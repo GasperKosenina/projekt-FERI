@@ -17,6 +17,8 @@ type App struct {
 
 func NewApp() (*App, error) {
 	app := &App{}
+
+	app.routes()
 	return app, nil
 }
 
