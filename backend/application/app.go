@@ -9,16 +9,43 @@ import (
 	"os/signal"
 	"syscall"
 	"time"
+
+	"go.mongodb.org/mongo-driver/mongo"
+	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
 type App struct {
 	router http.Handler
+	db     *mongo.Client
 }
 
-func NewApp() (*App, error) {
-	app := &App{}
+func NewApp(cfg Config) (*App, error) {
+	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
+
+	clientOptions := options.Client().
+		ApplyURI(cfg.DatabaseURL).
+		SetServerAPIOptions(serverAPI)
+
+	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	defer cancel()
+
+	client, err := mongo.Connect(ctx, clientOptions)
+	if err != nil {
+		log.Printf("Failed to connect to MongoDB: %v\n", err)
+		return nil, err
+	}
+
+	if err := client.Ping(ctx, nil); err != nil {
+		log.Printf("Failed to ping MongoDB: %v\n", err)
+		return nil, err
+	}
+
+	app := &App{
+		db: client,
+	}
 
 	app.routes()
+
 	return app, nil
 }
 
@@ -46,6 +73,12 @@ func (a *App) Start() error {
 	if err := server.Shutdown(ctx); err != nil {
 		log.Fatalf("HTTP server Shutdown: %v\n", err)
 	}
+
+	if err := a.db.Disconnect(ctx); err != nil {
+		log.Printf("Failed to disconnect from MongoDB: %v\n", err)
+	}
+
+	log.Println("Server gracefully stopped")
 
 	return nil
 }
