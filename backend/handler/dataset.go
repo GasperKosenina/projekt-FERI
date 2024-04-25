@@ -1,14 +1,18 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
 	"github.com/GasperKosenina/projekt-FERI/model"
+	"github.com/GasperKosenina/projekt-FERI/repository/dataset"
 	"github.com/labstack/echo/v4"
 )
 
-type Dataset struct{}
+type Dataset struct {
+	Repository *dataset.MongoRepository
+}
 
 func (d *Dataset) Create(c echo.Context) error {
 	var body struct {
@@ -40,6 +44,11 @@ func (d *Dataset) Create(c echo.Context) error {
 		UserID:      body.UserID,
 	}
 
-	return c.JSON(http.StatusCreated, dataset)
+	err := d.Repository.Insert(c.Request().Context(), dataset)
+	if err != nil {
+		fmt.Println("Error inserting dataset: ", err)
+		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
+	}
 
+	return c.JSON(http.StatusCreated, dataset.Name)
 }
