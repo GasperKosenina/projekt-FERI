@@ -50,5 +50,5 @@ func (d *Dataset) Create(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
 	}
 
-	return c.JSON(http.StatusCreated, dataset.Name)
+	return c.JSON(http.StatusCreated, dataset)
 }
