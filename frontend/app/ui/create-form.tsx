@@ -8,7 +8,7 @@ import {
   UserCircleIcon,
   DocumentTextIcon,
   ArrowUpOnSquareIcon,
-  KeyIcon
+  KeyIcon, GlobeAltIcon
 } from '@heroicons/react/24/outline';
 
 
@@ -65,6 +65,24 @@ export default function Form() {
           </div>
         </div>
 
+        <div className="mb-6">
+          <label htmlFor="description" className="mb-2 block text-sm font-medium">
+            URL 
+          </label>
+          <div className="relative mt-2 rounded-md">
+            <div className="relative">
+              <input
+                id="url"
+                name="url"
+                type="text"
+                placeholder="Enter URL"
+                className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+              />
+              <GlobeAltIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+            </div>
+          </div>
+        </div>
+
         <div className="mb-6 flex gap-4">
           <div className="flex-1">
             <label htmlFor="token" className="mb-2 block text-sm font-medium">
@@ -74,7 +92,7 @@ export default function Form() {
               <input
                 id="token"
                 name="token"
-                type="text"
+                type="password"
                 placeholder="Enter token"
                 className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
               />
