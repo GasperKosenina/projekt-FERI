@@ -10,31 +10,45 @@ import {
   DocumentTextIcon,
   ArrowUpOnSquareIcon,
   KeyIcon,
+  LinkIcon,
 } from "@heroicons/react/24/outline";
 import { postDataset } from "@/lib/data";
-
 export default function Form() {
   return (
     <>
       <form action={postDataset}>
         <div className="rounded-md bg-gray-50 p-4 md:p-6">
           <div className="mb-6">
-            <label
-              htmlFor="description"
-              className="mb-2 block text-sm font-medium"
-            >
-              Description
+            <label htmlFor="name" className="mb-2 block text-sm font-medium">
+              Name
             </label>
             <div className="relative mt-2 rounded-md">
               <div className="relative">
                 <input
-                  id="description"
-                  name="description"
+                  id="name"
+                  name="name"
                   type="text"
-                  placeholder="Enter Description"
-                  className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                  placeholder="Enter name"
+                  className="peer block w-1/2 rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 />
                 <DocumentTextIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              </div>
+            </div>
+          </div>
+          <div className="mb-6">
+            <label htmlFor="url" className="mb-2 block text-sm font-medium">
+              Url
+            </label>
+            <div className="relative mt-2 rounded-md">
+              <div className="relative">
+                <input
+                  id="url"
+                  name="url"
+                  type="text"
+                  placeholder="Enter url"
+                  className="peer block w-1/2 rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                />
+                <LinkIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
               </div>
             </div>
           </div>
@@ -44,60 +58,64 @@ export default function Form() {
               Schema
             </label>
             <div className="grid w-full max-w-sm items-center gap-1.5">
-              <Input id="schema" type="file" />
+              <Input id="schema" name="schema" type="file" />
             </div>
           </div>
 
           <div className="mb-6">
-            <label htmlFor="amount" className="mb-2 block text-sm font-medium">
+            <label htmlFor="price" className="mb-2 block text-sm font-medium">
               Price
             </label>
             <div className="relative mt-2 rounded-md">
               <div className="relative">
                 <input
-                  id="amount"
-                  name="amount"
+                  id="price"
+                  name="price"
                   type="number"
                   step="0.01"
                   placeholder="Enter EUR Price"
-                  className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                  className="peer block w-1/2 rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 />
                 <CurrencyEuroIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
               </div>
             </div>
           </div>
 
-          <div className="mb-6 flex gap-4">
+          <div className="mb-6">
             <div className="flex-1">
-              <label htmlFor="token" className="mb-2 block text-sm font-medium">
-                Token
+              <label
+                htmlFor="accessToken"
+                className="mb-2 block text-sm font-medium"
+              >
+                Secret token
               </label>
               <div className="relative rounded-md">
                 <input
-                  id="token"
-                  name="token"
-                  type="text"
-                  placeholder="Enter token"
-                  className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                  id="accessToken"
+                  name="accessToken"
+                  type="password"
+                  placeholder="Enter secret token"
+                  className="peer block w-1/2 rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 />
                 <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
               </div>
             </div>
-
+          </div>
+          <div className="mb-6">
             <div className="flex-1">
               <label
                 htmlFor="duration"
                 className="mb-2 block text-sm font-medium"
               >
-                Expiration Time
+                Duration of token
               </label>
               <div className="relative rounded-md">
                 <input
-                  id="expiration"
-                  name="expiration"
-                  type="expiration"
-                  placeholder="Enter Token Expiration Time"
-                  className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                  id="duration"
+                  name="duration"
+                  type="duration"
+                  placeholder="Enter Token Duration Time"
+                  className="peer block w-1/2 rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                 />
                 <ClockIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
               </div>
@@ -144,10 +162,10 @@ export default function Form() {
           </div>
         </fieldset> */}
 
-          <div className="mt-6 flex justify-end gap-4">
+          <div className="mt-6 flex gap-4">
             <Link
               href="/dashboard/datasets"
-              className="flex h-10 items-center rounded-lg bg-gray-100 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
+              className="flex h-10 items-center rounded-lg bg-gray-300 px-4 text-sm font-medium text-gray-600 transition-colors hover:bg-gray-200"
             >
               Cancel
             </Link>
