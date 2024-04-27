@@ -16,13 +16,13 @@ type Dataset struct {
 
 func (d *Dataset) Create(c echo.Context) error {
 	var body struct {
-		Name        string        `json:"name"`
-		URL         string        `json:"url"`
-		AccessToken string        `json:"accessToken"`
-		Price       float64       `json:"price"`
-		Description interface{}   `json:"description"`
-		Duration    time.Duration `json:"duration"` // nano seconds
-		UserID      string        `json:"userID"`
+		Name        string      `json:"name"`
+		URL         string      `json:"url"`
+		AccessToken string      `json:"accessToken"`
+		Price       float64     `json:"price"`
+		Description interface{} `json:"description"`
+		Duration    int         `json:"duration"`
+		UserID      string      `json:"userID"`
 	}
 
 	if err := c.Bind(&body); err != nil {
@@ -50,5 +50,5 @@ func (d *Dataset) Create(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
 	}
 
-	return c.JSON(http.StatusCreated, dataset.Name)
+	return c.JSON(http.StatusCreated, dataset)
 }
