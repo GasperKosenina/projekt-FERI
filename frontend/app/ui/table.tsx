@@ -1,29 +1,25 @@
-export default async function InvoicesTable({ query }: { query: string; }) {
+import { Dataset } from "@/lib/definitions";
+import { listAll } from "@/lib/data";
 
 
-  const datasets = [
-    {
-      id: 1,
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      amount: '€500',
-      date: '2024-04-01',
-    },
-    {
-      id: 2,
-      name: 'Jane Smith',
-      email: 'jane.smith@example.com',
-      amount: '€750',
-      date: '2024-04-05',
-    },
-    {
-      id: 3,
-      name: 'Alice Johnson',
-      email: 'alice.johnson@example.com',
-      amount: '€1200',
-      date: '2024-04-10',
-    }
-  ];
+
+function formatDate(dateString: any) {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+  });
+}
+
+
+export default async function Table({ query }: { query: string; }) {
+
+  const datasets: Dataset[] = await listAll();
+  //console.log(datasets)
 
 
   const filteredDatasets = datasets.filter(dataset => dataset.name.toLowerCase().includes(query.toLowerCase()));
@@ -43,16 +39,16 @@ export default async function InvoicesTable({ query }: { query: string; }) {
                     <div className="mb-2 flex items-center">
                       <p>{dataset.name}</p>
                     </div>
-                    <p className="text-sm text-gray-500">{dataset.email}</p>
+                    <p className="text-sm text-gray-500">{dataset.userID}</p>
                   </div>
 
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
                     <p className="text-xl font-medium">
-                      {dataset.amount}
+                      {dataset.price} €
                     </p>
-                    <p>{dataset.date}</p>
+                    <p>{formatDate(dataset.createdAt)}</p>
                   </div>
                 </div>
               </div>
@@ -61,16 +57,19 @@ export default async function InvoicesTable({ query }: { query: string; }) {
           <table className="hidden min-w-full text-gray-900 md:table">
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
-                <th scope="col" className="px-4 py-5 font-medium sm:pl-6">
+                <th scope="col" className="px-4 py-6 font-medium sm:pl-6 text-blue-900">
                   Dataset
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope="col" className="px-4 py-6 font-medium sm:pl-6 text-blue-900">
+                  Category
+                </th>
+                <th scope="col" className="px-3 py-6 font-medium text-blue-900">
                   Data Provider
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope="col" className="px-3 py-6 font-medium text-blue-900">
                   Price
                 </th>
-                <th scope="col" className="px-3 py-5 font-medium">
+                <th scope="col" className="px-3 py-6 font-medium text-blue-900">
                   Date
                 </th>
               </tr>
@@ -81,19 +80,22 @@ export default async function InvoicesTable({ query }: { query: string; }) {
                   key={dataset.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
-                  <td className="whitespace-nowrap py-3 pl-6 pr-3">
+                  <td className="whitespace-nowrap py-10 pl-6 pr-3">
                     <div className="flex items-center gap-3">
                       <p>{dataset.name}</p>
                     </div>
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {dataset.email}
+                  <td className="whitespace-nowrap px-3 py-10">
+                    Izpis kategorije
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {dataset.amount}
+                  <td className="whitespace-nowrap px-3 py-10">
+                    {dataset.userID}
                   </td>
-                  <td className="whitespace-nowrap px-3 py-3">
-                    {dataset.date}
+                  <td className="whitespace-nowrap px-3 py-10">
+                    {dataset.price} €
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-10">
+                    {formatDate(dataset.createdAt)}
                   </td>
                 </tr>
               ))}

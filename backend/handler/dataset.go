@@ -52,3 +52,11 @@ func (d *Dataset) Create(c echo.Context) error {
 
 	return c.JSON(http.StatusCreated, dataset)
 }
+
+func (d *Dataset) ListAll(c echo.Context) error {
+	datasets, err := d.Repository.ListAll(c.Request().Context())
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
+	}
+	return c.JSON(http.StatusOK, datasets)
+}

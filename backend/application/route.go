@@ -26,4 +26,5 @@ func (a *App) datasetRoute(g *echo.Group) {
 	}
 
 	g.POST("", datasetHandler.Create)
+	g.GET("", datasetHandler.ListAll)
 }

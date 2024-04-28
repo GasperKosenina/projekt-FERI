@@ -2,6 +2,7 @@
 import { revalidatePath } from "next/cache";
 import { Dataset } from "./definitions";
 import { redirect } from "next/navigation";
+import { unstable_noStore as noStore } from 'next/cache';
 
 export async function postDataset(formData: FormData) {
   const file = formData.get("schema") as File;
@@ -31,3 +32,30 @@ export async function postDataset(formData: FormData) {
     };
   }
 }
+
+
+export async function listAll() {
+  noStore();
+
+
+  try {
+    const response = await fetch('http://localhost:8000/dataset', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (!response.ok) {
+      throw new Error(`Failed to fetch datasets: ${response.status}`);
+    }
+
+    const datasets = await response.json();
+    return datasets;
+
+  } catch (error) {
+    console.error('Error fetching datasets:', error);
+    return { message: 'Failed to retrieve datasets' };
+  }
+}
+

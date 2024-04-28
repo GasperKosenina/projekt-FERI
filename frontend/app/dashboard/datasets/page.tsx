@@ -1,4 +1,3 @@
-
 import Table from "@/app/ui/table"
 import Search from "@/app/ui/search"
 import Link from "next/link"
@@ -26,7 +25,7 @@ export default async function Page({ searchParams }: { searchParams?: { query?: 
                 </Link>
             </div>
             <Suspense key={query}>
-                <Table query={query} />
+                <Table query={query}/>
             </Suspense>
         </div>
     )
