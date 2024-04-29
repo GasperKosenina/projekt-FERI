@@ -1,29 +1,66 @@
 "use server";
-import { revalidatePath } from "next/cache";
 import { Dataset } from "./definitions";
 import { redirect } from "next/navigation";
-import { unstable_noStore as noStore } from 'next/cache';
+import { unstable_noStore as noStore } from "next/cache";
+import { z } from "zod";
+
+const DatasetSchema = z.object({
+  name: z.string().min(3, "Name must be at least 3 characters"),
+  url: z.string().url("URL must be a valid URL"),
+  accessToken: z.string().min(3, "Access token must be at least 3 characters"),
+  price: z.number().gt(0, "Price must be greater than 0"),
+  description: z.any(),
+  duration: z.number().gt(0, "Duration must be greater than 0"),
+});
+
+export type State = {
+  errors?: {
+    name?: string[];
+    url?: string[];
+    accessToken?: string[];
+    price?: string[];
+    duration?: string[];
+  };
+  message?: string | null;
+};
 
 export async function postDataset(formData: FormData) {
-  const file = formData.get("schema") as File;
-  const content = await file.text();
+  const userID = "slkdasd98";
 
-  const dataset: Dataset = {
+  if (!userID) {
+    console.log("Error getting user ID");
+    return {
+      message: "Error getting user ID",
+    };
+  }
+
+  const validatedData = DatasetSchema.safeParse({
     name: formData.get("name") as string,
     url: formData.get("url") as string,
     accessToken: formData.get("accessToken") as string,
     price: parseFloat(formData.get("price") as string),
-    description: JSON.parse(content),
+    description: formData.get("schema") as File,
     duration: parseInt(formData.get("duration") as string),
-    userID: "1",
-  };
+    userID: userID,
+  });
+
+  if (!validatedData.success) {
+    console.log("Missing Fields. Failed to create dataset");
+    return {
+      errors: validatedData.error.flatten().fieldErrors,
+      message: "Missing Fields. Failed to create dataset",
+    };
+  }
+
+  const content = await validatedData.data.description.text();
+  validatedData.data.description = JSON.parse(content);
 
   const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dataset`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(dataset),
+    body: JSON.stringify(validatedData.data),
   });
   if (response.status !== 201) {
     console.log("Error creating dataset");
@@ -33,17 +70,15 @@ export async function postDataset(formData: FormData) {
   }
 }
 
-
 export async function listAll() {
   noStore();
 
-
   try {
-    const response = await fetch('http://localhost:8000/dataset', {
-      method: 'GET',
+    const response = await fetch("http://localhost:8000/dataset", {
+      method: "GET",
       headers: {
-        'Content-Type': 'application/json'
-      }
+        "Content-Type": "application/json",
+      },
     });
 
     if (!response.ok) {
@@ -52,10 +87,8 @@ export async function listAll() {
 
     const datasets = await response.json();
     return datasets;
-
   } catch (error) {
-    console.error('Error fetching datasets:', error);
-    return { message: 'Failed to retrieve datasets' };
+    console.error("Error fetching datasets:", error);
+    return { message: "Failed to retrieve datasets" };
   }
 }
-
