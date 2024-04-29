@@ -24,8 +24,8 @@ export default async function Page({ searchParams }: { searchParams?: { query?: 
                     <PlusIcon className="h-5 md:ml-4" />
                 </Link>
             </div>
-            <Suspense key={query}>
-                <Table query={query}/>
+            <Suspense key={query} >
+                <Table query={query} />
             </Suspense>
         </div>
     )

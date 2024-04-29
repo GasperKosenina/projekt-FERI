@@ -5,6 +5,7 @@ import (
 
 	"github.com/GasperKosenina/projekt-FERI/model"
 	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
@@ -35,4 +36,18 @@ func (m *MongoRepository) ListAll(ctx context.Context) ([]*model.Dataset, error)
 		return nil, err
 	}
 	return datasets, nil
+}
+
+func (m *MongoRepository) FindByID(ctx context.Context, id string) (*model.Dataset, error) {
+	collection := m.Client.Database("projekt").Collection("dataset")
+	objID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return nil, err
+	}
+
+	var dataset model.Dataset
+	if err := collection.FindOne(ctx, bson.M{"_id": objID}).Decode(&dataset); err != nil {
+		return nil, err
+	}
+	return &dataset, nil
 }

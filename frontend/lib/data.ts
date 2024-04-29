@@ -1,4 +1,7 @@
-"use server";
+'use server'
+
+
+
 import { revalidatePath } from "next/cache";
 import { Dataset } from "./definitions";
 import { redirect } from "next/navigation";
@@ -31,6 +34,9 @@ export async function postDataset(formData: FormData) {
       message: "Error creating dataset",
     };
   }
+  
+  revalidatePath('/dashboard/datasets');
+  redirect('/dashboard/datasets');
 }
 
 

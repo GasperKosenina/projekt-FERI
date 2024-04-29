@@ -1,4 +1,6 @@
 import clsx from 'clsx';
+import { PencilIcon } from 'lucide-react';
+import Link from 'next/link';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
@@ -15,5 +17,16 @@ export function ButtonComponent({ children, className, ...rest }: ButtonProps) {
     >
       {children}
     </button>
+  );
+}
+
+export function ButtonDetailsComponent({ id }: { id: string }) {
+  return (
+    <Link
+      href={`/dashboard/datasets/${id}`}
+      className="rounded-md border p-2 hover:bg-gray-100"
+    >
+      See more
+    </Link>
   );
 }

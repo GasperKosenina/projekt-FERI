@@ -60,3 +60,17 @@ func (d *Dataset) ListAll(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, datasets)
 }
+
+func (d *Dataset) FindById(c echo.Context) error {
+	id := c.Param("id")
+	if id == "" {
+		return c.JSON(http.StatusBadRequest, "Invalid ID")
+	}
+
+	dataset, err := d.Repository.FindByID(c.Request().Context(), id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
+	}
+
+	return c.JSON(http.StatusOK, dataset)
+}
