@@ -6,14 +6,22 @@ import { unstable_noStore as noStore } from "next/cache";
 import { z } from "zod";
 
 const DatasetSchema = z.object({
-  name: z.string().min(3, { message: "Name must be at least 3 characters" }),
-  url: z.string().url({ message: "URL must be valid" }),
+  name: z
+    .string()
+    .min(3, { message: "Name must be at least 3 characters" })
+    .max(50, { message: "Name must be less than 50 characters" }),
+  url: z
+    .string()
+    .url({ message: "URL must be valid" })
+    .max(255, { message: "URL must be less than 255 characters" }),
   accessToken: z
     .string()
-    .min(3, { message: "Access Token must be at least 3 characters" }),
+    .min(3, { message: "Access Token must be at least 3 characters" })
+    .max(50, { message: "Access Token must be less than 50 characters" }),
   price: z
     .number({ message: "Price must be a number" })
-    .gt(0, { message: "Price must be greater than 0" }),
+    .gt(0, { message: "Price must be greater than 0" })
+    .max(1000, { message: "Price must be less than 1001" }),
   description: z
     .instanceof(File)
     .refine((file) => file.type === "application/json", {
@@ -25,7 +33,8 @@ const DatasetSchema = z.object({
   category: z.string().nonempty({ message: "Please select a category" }),
   duration: z
     .number({ message: "Duration must be a number" })
-    .gt(0, { message: "Duration must be greater than 0" }),
+    .gt(0, { message: "Duration must be greater than 0" })
+    .max(1440, { message: "Duration must be less than 1441" }),
   userID: z.string(),
 });
 

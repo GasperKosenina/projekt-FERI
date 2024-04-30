@@ -24,6 +24,7 @@ import {
 import { useState } from "react";
 import { postDataset } from "@/lib/data";
 import { useFormState } from "react-dom";
+import { ChevronRight } from "lucide-react";
 
 export default function Form() {
   const [position, setPosition] = useState("");
@@ -47,9 +48,13 @@ export default function Form() {
       <form action={dispatch} onSubmit={handleSubmit}>
         <div className="rounded-md bg-gray-50 p-4 md:p-6">
           <div className="mb-6">
-            <label htmlFor="name" className="mb-2 block text-sm font-medium">
-              Name
-            </label>
+            <div className="flex gap-1">
+              <label htmlFor="name" className="mb-2 block text-sm font-medium">
+                Name
+              </label>
+              <ChevronRight className="h-5 w-5 text-gray-500" />
+              <p className="text-sm text-gray-500">Name of the dataset</p>
+            </div>
             <div className="relative mt-2 rounded-md">
               <div className="relative">
                 <input
@@ -73,9 +78,13 @@ export default function Form() {
             </div>
           </div>
           <div className="mb-6">
-            <label htmlFor="url" className="mb-2 block text-sm font-medium">
-              Url
-            </label>
+            <div className="flex gap-1">
+              <label htmlFor="url" className="mb-2 block text-sm font-medium">
+                Url
+              </label>
+              <ChevronRight className="h-5 w-5 text-gray-500" />
+              <p className="text-sm text-gray-500">Link to the dataset file</p>
+            </div>
             <div className="relative mt-2 rounded-md">
               <div className="relative">
                 <input
@@ -98,15 +107,22 @@ export default function Form() {
                 ))}
             </div>
           </div>
-
           <div className="mb-6">
-            <label htmlFor="schema" className="mb-2 block text-sm font-medium">
-              Schema
-            </label>
+            <div className="flex gap-1 mb-2">
+              <label
+                htmlFor="schema"
+                className="mb-2 block text-sm font-medium"
+              >
+                Schema
+              </label>
+              <ChevronRight className="h-5 w-5 text-gray-500" />
+              <p className="text-sm text-gray-500">
+                Choose the schema file (JSON) for the dataset
+              </p>
+            </div>
             <div className="grid w-full max-w-sm items-center gap-1.5">
               <Input id="schema" name="schema" type="file" />
             </div>
-
             <div id="schema-error" aria-live="polite" aria-atomic="true">
               {state?.errors?.description &&
                 state.errors.description.map((error: string) => (
@@ -116,12 +132,20 @@ export default function Form() {
                 ))}
             </div>
           </div>
-
           <div className="mb-6 flex">
             <div className="flex-1 mr-6">
-              <label htmlFor="price" className="mb-2 block text-sm font-medium">
-                Price
-              </label>
+              <div className="flex mb-2 gap-1">
+                <label
+                  htmlFor="price"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Price
+                </label>
+                <ChevronRight className="h-5 w-5 text-gray-500" />
+                <p className="text-sm text-gray-500">
+                  Price of the dataset in EUR (0.01 - 1000.00)
+                </p>
+              </div>
               <div className="relative">
                 <input
                   id="price"
@@ -203,15 +227,21 @@ export default function Form() {
               </div>
             </div>
           </div>
-
           <div className="mb-6 flex">
             <div className="flex-1 mr-6">
-              <label
-                htmlFor="accessToken"
-                className="mb-2 block text-sm font-medium"
-              >
-                Secret Token
-              </label>
+              <div className="flex mb-2 gap-1">
+                <label
+                  htmlFor="accessToken"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Secret Token
+                </label>
+                <ChevronRight className="h-5 w-5 text-gray-500" />
+                <p className="text-sm text-gray-500">
+                  Enter a secret token to secure the dataset
+                </p>
+              </div>
+
               <div className="relative">
                 <input
                   id="accessToken"
@@ -234,12 +264,18 @@ export default function Form() {
               </div>
             </div>
             <div className="flex-1 ml-2">
-              <label
-                htmlFor="duration"
-                className="mb-2 block text-sm font-medium"
-              >
-                Token Duration
-              </label>
+              <div className="flex mb-2 gap-1">
+                <label
+                  htmlFor="duration"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Token Duration
+                </label>
+                <ChevronRight className="h-5 w-5 text-gray-500" />
+                <p className="text-sm text-gray-500">
+                  Enter the duration of the token in minutes (1 - 1440)
+                </p>
+              </div>
               <div className="relative">
                 <input
                   id="duration"

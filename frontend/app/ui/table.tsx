@@ -54,7 +54,9 @@ export default async function Table({ query }: { query: string }) {
                 <th
                   scope="col"
                   className="px-4 py-8 font-medium sm:pl-6 text-blue-900"
-                ></th>
+                >
+                  Name
+                </th>
                 <th
                   scope="col"
                   className="px-4 py-8 font-medium sm:pl-6 text-blue-900"
