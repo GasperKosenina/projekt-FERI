@@ -60,7 +60,7 @@ export default async function Table({ query }: { query: string; }) {
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
                 <th scope="col" className="px-4 py-8 font-medium sm:pl-6 text-blue-900">
-
+                  Dataset
                 </th>
                 <th scope="col" className="px-4 py-8 font-medium sm:pl-6 text-blue-900">
                   Category
@@ -82,13 +82,15 @@ export default async function Table({ query }: { query: string; }) {
                   key={dataset.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
-                  <Link href={`/dashboard/datasets/${dataset.id}`}>
-                    <td className="whitespace-nowrap py-10 pl-6 pr-3">
-                      <div className="flex items-center gap-3 hover:text-slate-500">
+
+                  <td className="whitespace-nowrap py-10 pl-6 pr-3">
+                    <div className="flex items-center gap-3 hover:text-slate-500">
+                      <Link href={`/dashboard/datasets/${dataset.id}`}>
                         <strong>{dataset.name}</strong>
-                      </div>
-                    </td>
-                  </Link>
+                      </Link>
+                    </div>
+                  </td>
+
 
                   <td className="whitespace-nowrap px-3 py-10">
                     Izpis kategorije
