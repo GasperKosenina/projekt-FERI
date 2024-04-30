@@ -6,6 +6,7 @@ export type Dataset = {
   price: number;
   description: any;
   duration: number;
+  category: string;
   createdAt?: Date;
   updatedAt?: Date;
   userID: string;

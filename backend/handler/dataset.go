@@ -21,15 +21,18 @@ func (d *Dataset) Create(c echo.Context) error {
 		AccessToken string      `json:"accessToken"`
 		Price       float64     `json:"price"`
 		Description interface{} `json:"description"`
+		Category    string      `json:"category"`
 		Duration    int         `json:"duration"`
 		UserID      string      `json:"userID"`
 	}
 
 	if err := c.Bind(&body); err != nil {
+		fmt.Println("Error binding body: ", err)
 		return c.JSON(http.StatusBadRequest, "Bad Request")
 	}
 
-	if body.Name == "" || body.URL == "" || body.AccessToken == "" || body.Price == 0 || body.Duration == 0 || body.UserID == "" {
+	if body.Name == "" || body.URL == "" || body.AccessToken == "" || body.Price == 0 || body.Duration == 0 || body.UserID == "" || body.Category == "" {
+		fmt.Println("Missing required fields")
 		return c.JSON(http.StatusBadRequest, "Bad Request")
 	}
 
@@ -40,6 +43,7 @@ func (d *Dataset) Create(c echo.Context) error {
 		Price:       body.Price,
 		Description: body.Description,
 		Duration:    body.Duration,
+		Category:    body.Category,
 		CreatedAt:   time.Now(),
 		UserID:      body.UserID,
 	}

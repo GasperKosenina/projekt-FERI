@@ -6,12 +6,27 @@ import { unstable_noStore as noStore } from "next/cache";
 import { z } from "zod";
 
 const DatasetSchema = z.object({
-  name: z.string().min(3, "Name must be at least 3 characters"),
-  url: z.string().url("URL must be a valid URL"),
-  accessToken: z.string().min(3, "Access token must be at least 3 characters"),
-  price: z.number().gt(0, "Price must be greater than 0"),
-  description: z.any(),
-  duration: z.number().gt(0, "Duration must be greater than 0"),
+  name: z.string().min(3, { message: "Name must be at least 3 characters" }),
+  url: z.string().url({ message: "URL must be valid" }),
+  accessToken: z
+    .string()
+    .min(3, { message: "Access Token must be at least 3 characters" }),
+  price: z
+    .number({ message: "Price must be a number" })
+    .gt(0, { message: "Price must be greater than 0" }),
+  description: z
+    .instanceof(File)
+    .refine((file) => file.type === "application/json", {
+      message: "Schema must be a JSON file",
+    })
+    .refine((file) => file.size < 1024 * 1024, {
+      message: "Schema must be less than 1MB",
+    }),
+  category: z.string().nonempty({ message: "Please select a category" }),
+  duration: z
+    .number({ message: "Duration must be a number" })
+    .gt(0, { message: "Duration must be greater than 0" }),
+  userID: z.string(),
 });
 
 export type State = {
@@ -20,18 +35,20 @@ export type State = {
     url?: string[];
     accessToken?: string[];
     price?: string[];
+    description?: string[];
+    category?: string[];
     duration?: string[];
   };
   message?: string | null;
 };
 
-export async function postDataset(formData: FormData) {
+export async function postDataset(prevState: State, formData: FormData) {
   const userID = "slkdasd98";
 
   if (!userID) {
     console.log("Error getting user ID");
     return {
-      message: "Error getting user ID",
+      message: "Internal Server Error. Failed to create dataset",
     };
   }
 
@@ -41,15 +58,15 @@ export async function postDataset(formData: FormData) {
     accessToken: formData.get("accessToken") as string,
     price: parseFloat(formData.get("price") as string),
     description: formData.get("schema") as File,
+    category: formData.get("category") as string,
     duration: parseInt(formData.get("duration") as string),
     userID: userID,
   });
 
   if (!validatedData.success) {
-    console.log("Missing Fields. Failed to create dataset");
     return {
       errors: validatedData.error.flatten().fieldErrors,
-      message: "Missing Fields. Failed to create dataset",
+      message: "",
     };
   }
 
@@ -64,21 +81,19 @@ export async function postDataset(formData: FormData) {
     body: JSON.stringify(validatedData.data),
   });
   if (response.status !== 201) {
-    console.log("Error creating dataset");
     return {
-      message: "Error creating dataset",
+      message: "Internal Server Error. Failed to create dataset",
     };
   }
-  
-  revalidatePath('/dashboard/datasets');
-  redirect('/dashboard/datasets');
+
+  revalidatePath("/dashboard/datasets");
+  redirect("/dashboard/datasets");
 }
 
 export async function listAll() {
   noStore();
-
   try {
-    const response = await fetch("http://localhost:8000/dataset", {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dataset`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
