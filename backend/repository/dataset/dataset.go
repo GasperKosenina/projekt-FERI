@@ -25,7 +25,9 @@ func (m *MongoRepository) Insert(ctx context.Context, dataset *model.Dataset) er
 
 func (m *MongoRepository) ListAll(ctx context.Context) ([]*model.Dataset, error) {
 	collection := m.Client.Database("projekt").Collection("dataset")
-	cursor, err := collection.Find(ctx, bson.D{{}}, options.Find())
+	findOptions := options.Find()
+	findOptions.SetSort(bson.D{{"createdAt", -1}})
+	cursor, err := collection.Find(ctx, bson.D{{}}, findOptions)
 	if err != nil {
 		return nil, err
 	}

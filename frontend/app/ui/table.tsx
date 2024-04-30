@@ -2,26 +2,21 @@ import { Dataset } from "@/lib/definitions";
 import { listAll } from "@/lib/data";
 import Link from "next/link";
 
-
-
-
 function formatDate(dateString: any) {
   const date = new Date(dateString);
   return date.toLocaleDateString("en-US", {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
+    year: "numeric",
+    month: "long",
+    day: "numeric",
   });
 }
 
-
-export default async function Table({ query }: { query: string; }) {
-
+export default async function Table({ query }: { query: string }) {
   const datasets: Dataset[] = await listAll();
-  //console.log(datasets)
 
-
-  const filteredDatasets = datasets.filter(dataset => dataset.name.toLowerCase().includes(query.toLowerCase()));
+  const filteredDatasets = datasets.filter((dataset) =>
+    dataset.name.toLowerCase().includes(query.toLowerCase())
+  );
 
   return (
     <div className="mt-6 flow-root">
@@ -42,13 +37,10 @@ export default async function Table({ query }: { query: string; }) {
                     </Link>
                     <p className="text-sm text-gray-500">{dataset.userID}</p>
                   </div>
-
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
-                    <p className="text-xl">
-                      {dataset.price} €
-                    </p>
+                    <p className="text-xl">{dataset.price} €</p>
                     <p>{formatDate(dataset.createdAt)}</p>
                   </div>
                 </div>
@@ -59,10 +51,16 @@ export default async function Table({ query }: { query: string; }) {
           <table className="hidden min-w-full text-gray-900 md:table">
             <thead className="rounded-lg text-left text-sm font-normal">
               <tr>
-                <th scope="col" className="px-4 py-8 font-medium sm:pl-6 text-blue-900">
-                  Dataset
+                <th
+                  scope="col"
+                  className="px-4 py-8 font-medium sm:pl-6 text-blue-900"
+                >
+                  Name
                 </th>
-                <th scope="col" className="px-4 py-8 font-medium sm:pl-6 text-blue-900">
+                <th
+                  scope="col"
+                  className="px-4 py-8 font-medium sm:pl-6 text-blue-900"
+                >
                   Category
                 </th>
                 <th scope="col" className="px-3 py-8 font-medium text-blue-900">
@@ -93,7 +91,8 @@ export default async function Table({ query }: { query: string; }) {
 
 
                   <td className="whitespace-nowrap px-3 py-10">
-                    Izpis kategorije
+                    {dataset.category.charAt(0).toUpperCase() +
+                      dataset.category.slice(1)}
                   </td>
                   <td className="whitespace-nowrap px-3 py-10">
                     {dataset.userID}
@@ -110,6 +109,6 @@ export default async function Table({ query }: { query: string; }) {
           </table>
         </div>
       </div>
-    </div >
+    </div>
   );
 }
