@@ -110,13 +110,13 @@ export async function listAll() {
     });
 
     if (!response.ok) {
-      throw new Error(`Failed to fetch datasets: ${response.status}`);
+      return [];
     }
 
     const datasets = await response.json();
     return datasets;
   } catch (error) {
     console.error("Error fetching datasets:", error);
-    return { message: "Failed to retrieve datasets" };
+    return [];
   }
 }

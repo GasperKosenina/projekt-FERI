@@ -18,6 +18,11 @@ export default async function Table({ query }: { query: string }) {
     dataset.name.toLowerCase().includes(query.toLowerCase())
   );
 
+
+  if (datasets.length === 0) {
+    return <div className="text-lg mt-10">No datasets found</div>;
+  }
+
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -53,13 +58,13 @@ export default async function Table({ query }: { query: string }) {
               <tr>
                 <th
                   scope="col"
-                  className="px-4 py-8 font-medium sm:pl-6 text-blue-900"
+                  className="px-3 py-8 font-medium sm:pl-6 text-blue-900"
                 >
                   Name
                 </th>
                 <th
                   scope="col"
-                  className="px-4 py-8 font-medium sm:pl-6 text-blue-900"
+                  className="px-3 py-8 font-medium sm:pl-6 text-blue-900"
                 >
                   Category
                 </th>
@@ -82,15 +87,13 @@ export default async function Table({ query }: { query: string }) {
                 >
 
                   <td className="whitespace-nowrap py-10 pl-6 pr-3">
-                    <div className="flex items-center gap-3 hover:text-slate-500">
+                    <div className="flex items-center gap-3 hover:text-gray-500">
                       <Link href={`/dashboard/datasets/${dataset.id}`}>
                         <strong>{dataset.name}</strong>
                       </Link>
                     </div>
                   </td>
-
-
-                  <td className="whitespace-nowrap px-3 py-10">
+                  <td className="whitespace-nowrap px-6 py-10">
                     {dataset.category.charAt(0).toUpperCase() +
                       dataset.category.slice(1)}
                   </td>
