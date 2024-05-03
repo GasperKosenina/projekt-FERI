@@ -15,6 +15,8 @@ func (a *App) routes() {
 	datasetGroup := e.Group("/dataset")
 	a.datasetRoute(datasetGroup)
 
+	e.POST("login", handler.Login)
+	e.GET("protected", handler.Protected, handler.JWTAuthMiddleware)
 	a.router = e
 }
 
