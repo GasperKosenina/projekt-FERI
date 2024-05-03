@@ -19,8 +19,8 @@ export default async function Table({ query }: { query: string }) {
   );
 
 
-  if (datasets.length === 0) {
-    return <div className="text-lg mt-10">No datasets found</div>;
+  if (filteredDatasets.length === 0) {
+    return <div className="text-sm mt-10">No datasets found</div>;
   }
 
   return (

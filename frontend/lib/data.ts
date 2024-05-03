@@ -120,3 +120,54 @@ export async function listAll() {
     return [];
   }
 }
+
+
+export async function findById(id: string) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dataset/${id}`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const dataset = await response.json();
+    return dataset;
+  } catch (error) {
+    console.error("Error fetching datasets:", error);
+    return [];
+  }
+}
+
+
+export async function generate(token: string) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token: token })
+    });
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+    return data;
+
+  } catch (error) {
+    console.error("Error logging in:", error);
+    return null;
+  }
+}
+
+
+
+
+
