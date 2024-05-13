@@ -1,4 +1,3 @@
-import AcmeLogo from "./ui/acme-logo";
 import Link from "next/link";
 import Image from "next/image";
 import "../app/styles/animations.css";

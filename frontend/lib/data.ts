@@ -81,15 +81,20 @@ export async function postDataset(prevState: State, formData: FormData) {
 
   const content = await validatedData.data.description.text();
   validatedData.data.description = JSON.parse(content);
-
-  const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dataset`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(validatedData.data),
-  });
-  if (response.status !== 201) {
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dataset`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(validatedData.data),
+    });
+    if (response.status !== 201) {
+      return {
+        message: "Internal Server Error. Failed to create dataset",
+      };
+    }
+  } catch (error) {
     return {
       message: "Internal Server Error. Failed to create dataset",
     };
@@ -121,15 +126,17 @@ export async function listAll() {
   }
 }
 
-
 export async function findById(id: string) {
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dataset/${id}`, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/dataset/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
       },
-    });
+    );
 
     if (!response.ok) {
       return [];
@@ -143,15 +150,14 @@ export async function findById(id: string) {
   }
 }
 
-
 export async function generate(token: string) {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
-      method: 'POST',
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
       },
-      body: JSON.stringify({ token: token })
+      body: JSON.stringify({ token: token }),
     });
 
     if (!response.ok) {
@@ -160,14 +166,8 @@ export async function generate(token: string) {
 
     const data = await response.json();
     return data;
-
   } catch (error) {
     console.error("Error logging in:", error);
     return null;
   }
 }
-
-
-
-
-

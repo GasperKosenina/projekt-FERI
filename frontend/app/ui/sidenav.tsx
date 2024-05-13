@@ -1,9 +1,7 @@
 import NavLinks from "./nav-links";
 import { auth, clerkClient } from "@clerk/nextjs/server";
-import { SignOutButton, UserButton } from "@clerk/nextjs";
-import AcmeLogo from "./acme-logo";
-
-
+import { UserButton } from "@clerk/nextjs";
+import DataChainLogo from "./datachain-logo";
 export default async function SideNav() {
   const { userId } = auth();
   if (!userId) {
@@ -21,7 +19,7 @@ export default async function SideNav() {
     <div className="flex h-full flex-col px-3 py-4 md:px-2">
       <div className="mb-2 flex h-20 items-end justify-start rounded-md bg-blue-600 p-4 md:h-40">
         <div className="w-32 text-white md:w-40">
-          <AcmeLogo />
+          <DataChainLogo />
         </div>
       </div>
 
