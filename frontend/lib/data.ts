@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
 import { z } from "zod";
+import { auth } from "@clerk/nextjs/server";
 
 const DatasetSchema = z.object({
   name: z
@@ -172,8 +173,7 @@ export async function generate(token: string) {
   }
 }
 
-// Iterate over the entries in the FormData
-export async function postUserType(formData: FormData) {
+export async function postUser(formData: FormData) {
   let userType = "";
   const entries = formData.entries();
   let entry = entries.next();
@@ -191,5 +191,55 @@ export async function postUserType(formData: FormData) {
     return;
   }
 
+  const { userId } = auth();
+  if (!userId) {
+    console.error("No user ID found");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: userId,
+        userType: userType,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error("Error setting user type:", response.statusText);
+      return;
+    }
+  } catch (error) {
+    console.error("Error setting user type:", error);
+  }
+
   redirect(`/dashboard`);
+}
+
+export async function getUser(userId: string) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/user/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const user = await response.json();
+    return user;
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return null;
+  }
 }

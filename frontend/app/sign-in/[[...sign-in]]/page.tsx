@@ -1,7 +1,6 @@
 import { SignIn } from "@clerk/nextjs";
 import "@/app/styles/animations.css";
-
-export default function Page() {
+export default async function Page() {
   return (
     <>
       <div className="background">
