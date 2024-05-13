@@ -1,6 +1,7 @@
 import { Dataset } from "@/lib/definitions";
 import { listAll } from "@/lib/data";
 import Link from "next/link";
+import { clerkClient } from "@clerk/nextjs/server";
 
 function formatDate(dateString: any) {
   const date = new Date(dateString);
@@ -10,6 +11,17 @@ function formatDate(dateString: any) {
     day: "numeric",
   });
 }
+
+async function getDataProvider(userId: string) {
+  try {
+    const user = await clerkClient.users.getUser(userId);
+    return user.username;
+  }
+  catch (error) {
+    return ("No Data Provider")
+  }
+}
+
 
 export default async function Table({ query }: { query: string }) {
   const datasets: Dataset[] = await listAll();
@@ -29,7 +41,7 @@ export default async function Table({ query }: { query: string }) {
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
             {filteredDatasets?.map((dataset) => (
-              <div
+              < div
                 key={dataset.id}
                 className="mb-2 w-full rounded-md bg-white p-4"
               >
@@ -40,7 +52,10 @@ export default async function Table({ query }: { query: string }) {
                         <strong>{dataset.name}</strong>
                       </div>
                     </Link>
-                    <p className="text-sm text-gray-500">{dataset.userID}</p>
+                    <p className="text-sm text-gray-500">{
+
+                      dataset.userID
+                    }</p>
                   </div>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
@@ -80,7 +95,7 @@ export default async function Table({ query }: { query: string }) {
               </tr>
             </thead>
             <tbody className="bg-white">
-              {filteredDatasets?.map((dataset) => (
+              {filteredDatasets?.map(async (dataset) => (
                 <tr
                   key={dataset.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
@@ -98,7 +113,7 @@ export default async function Table({ query }: { query: string }) {
                       dataset.category.slice(1)}
                   </td>
                   <td className="whitespace-nowrap px-3 py-10">
-                    {dataset.userID}
+                    <span>{(await getDataProvider(dataset.userID))} </span>
                   </td>
                   <td className="whitespace-nowrap px-3 py-10">
                     {dataset.price} €
@@ -112,6 +127,6 @@ export default async function Table({ query }: { query: string }) {
           </table>
         </div>
       </div>
-    </div>
+    </div >
   );
 }

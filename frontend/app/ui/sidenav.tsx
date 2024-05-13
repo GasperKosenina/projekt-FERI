@@ -8,12 +8,16 @@ export default async function SideNav() {
     console.error("No user ID found");
     return null;
   }
-
-  const user = await clerkClient.users.getUser(userId);
-  if (!user) {
-    console.error("No user found");
-    return null;
+  let user;
+  try {
+    user = await clerkClient.users.getUser(userId);
   }
+  catch (error) {
+      return ("Check Your Internet Connection!");
+    }
+  
+
+
 
   return (
     <div className="flex h-full flex-col px-3 py-4 md:px-2">

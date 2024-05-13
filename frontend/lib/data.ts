@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
 import { z } from "zod";
+import { auth } from "@clerk/nextjs/server";
 
 const DatasetSchema = z.object({
   name: z
@@ -20,7 +21,7 @@ const DatasetSchema = z.object({
     .max(50, { message: "Access Token must be less than 50 characters" }),
   price: z
     .number({ message: "Price must be a number" })
-    .gt(0, { message: "Price must be greater than 0" })
+    .gte(0, { message: "Price must be greater at least 0" })
     .max(1000, { message: "Price must be less than 1001" }),
   description: z
     .instanceof(File)
@@ -52,9 +53,9 @@ export type State = {
 };
 
 export async function postDataset(prevState: State, formData: FormData) {
-  const userID = "slkdasd98";
+  const { userId } = auth();
 
-  if (!userID) {
+  if (!userId) {
     console.log("Error getting user ID");
     return {
       message: "Internal Server Error. Failed to create dataset",
@@ -69,7 +70,7 @@ export async function postDataset(prevState: State, formData: FormData) {
     description: formData.get("schema") as File,
     category: formData.get("category") as string,
     duration: parseInt(formData.get("duration") as string),
-    userID: userID,
+    userID: userId,
   });
 
   if (!validatedData.success) {

@@ -31,7 +31,7 @@ func (d *Dataset) Create(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Bad Request")
 	}
 
-	if body.Name == "" || body.URL == "" || body.AccessToken == "" || body.Price == 0 || body.Duration == 0 || body.UserID == "" || body.Category == "" {
+	if body.Name == "" || body.URL == "" || body.AccessToken == "" || body.Duration == 0 || body.UserID == "" || body.Category == "" {
 		fmt.Println("Missing required fields")
 		return c.JSON(http.StatusBadRequest, "Bad Request")
 	}
