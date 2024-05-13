@@ -11,27 +11,25 @@ export default function Page() {
           <li key={idx}></li>
         ))}
       </ul>
-      {/* <div className="mt-4 flex grow flex-col gap-4 md:flex-row"> */}
       <div className="flex items-center justify-center min-h-screen">
         <div
-          className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-3 py-10 md:w-2/5 md:px-20"
+          className="flex flex-col justify-center gap-6 rounded-lg bg-gray-50 px-6 py-8 md:w-2/6 md:px-20"
           style={{ backgroundColor: "#ffffff" }}
         >
           <p
-            className="text-xl text-gray-800 md:text-3xl md:leading-normal"
-            style={{ fontFamily: "'Lusitana', serif", textAlign: "center" }}
+            className="text-xl text-gray-800 md:text-3xl"
+            style={{ fontFamily: "'Lusitana', serif", textAlign: "center", lineHeight: '1.2' }} // Adjusted line-height here
           >
             <Image
               src="/DS_logo2.png"
               alt="Data Chain Logo"
-              width={200}
+              width={150}
               height={100}
               priority
               style={{ margin: "0 auto" }}
             />
-
             <br />
-            <span style={{ fontSize: "24px", fontFamily: "Helvetica" }}>
+            <span style={{ fontSize: "20px", fontFamily: "Helvetica" }}>
               Welcome to DataChain, your starting point for easy access to data.
             </span>
           </p>
