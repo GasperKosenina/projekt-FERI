@@ -135,7 +135,7 @@ export async function findById(id: string) {
         headers: {
           "Content-Type": "application/json",
         },
-      },
+      }
     );
 
     if (!response.ok) {
@@ -170,4 +170,26 @@ export async function generate(token: string) {
     console.error("Error logging in:", error);
     return null;
   }
+}
+
+// Iterate over the entries in the FormData
+export async function postUserType(formData: FormData) {
+  let userType = "";
+  const entries = formData.entries();
+  let entry = entries.next();
+  while (!entry.done) {
+    const [key, value] = entry.value;
+    if (value) {
+      userType = key;
+      break;
+    }
+    entry = entries.next();
+  }
+
+  if (!userType) {
+    console.error("No user type found");
+    return;
+  }
+
+  redirect(`/dashboard`);
 }
