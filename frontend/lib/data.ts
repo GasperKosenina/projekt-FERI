@@ -136,7 +136,7 @@ export async function findById(id: string) {
         headers: {
           "Content-Type": "application/json",
         },
-      },
+      }
     );
 
     if (!response.ok) {
@@ -169,6 +169,77 @@ export async function generate(token: string) {
     return data;
   } catch (error) {
     console.error("Error logging in:", error);
+    return null;
+  }
+}
+
+export async function postUser(formData: FormData) {
+  let userType = "";
+  const entries = formData.entries();
+  let entry = entries.next();
+  while (!entry.done) {
+    const [key, value] = entry.value;
+    if (value) {
+      userType = key;
+      break;
+    }
+    entry = entries.next();
+  }
+
+  if (!userType) {
+    console.error("No user type found");
+    return;
+  }
+
+  const { userId } = auth();
+  if (!userId) {
+    console.error("No user ID found");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        id: userId,
+        userType: userType,
+      }),
+    });
+
+    if (!response.ok) {
+      console.error("Error setting user type:", response.statusText);
+      return;
+    }
+  } catch (error) {
+    console.error("Error setting user type:", error);
+  }
+
+  redirect(`/dashboard`);
+}
+
+export async function getUser(userId: string) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/user/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const user = await response.json();
+    return user;
+  } catch (error) {
+    console.error("Error fetching user:", error);
     return null;
   }
 }
