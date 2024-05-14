@@ -41,6 +41,8 @@ export default async function Table({ query }: { query: string }) {
     return <p className="mt-10">No datasets found</p>;
   }
 
+
+
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
@@ -92,36 +94,53 @@ export default async function Table({ query }: { query: string }) {
                   Data Provider
                 </th>
                 <th scope="col" className="px-3 py-8 font-medium text-blue-900">
+                  Purpose
+                </th>
+                <th scope="col" className="px-3 py-8 font-medium text-blue-900">
+                  Price
+                </th>
+                <th scope="col" className="px-3 py-8 font-medium text-blue-900">
                   Date
                 </th>
               </tr>
             </thead>
             <tbody className="bg-white">
               {filteredDatasets?.map(async (dataset) => (
-                <tr
-                  key={dataset.id}
-                  className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
-                >
-                  <td className="whitespace-nowrap py-10 pl-6 pr-3">
-                    <div className="flex items-center gap-3 hover:text-gray-500">
-                      <Link href={`/dashboard/datasets/${dataset.id}`}>
-                        <strong>{dataset.name}</strong>
-                      </Link>
-                    </div>
-                  </td>
-                  <td className="whitespace-nowrap px-6 py-10">
-                    {dataset.category.charAt(0).toUpperCase() +
-                      dataset.category.slice(1)}
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-10">
-                    <span>{(await getDataProvider(dataset.userID))} </span>
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-10">
-                    {formatDate(dataset.createdAt)}
-                  </td>
-                </tr>
+                <>
+                  {dataset.price.map(async (priceItem, index) => (
+                    <tr
+                      key={`${dataset.id}_${index}`}
+                      className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+                    >
+                      <td className="whitespace-nowrap py-10 pl-6 pr-3">
+                        <div className="flex items-center gap-3 hover:text-gray-500">
+                          <Link href={`/dashboard/datasets/${dataset.id}?purpose=${priceItem.purpose}&price=${priceItem.price}`}>
+                            <strong>{dataset.name}</strong>
+                          </Link>
+                        </div>
+                      </td>
+                      <td className="whitespace-nowrap px-6 py-10">
+                        {dataset.category.charAt(0).toUpperCase() +
+                          dataset.category.slice(1)}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-10">
+                        <span>{(await getDataProvider(dataset.userID))}</span>
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-10">
+                        {priceItem.purpose}
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-10">
+                        {priceItem.price} €
+                      </td>
+                      <td className="whitespace-nowrap px-3 py-10">
+                        {formatDate(dataset.createdAt)}
+                      </td>
+                    </tr>
+                  ))}
+                </>
               ))}
             </tbody>
+
           </table>
         </div>
       </div>

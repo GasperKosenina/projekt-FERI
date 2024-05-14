@@ -335,7 +335,7 @@ export default function Form() {
                     checked={checkbox.checked}
                     onChange={() => handleCheckboxChange(checkbox.id)}
                     className="mr-2"
-                    aria-describedby="price1-error"
+                    aria-describedby="price-error"
                   />
                   <label htmlFor={`checkbox-${checkbox.id}`} className="text-sm">{checkbox.label}</label>
                   {checkbox.checked && (
@@ -352,9 +352,9 @@ export default function Form() {
                 </div>
               ))}
             </div>
-            <div id="price1-error" aria-live="polite" aria-atomic="true">
-              {state?.errors?.price1 &&
-                state.errors.price1.map((error: string) => (
+            <div id="price-error" aria-live="polite" aria-atomic="true">
+              {state?.errors?.price &&
+                state.errors.price.map((error: string) => (
                   <p className="mt-2 text-sm text-red-500" key={error}>
                     {error}
                   </p>

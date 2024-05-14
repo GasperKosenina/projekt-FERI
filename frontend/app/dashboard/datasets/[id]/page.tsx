@@ -23,9 +23,13 @@ function formatDate(dateString: any) {
   });
 }
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({ params, searchParams }: {
+  params: { id: string }, searchParams?: { [key: string]: string | undefined };
+}) {
   const id = params.id;
 
+  let purpose = searchParams?.purpose;
+  let price = searchParams?.price;
 
   const dataset: Dataset = await findById(id);
   console.log(dataset.description);
