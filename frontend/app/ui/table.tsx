@@ -24,15 +24,21 @@ async function getDataProvider(userId: string) {
 
 
 export default async function Table({ query }: { query: string }) {
-  const datasets: Dataset[] = await listAll();
+  let datasets: Dataset[] = [];
+
+  const data = await listAll();
+  if (data) {
+    datasets = data;
+  }
+
+
 
   const filteredDatasets = datasets.filter((dataset) =>
     dataset.name.toLowerCase().includes(query.toLowerCase())
   );
 
-
   if (filteredDatasets.length === 0) {
-    return <div className="text-sm mt-10">No datasets found</div>;
+    return <p className="mt-10">No datasets found</p>;
   }
 
   return (
@@ -60,7 +66,6 @@ export default async function Table({ query }: { query: string }) {
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
                   <div>
-                    <p className="text-xl">{dataset.price} €</p>
                     <p>{formatDate(dataset.createdAt)}</p>
                   </div>
                 </div>
@@ -87,9 +92,6 @@ export default async function Table({ query }: { query: string }) {
                   Data Provider
                 </th>
                 <th scope="col" className="px-3 py-8 font-medium text-blue-900">
-                  Price
-                </th>
-                <th scope="col" className="px-3 py-8 font-medium text-blue-900">
                   Date
                 </th>
               </tr>
@@ -100,7 +102,6 @@ export default async function Table({ query }: { query: string }) {
                   key={dataset.id}
                   className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                 >
-
                   <td className="whitespace-nowrap py-10 pl-6 pr-3">
                     <div className="flex items-center gap-3 hover:text-gray-500">
                       <Link href={`/dashboard/datasets/${dataset.id}`}>
@@ -114,9 +115,6 @@ export default async function Table({ query }: { query: string }) {
                   </td>
                   <td className="whitespace-nowrap px-3 py-10">
                     <span>{(await getDataProvider(dataset.userID))} </span>
-                  </td>
-                  <td className="whitespace-nowrap px-3 py-10">
-                    {dataset.price} €
                   </td>
                   <td className="whitespace-nowrap px-3 py-10">
                     {formatDate(dataset.createdAt)}
