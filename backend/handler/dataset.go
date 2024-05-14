@@ -23,7 +23,7 @@ func (d *Dataset) Create(c echo.Context) error {
 		Category    string               `json:"category"`
 		Duration    int                  `json:"duration"`
 		UserID      string               `json:"userID"`
-		Price       []model.PricePurpose `json:"price1"`
+		Price       []model.PricePurpose `json:"price"`
 	}
 
 	if err := c.Bind(&body); err != nil {

@@ -24,15 +24,21 @@ async function getDataProvider(userId: string) {
 
 
 export default async function Table({ query }: { query: string }) {
-  const datasets: Dataset[] = await listAll();
+  let datasets: Dataset[] = [];
+
+  const data = await listAll();
+  if (data) {
+    datasets = data;
+  }
+
+
 
   const filteredDatasets = datasets.filter((dataset) =>
     dataset.name.toLowerCase().includes(query.toLowerCase())
   );
 
-
   if (filteredDatasets.length === 0) {
-    return <div className="text-sm mt-10">No datasets found</div>;
+    return <p className="mt-10">No datasets found</p>;
   }
 
   return (

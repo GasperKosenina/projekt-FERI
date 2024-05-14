@@ -16,7 +16,7 @@ type Dataset struct {
 	Duration    int                `bson:"duration" json:"duration"`
 	CreatedAt   time.Time          `bson:"createdAt" json:"createdAt"`
 	UserID      string             `bson:"userID" json:"userID"`
-	Price       []PricePurpose     `bson:"price1" json:"price1"`
+	Price       []PricePurpose     `bson:"price" json:"price"`
 }
 
 type PricePurpose struct {
