@@ -25,11 +25,11 @@ export default async function Page() {
         </ul>
       </div>
       <div className="flex justify-center items-center h-screen">
-        <div className="flex flex-col items-center gap-4 bg-white p-8 rounded-md shadow-md">
-          <h1 className="text-2xl font-bold text-gray-800">Sign in as</h1>
-          <form action={postUser} className="flex gap-4 mt-2">
+        <div className="flex flex-col items-center gap-4 bg-white p-12 rounded-lg shadow-lg w-96">
+          <h1 className="text-2xl font-bold text-gray-800">Sign in as:</h1>
+          <form action={postUser} className="flex flex-col gap-4 mt-2">
             <button
-              className="flex items-center gap-2 p-4 w-30 rounded-xl bg-blue-600 text-white"
+              className="flex items-center justify-center gap-2 p-2 w-full rounded-md bg-[#3b82f6] text-white hover:bg-[#60a5fa]"
               type="submit"
               value="individual"
               name="individual"
@@ -38,7 +38,7 @@ export default async function Page() {
             </button>
 
             <button
-              className="flex items-center gap-2 p-4 w-30 rounded-xl bg-blue-600 text-white"
+              className="flex items-center justify-center gap-2 p-2 w-full rounded-md bg-[#3b82f6] text-white hover:bg-[#60a5fa]"
               type="submit"
               value="company"
               name="company"
@@ -47,7 +47,7 @@ export default async function Page() {
             </button>
 
             <button
-              className="flex items-center gap-2 p-4 w-30 rounded-xl bg-blue-600 text-white"
+              className="flex items-center justify-center gap-2 p-2 w-full rounded-md bg-[#3b82f6] text-white hover:bg-[#60a5fa]"
               type="submit"
               value="research-institution"
               name="research-institution"
@@ -56,7 +56,7 @@ export default async function Page() {
             </button>
 
             <button
-              className="flex items-center gap-2 p-4 w-30 rounded-xl bg-blue-600 text-white"
+              className="flex items-center justify-center gap-2 p-2 w-full rounded-md bg-[#3b82f6] text-white hover:bg-[#60a5fa]"
               type="submit"
               value="public-administration"
               name="public-administration"
@@ -65,7 +65,7 @@ export default async function Page() {
             </button>
 
             <button
-              className="flex items-center gap-2 p-4 w-30 rounded-xl bg-blue-600 text-white"
+              className="flex items-center justify-center gap-2 p-2 w-full rounded-md bg-[#3b82f6] text-white hover:bg-[#60a5fa]"
               type="submit"
               value="state-administration"
               name="state-administration"
