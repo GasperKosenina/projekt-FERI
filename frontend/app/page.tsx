@@ -28,8 +28,7 @@ export default function Page() {
               priority
               style={{ margin: "0 auto" }}
             />
-            <br />
-            <span style={{ fontSize: "20px", fontFamily: "Helvetica" }}>
+            <span className="block mt-6 mb-4" style={{ fontFamily: "Helvetica",  fontSize: "20px"}}>
               Welcome to DataChain, your starting point for easy access to data.
             </span>
           </p>
