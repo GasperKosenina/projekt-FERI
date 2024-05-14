@@ -1,5 +1,4 @@
 import Breadcrumbs from "@/app/ui/breadcrumbs";
-import { Button } from "@/components/ui/button";
 import { findById, generate } from "@/lib/data";
 import { Dataset } from "@/lib/definitions";
 import { clerkClient } from "@clerk/nextjs/server";
@@ -24,8 +23,13 @@ function formatDate(dateString: any) {
   });
 }
 
-export default async function Page({ params }: { params: { id: string } }) {
+export default async function Page({ params, searchParams }: {
+  params: { id: string }, searchParams?: { [key: string]: string | undefined };
+}) {
   const id = params.id;
+
+  let purpose = searchParams?.purpose;
+  let price = searchParams?.price;
 
   const dataset: Dataset = await findById(id);
   //console.log(dataset)
@@ -76,6 +80,18 @@ export default async function Page({ params }: { params: { id: string } }) {
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
               <dt className="text-sm font-medium leading-6 text-gray-900">Duration</dt>
               <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{dataset.duration} seconds</dd>
+            </div>
+            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt className="text-sm font-medium leading-6 text-gray-900">Purpose</dt>
+              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                {purpose}
+              </dd>
+            </div>
+            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+              <dt className="text-sm font-medium leading-6 text-gray-900">Price</dt>
+              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
+                {price} €
+              </dd>
             </div>
             <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
               <dt className="text-sm font-medium leading-6 text-gray-900">Date</dt>

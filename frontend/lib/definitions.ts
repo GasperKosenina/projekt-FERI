@@ -3,7 +3,7 @@ export type Dataset = {
   name: string;
   url: string;
   accessToken: string;
-  price: number;
+  price: { purpose: string; price: number }[];
   description: any;
   duration: number;
   category: string;
