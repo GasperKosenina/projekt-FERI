@@ -16,14 +16,14 @@ type Dataset struct {
 
 func (d *Dataset) Create(c echo.Context) error {
 	var body struct {
-		Name        string      `json:"name"`
-		URL         string      `json:"url"`
-		AccessToken string      `json:"accessToken"`
-		Price       float64     `json:"price"`
-		Description interface{} `json:"description"`
-		Category    string      `json:"category"`
-		Duration    int         `json:"duration"`
-		UserID      string      `json:"userID"`
+		Name        string               `json:"name"`
+		URL         string               `json:"url"`
+		AccessToken string               `json:"accessToken"`
+		Description interface{}          `json:"description"`
+		Category    string               `json:"category"`
+		Duration    int                  `json:"duration"`
+		UserID      string               `json:"userID"`
+		Price       []model.PricePurpose `json:"price1"`
 	}
 
 	if err := c.Bind(&body); err != nil {
@@ -40,12 +40,12 @@ func (d *Dataset) Create(c echo.Context) error {
 		Name:        body.Name,
 		URL:         body.URL,
 		AccessToken: body.AccessToken,
-		Price:       body.Price,
 		Description: body.Description,
 		Duration:    body.Duration,
 		Category:    body.Category,
 		CreatedAt:   time.Now(),
 		UserID:      body.UserID,
+		Price:       body.Price,
 	}
 
 	err := d.Repository.Insert(c.Request().Context(), dataset)

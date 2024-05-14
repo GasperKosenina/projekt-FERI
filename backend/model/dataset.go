@@ -11,10 +11,15 @@ type Dataset struct {
 	Name        string             `bson:"name" json:"name"`
 	URL         string             `bson:"url" json:"url"`
 	AccessToken string             `bson:"accessToken" json:"accessToken"`
-	Price       float64            `bson:"price" json:"price"`
-	Description interface{}        `bson:"description" json:"description"` // JSON Schema as an interface{}
+	Description interface{}        `bson:"description" json:"description"`
 	Category    string             `bson:"category" json:"category"`
 	Duration    int                `bson:"duration" json:"duration"`
 	CreatedAt   time.Time          `bson:"createdAt" json:"createdAt"`
 	UserID      string             `bson:"userID" json:"userID"`
+	Price       []PricePurpose     `bson:"price1" json:"price1"`
+}
+
+type PricePurpose struct {
+	Purpose string  `bson:"purpose" json:"purpose"`
+	Price   float64 `bson:"price" json:"price"`
 }

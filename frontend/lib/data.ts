@@ -3,8 +3,14 @@ import { Dataset } from "./definitions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
-import { z } from "zod";
+import { any, z } from "zod";
 import { auth } from "@clerk/nextjs/server";
+
+
+const PriceItemSchema = z.object({
+  purpose: z.string(),
+  price: z.number().min(0, { message: "Price must be greater or equal to 0" }),
+});
 
 const DatasetSchema = z.object({
   name: z
@@ -20,9 +26,8 @@ const DatasetSchema = z.object({
     .min(3, { message: "Access Token must be at least 3 characters" })
     .max(50, { message: "Access Token must be less than 50 characters" }),
   price: z
-    .number({ message: "Price must be a number" })
-    .gte(0, { message: "Price must be greater at least 0" })
-    .max(1000, { message: "Price must be less than 1001" }),
+    .array(PriceItemSchema)
+    .min(1, { message: "At least one price item must be provided" }),
   description: z
     .instanceof(File)
     .refine((file) => file.type === "application/json", {
@@ -39,15 +44,16 @@ const DatasetSchema = z.object({
   userID: z.string(),
 });
 
+
 export type State = {
   errors?: {
     name?: string[];
     url?: string[];
     accessToken?: string[];
-    price?: string[];
     description?: string[];
     category?: string[];
     duration?: string[];
+    price?: string[];
   };
   message?: string | null;
 };
@@ -62,15 +68,16 @@ export async function postDataset(prevState: State, formData: FormData) {
     };
   }
 
+
   const validatedData = DatasetSchema.safeParse({
     name: formData.get("name") as string,
     url: formData.get("url") as string,
     accessToken: formData.get("accessToken") as string,
-    price: parseFloat(formData.get("price") as string),
     description: formData.get("schema") as File,
     category: formData.get("category") as string,
     duration: parseInt(formData.get("duration") as string),
     userID: userId,
+    price: JSON.parse(formData.get("purposeAndPrice") as string),
   });
 
   if (!validatedData.success) {

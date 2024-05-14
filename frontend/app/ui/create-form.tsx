@@ -31,23 +31,72 @@ export default function Form() {
   const initialState = { message: "", errors: {} };
   const [state, dispatch] = useFormState(postDataset, initialState);
 
+
+  const [checkboxes, setCheckboxes] = useState([
+    { id: 1, label: 'Research (using dataset for scientific research)', checked: false, price: 0 },
+    { id: 2, label: 'Education (using dataset for pedagogical purposes)', checked: false, price: 0 },
+    { id: 3, label: 'Public administration processes', checked: false, price: 0 },
+    { id: 4, label: 'Comparative analysis (benchmarking)', checked: false, price: 0 },
+    { id: 5, label: 'Machine learning/Model training', checked: false, price: 0 },
+    { id: 6, label: 'Business analytics (commercial)', checked: false, price: 0 },
+  ]);
+
+  const handleCheckboxChange = (id: any) => {
+    setCheckboxes(prevCheckboxes =>
+      prevCheckboxes.map(checkbox =>
+        checkbox.id === id ? { ...checkbox, checked: !checkbox.checked } : checkbox
+
+      )
+    );
+  };
+
+  const handlePriceChange = (id: any, event: any) => {
+    console.log(id)
+    console.log(typeof (event))
+    const newPrice = parseFloat(event.target.value);
+    setCheckboxes(prevCheckboxes =>
+      prevCheckboxes.map(checkbox =>
+        checkbox.id === id ? { ...checkbox, price: newPrice } : checkbox
+      )
+    );
+  };
+
   const appendCategory = (formData: FormData) => {
     const category = position;
     formData.append("category", category);
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+
+
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     appendCategory(formData);
+
+    const purposeAndPriceArray: { purpose: string; price: number }[] = [];
+
+    checkboxes.forEach(checkbox => {
+      if (checkbox.checked) {
+        const purposeAndPriceObject = { purpose: checkbox.label, price: checkbox.price };
+        purposeAndPriceArray.push(purposeAndPriceObject);
+      }
+    });
+
+    const purposeAndPriceString = JSON.stringify(purposeAndPriceArray);
+
+    console.log(purposeAndPriceString);
+    formData.append('purposeAndPrice', purposeAndPriceString);
+
     dispatch(formData);
   };
+
+
 
   return (
     <>
       <form action={dispatch} onSubmit={handleSubmit}>
         <div className="rounded-md bg-gray-50 p-4 md:p-6">
-          <div className="mb-6">
+          <div className="mb-8">
             <div className="flex gap-1">
               <label htmlFor="name" className="mb-2 block text-sm font-medium">
                 Name
@@ -77,7 +126,7 @@ export default function Form() {
               </div>
             </div>
           </div>
-          <div className="mb-6">
+          <div className="mb-8">
             <div className="flex gap-1">
               <label htmlFor="url" className="mb-2 block text-sm font-medium">
                 Url
@@ -132,42 +181,8 @@ export default function Form() {
                 ))}
             </div>
           </div>
-          <div className="mb-6 flex">
-            <div className="flex-1 mr-6">
-              <div className="flex mb-2 gap-1">
-                <label
-                  htmlFor="price"
-                  className="mb-2 block text-sm font-medium"
-                >
-                  Price
-                </label>
-                <ChevronRight className="h-5 w-5 text-gray-500" />
-                <p className="text-sm text-gray-500">
-                  Price of the dataset in EUR (0.01 - 1000.00)
-                </p>
-              </div>
-              <div className="relative">
-                <input
-                  id="price"
-                  name="price"
-                  type="number"
-                  step="0.01"
-                  placeholder="Enter EUR Price"
-                  className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                  aria-describedby="price-error"
-                />
-                <CurrencyEuroIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
-              </div>
-              <div id="price-error" aria-live="polite" aria-atomic="true">
-                {state?.errors?.price &&
-                  state.errors.price.map((error: string) => (
-                    <p className="mt-2 text-sm text-red-500" key={error}>
-                      {error}
-                    </p>
-                  ))}
-              </div>
-            </div>
-            <div className="flex-1 ml-2">
+          <div className="mb-8">
+            <div className="flex-1">
               <label className="mb-2 block text-sm font-medium invisible">
                 Choose Category
               </label>
@@ -227,7 +242,7 @@ export default function Form() {
               </div>
             </div>
           </div>
-          <div className="mb-6 flex">
+          <div className="mb-8 flex">
             <div className="flex-1 mr-6">
               <div className="flex mb-2 gap-1">
                 <label
@@ -295,6 +310,55 @@ export default function Form() {
                     </p>
                   ))}
               </div>
+            </div>
+          </div>
+          <div className="mb-8">
+            <div className="max-wmx-auto mt-4 bg-gray-50">
+              <div className="flex mb-2 gap-1">
+                <label
+                  htmlFor="duration"
+                  className="mb-2 block text-sm font-medium"
+                >
+                  Purpose
+                </label>
+                <ChevronRight className="h-5 w-5 text-gray-500" />
+                <p className="text-sm text-gray-500">
+                  Enter the price for specific purpose of dataset usage
+                </p>
+              </div>
+
+              {checkboxes.map(checkbox => (
+                <div key={checkbox.id} className="flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    id={`checkbox-${checkbox.id}`}
+                    checked={checkbox.checked}
+                    onChange={() => handleCheckboxChange(checkbox.id)}
+                    className="mr-2"
+                    aria-describedby="price1-error"
+                  />
+                  <label htmlFor={`checkbox-${checkbox.id}`} className="text-sm">{checkbox.label}</label>
+                  {checkbox.checked && (
+                    <input
+                      type="number"
+                      value={checkbox.price}
+                      onChange={(event) => handlePriceChange(checkbox.id, event)}
+                      className="ml-auto px-2 py-2 border border-gray-300 rounded text-sm outline-2 placeholder:text-gray-500"
+                      step="0.01"
+                      placeholder="Enter EUR Price"
+
+                    />
+                  )}
+                </div>
+              ))}
+            </div>
+            <div id="price1-error" aria-live="polite" aria-atomic="true">
+              {state?.errors?.price1 &&
+                state.errors.price1.map((error: string) => (
+                  <p className="mt-2 text-sm text-red-500" key={error}>
+                    {error}
+                  </p>
+                ))}
             </div>
           </div>
           <div aria-live="polite" aria-atomic="true">

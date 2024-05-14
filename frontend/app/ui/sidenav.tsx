@@ -13,9 +13,9 @@ export default async function SideNav() {
     user = await clerkClient.users.getUser(userId);
   }
   catch (error) {
-      return ("Check Your Internet Connection!");
-    }
-  
+    return ("Check Your Internet Connection!");
+  }
+
 
 
 
@@ -33,7 +33,7 @@ export default async function SideNav() {
         <div className="flex items-center gap-2 rounded-md bg-gray-50 p-3 md:p-2 md:px-3 md:py-4">
           <UserButton afterSignOutUrl="/" />
           <p className="text-sm text-gray-800 md:text-base">
-            Welcome, {user.fullName ? user.fullName : user.username}
+            {user.fullName ? user.fullName : user.username}
           </p>
         </div>
         {/*         <div className="flex items-center gap-2 rounded-md bg-gray-50 p-3 md:p-2 md:px-3 md:py-4">
