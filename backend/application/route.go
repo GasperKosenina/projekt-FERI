@@ -3,6 +3,7 @@ package application
 import (
 	"github.com/GasperKosenina/projekt-FERI/handler"
 	"github.com/GasperKosenina/projekt-FERI/repository/dataset"
+	"github.com/GasperKosenina/projekt-FERI/repository/payment"
 	"github.com/GasperKosenina/projekt-FERI/repository/user"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -18,6 +19,9 @@ func (a *App) routes() {
 
 	userGroup := e.Group("/user")
 	a.userRoute(userGroup)
+
+	paymentGroup := e.Group("/payment")
+	a.paymentRoute(paymentGroup)
 
 	e.POST("login", handler.Login)
 	e.GET("protected", handler.Protected, handler.JWTAuthMiddleware)
@@ -45,4 +49,14 @@ func (a *App) userRoute(g *echo.Group) {
 
 	g.POST("", userHandler.Create)
 	g.GET("/:id", userHandler.GetByID)
+}
+
+func (a *App) paymentRoute(g *echo.Group) {
+	paymentHandler := &handler.Payment{
+		Repository: &payment.MongoRepository{
+			Client: a.db,
+		},
+	}
+
+	g.POST("", paymentHandler.Create)
 }
