@@ -16,8 +16,8 @@ type Payment struct {
 func (p *Payment) Create(c echo.Context) error {
 
 	var body struct {
-		UserID    string `json:"userID"`
-		DatasetID string `json:"datasetID"`
+		UserID    string `json:"userId"`
+		DatasetID string `json:"datasetId"`
 	}
 
 	if err := c.Bind(&body); err != nil {

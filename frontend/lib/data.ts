@@ -295,7 +295,7 @@ export async function updateUserWithEmail(formData: FormData) {
     console.error("No user ID found");
     return;
   }
-  
+
 
   const validatedData = EmailSchema.safeParse({
     email: formData.get("email") as string,
@@ -308,7 +308,7 @@ export async function updateUserWithEmail(formData: FormData) {
       message: "",
     };
   }
-  
+
 
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/email/${userId}`, {
@@ -329,6 +329,40 @@ export async function updateUserWithEmail(formData: FormData) {
 
   redirect(`/dashboard`);
 }
+
+export async function createPayment(datasetId: string) {
+  const { userId } = auth();
+  if (!userId) {
+    console.error("No user ID found");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        datasetId: datasetId,
+        userId: userId,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to create payment");
+    }
+
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error("Error creating payment:", error);
+  }
+}
+
+
+
 
 
 
