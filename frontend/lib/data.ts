@@ -6,7 +6,6 @@ import { unstable_noStore as noStore } from "next/cache";
 import { any, z } from "zod";
 import { auth } from "@clerk/nextjs/server";
 
-
 const PriceItemSchema = z.object({
   purpose: z.string(),
   price: z.number().min(0, { message: "Price must be greater or equal to 0" }),
@@ -44,7 +43,6 @@ const DatasetSchema = z.object({
   userID: z.string(),
 });
 
-
 export type State = {
   errors?: {
     name?: string[];
@@ -67,7 +65,6 @@ export async function postDataset(prevState: State, formData: FormData) {
       message: "Internal Server Error. Failed to create dataset",
     };
   }
-
 
   const validatedData = DatasetSchema.safeParse({
     name: formData.get("name") as string,
@@ -248,5 +245,31 @@ export async function getUser(userId: string) {
   } catch (error) {
     console.error("Error fetching user:", error);
     return null;
+  }
+}
+
+export async function paypal(datasetId: string) {
+  console.log(datasetId);
+  try {
+    const response = await fetch(`http://localhost:5001/pay`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ datasetId: datasetId }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to create PayPal payment");
+    }
+
+    const data = await response.json();
+    if (data.approvalUrl) {
+      return data.approvalUrl;
+    } else {
+      throw new Error("Approval URL not found");
+    }
+  } catch (error) {
+    console.error("Error fetching paypal:", error);
   }
 }
