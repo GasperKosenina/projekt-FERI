@@ -52,3 +52,22 @@ func (u *User) GetByID(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, user)
 }
+
+func (u *User) UpdateEmailByID(c echo.Context) error {
+
+	id := c.Param("id")
+	var body struct {
+		Email string `json:"email"`
+	}
+	if err := c.Bind(&body); err != nil {
+		return c.JSON(http.StatusBadRequest, "Bad Request")
+	}
+	if id == "" || body.Email == "" {
+		return c.JSON(http.StatusBadRequest, "Bad Request")
+	}
+	err := u.Reposeitory.UpdateByID(c.Request().Context(), id, body.Email)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
+	}
+	return c.JSON(http.StatusOK, "Email Updated Successfully")
+}

@@ -13,7 +13,7 @@ export default async function Page() {
 
   const mongoUser = await getUser(userId);
   if (mongoUser) {
-    redirect(`/dashboard`);
+    redirect(`/sign-in-paypal`);
   }
   return (
     <>

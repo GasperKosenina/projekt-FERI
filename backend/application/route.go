@@ -49,6 +49,7 @@ func (a *App) userRoute(g *echo.Group) {
 
 	g.POST("", userHandler.Create)
 	g.GET("/:id", userHandler.GetByID)
+	g.PUT("/email/:id", userHandler.UpdateEmailByID)
 }
 
 func (a *App) paymentRoute(g *echo.Group) {

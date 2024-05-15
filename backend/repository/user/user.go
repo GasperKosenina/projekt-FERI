@@ -30,3 +30,12 @@ func (m *MongoRepository) FindByID(ctx context.Context, id string) (*model.User,
 	}
 	return user, nil
 }
+
+func (m *MongoRepository) UpdateByID(ctx context.Context, id string, email string) error {
+	collection := m.Client.Database("projekt").Collection("user")
+	_, err := collection.UpdateByID(ctx, id, bson.M{"$set": bson.M{"email": email}})
+	if err != nil {
+		return err
+	}
+	return nil
+}

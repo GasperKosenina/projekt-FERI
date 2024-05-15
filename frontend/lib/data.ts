@@ -221,7 +221,7 @@ export async function postUser(formData: FormData) {
     console.error("Error setting user type:", error);
   }
 
-  redirect(`/dashboard`);
+  redirect(`/sign-in-paypal`);
 }
 
 export async function getUser(userId: string) {
@@ -273,3 +273,62 @@ export async function paypal(datasetId: string) {
     console.error("Error fetching paypal:", error);
   }
 }
+
+
+const EmailSchema = z.object({
+  email: z
+    .string().email()
+});
+
+export type State1 = {
+  errors?: {
+    email?: string[];
+  };
+  message?: string | null;
+};
+
+
+
+export async function updateUserWithEmail(formData: FormData) {
+  const { userId } = auth();
+  if (!userId) {
+    console.error("No user ID found");
+    return;
+  }
+  
+
+  const validatedData = EmailSchema.safeParse({
+    email: formData.get("email") as string,
+  });
+
+  if (!validatedData.success) {
+    //console.log(validatedData.error.flatten().fieldErrors)
+    return {
+      errors: validatedData.error.flatten().fieldErrors,
+      message: "",
+    };
+  }
+  
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/email/${userId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(validatedData.data),
+    });
+
+    if (!response.ok) {
+      console.error("Error setting user email:", response.statusText);
+      return;
+    }
+  } catch (error) {
+    console.error("Error setting user email:", error);
+  }
+
+  redirect(`/dashboard`);
+}
+
+
+
