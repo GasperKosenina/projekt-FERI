@@ -3,7 +3,7 @@ import { findById, generate } from "@/lib/data";
 import { Dataset } from "@/lib/definitions";
 import { clerkClient } from "@clerk/nextjs/server";
 import Modal from "@/app/ui/modal";
-import { ButtonComponent } from "@/app/ui/button";
+import PaymentButton from "@/components/ui/paypalButton";
 
 async function getDataProvider(userId: string) {
   try {
@@ -23,8 +23,12 @@ function formatDate(dateString: any) {
   });
 }
 
-export default async function Page({ params, searchParams }: {
-  params: { id: string }, searchParams?: { [key: string]: string | undefined };
+export default async function Page({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams?: { [key: string]: string | undefined };
 }) {
   const id = params.id;
 
@@ -124,6 +128,9 @@ export default async function Page({ params, searchParams }: {
         </div>
 
         <Modal description={dataset.description} />
+      </div>
+      <div className="mt-10">
+        <PaymentButton datasetId={dataset.id} />
       </div>
 
       <p className="mt-52">Your access token:</p>

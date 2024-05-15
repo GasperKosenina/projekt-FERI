@@ -37,7 +37,7 @@ export default function Form() {
     { id: 2, label: 'Education (using dataset for pedagogical purposes)', checked: false, price: 0 },
     { id: 3, label: 'Public administration processes', checked: false, price: 0 },
     { id: 4, label: 'Comparative analysis (benchmarking)', checked: false, price: 0 },
-    { id: 5, label: 'Machine learning/Model training', checked: false, price: 0 },
+    { id: 5, label: 'Machine learning', checked: false, price: 0 },
     { id: 6, label: 'Business analytics (commercial)', checked: false, price: 0 },
   ]);
 
@@ -51,8 +51,6 @@ export default function Form() {
   };
 
   const handlePriceChange = (id: any, event: any) => {
-    console.log(id)
-    console.log(typeof (event))
     const newPrice = parseFloat(event.target.value);
     setCheckboxes(prevCheckboxes =>
       prevCheckboxes.map(checkbox =>
@@ -83,8 +81,6 @@ export default function Form() {
     });
 
     const purposeAndPriceString = JSON.stringify(purposeAndPriceArray);
-
-    console.log(purposeAndPriceString);
     formData.append('purposeAndPrice', purposeAndPriceString);
 
     dispatch(formData);

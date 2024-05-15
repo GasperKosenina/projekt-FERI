@@ -2,6 +2,8 @@ import { Dataset } from "@/lib/definitions";
 import { listAll } from "@/lib/data";
 import Link from "next/link";
 import { clerkClient } from "@clerk/nextjs/server";
+import { getUser } from "@/lib/data";
+import { auth } from "@clerk/nextjs/server";
 
 function formatDate(dateString: any) {
   const date = new Date(dateString);
@@ -24,6 +26,19 @@ async function getDataProvider(userId: string) {
 
 
 export default async function Table({ query }: { query: string }) {
+
+
+  const { userId } = auth();
+
+  if (!userId) {
+    console.error("No user ID found");
+    return;
+  }
+
+  const mongoUser = await getUser(userId);
+  const tipUserja = mongoUser.type;
+
+
   let datasets: Dataset[] = [];
 
   const data = await listAll();
@@ -107,40 +122,55 @@ export default async function Table({ query }: { query: string }) {
             <tbody className="bg-white">
               {filteredDatasets?.map(async (dataset) => (
                 <>
-                  {dataset.price.map(async (priceItem, index) => (
-                    <tr
-                      key={`${dataset.id}_${index}`}
-                      className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
-                    >
-                      <td className="whitespace-nowrap py-10 pl-6 pr-3">
-                        <div className="flex items-center gap-3 hover:text-gray-500">
-                          <Link href={`/dashboard/datasets/${dataset.id}?purpose=${priceItem.purpose}&price=${priceItem.price}`}>
-                            <strong>{dataset.name}</strong>
-                          </Link>
-                        </div>
-                      </td>
-                      <td className="whitespace-nowrap px-6 py-10">
-                        {dataset.category.charAt(0).toUpperCase() +
-                          dataset.category.slice(1)}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-10">
-                        <span>{(await getDataProvider(dataset.userID))}</span>
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-10">
-                        {priceItem.purpose}
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-10">
-                        {priceItem.price} €
-                      </td>
-                      <td className="whitespace-nowrap px-3 py-10">
-                        {formatDate(dataset.createdAt)}
-                      </td>
-                    </tr>
-                  ))}
+                  {dataset.price.map(async (priceItem, index) => {
+
+                    if (
+                      (tipUserja === "individual" &&
+                        (priceItem.purpose === "Education (using dataset for pedagogical purposes)" ||
+                          priceItem.purpose === "Comparative analysis (benchmarking)" ||
+                          priceItem.purpose === "Machine learning")) ||
+                      (tipUserja === "company" &&
+                        (priceItem.purpose === "Business analytics (commercial)")) ||
+                      (tipUserja === "research-institution" &&
+                        priceItem.purpose === "Research (using dataset for scientific research)") ||
+                      ((tipUserja === "public-administration" || tipUserja === "state-administration") &&
+                        priceItem.purpose === "Public administration processes")
+                    ) {
+                      return (
+                        <tr
+                          key={`${dataset.id}_${index}`}
+                          className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
+                        >
+                          <td className="whitespace-nowrap py-10 pl-6 pr-3">
+                            <div className="flex items-center gap-3 hover:text-gray-500">
+                              <Link href={`/dashboard/datasets/${dataset.id}?purpose=${priceItem.purpose}&price=${priceItem.price}`}>
+                                <strong>{dataset.name}</strong>
+                              </Link>
+                            </div>
+                          </td>
+                          <td className="whitespace-nowrap px-6 py-10">
+                            {dataset.category.charAt(0).toUpperCase() +
+                              dataset.category.slice(1)}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-10">
+                            <span>{(await getDataProvider(dataset.userID))}</span>
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-10">
+                            {priceItem.purpose}
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-10">
+                            {priceItem.price} €
+                          </td>
+                          <td className="whitespace-nowrap px-3 py-10">
+                            {formatDate(dataset.createdAt)}
+                          </td>
+                        </tr>
+                      );
+                    }
+                  })}
                 </>
               ))}
             </tbody>
-
           </table>
         </div>
       </div>
