@@ -273,3 +273,34 @@ export async function paypal(datasetId: string) {
     console.error("Error fetching paypal:", error);
   }
 }
+
+export async function createPayment(datasetId: string) {
+  const { userId } = auth();
+  if (!userId) {
+    console.error("No user ID found");
+    return;
+  }
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        datasetId: datasetId,
+        userId: userId,
+      }),
+    });
+
+    if (!response.ok) {
+      throw new Error("Failed to create payment");
+    }
+
+    const data = await response.json();
+    console.log(data);
+    return data;
+  } catch (error) {
+    console.error("Error creating payment:", error);
+  }
+}
