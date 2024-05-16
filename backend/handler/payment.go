@@ -29,30 +29,27 @@ func (p *Payment) Create(c echo.Context) error {
 	}
 
 	payment := &model.Payment{
-		UserID:    body.UserID,
-		DatasetID: body.DatasetID,
-		CreatedAt: time.Now(),
-		Status:    model.PaymentStatusCompleted,
+		UserID:      body.UserID,
+		DatasetID:   body.DatasetID,
+		CreatedAt:   time.Now(),
+		Status:      model.PaymentStatusCompleted,
+		AccessToken: false,
 	}
 
-	err := p.Repository.Insert(c.Request().Context(), payment)
+	createdPayment, err := p.Repository.Insert(c.Request().Context(), payment)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
 	}
 
-	return c.JSON(http.StatusCreated, payment)
+	return c.JSON(http.StatusCreated, &createdPayment.ID)
 }
 
-func (p *Payment) UpdateStatus(c echo.Context) error {
+func (p *Payment) UpdateAccessToken(c echo.Context) error {
 	var body struct {
-		Status string `json:"status"`
+		AccessToken bool `json:"accessToken"`
 	}
 
 	if err := c.Bind(&body); err != nil {
-		return c.JSON(http.StatusBadRequest, "Bad Request")
-	}
-
-	if body.Status != model.PaymentStatusCompleted && body.Status != model.PaymentStatusFailed {
 		return c.JSON(http.StatusBadRequest, "Bad Request")
 	}
 
@@ -61,7 +58,7 @@ func (p *Payment) UpdateStatus(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Bad Request")
 	}
 
-	err := p.Repository.UpdateStatus(c.Request().Context(), id, body.Status)
+	err := p.Repository.UpdateAccessToken(c.Request().Context(), id, body.AccessToken)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
 	}
