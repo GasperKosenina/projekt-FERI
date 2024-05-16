@@ -60,4 +60,6 @@ func (a *App) paymentRoute(g *echo.Group) {
 	}
 
 	g.POST("", paymentHandler.Create)
+	g.PUT("/:id", paymentHandler.UpdateStatus)
+	g.GET("/:id", paymentHandler.GetByID)
 }
