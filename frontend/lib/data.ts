@@ -132,6 +132,7 @@ export async function listAll() {
 }
 
 export async function findById(id: string) {
+  noStore();
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/dataset/${id}`,
@@ -225,6 +226,7 @@ export async function postUser(formData: FormData) {
 }
 
 export async function getUser(userId: string) {
+  noStore();
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/user/${userId}`,
@@ -275,6 +277,8 @@ export async function paypal(datasetId: string) {
 }
 
 
+
+
 const EmailSchema = z.object({
   email: z
     .string().email()
@@ -286,7 +290,6 @@ export type State1 = {
   };
   message?: string | null;
 };
-
 
 
 export async function updateUserWithEmail(formData: FormData) {
@@ -358,6 +361,67 @@ export async function createPayment(datasetId: string) {
     return data;
   } catch (error) {
     console.error("Error creating payment:", error);
+  }
+}
+
+
+export async function getDatasetsByUser(userID: string) {
+  noStore();
+
+  
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/dataset/user/${userID}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const datasets = await response.json();
+    return datasets;
+  } catch (error) {
+    console.error("Error fetching datasets:", error);
+    return [];
+  }
+}
+
+
+
+export async function getDatasetsLengthByUser(userID: string) {
+  noStore();
+
+  
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/dataset/user/${userID}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const datasets = await response.json();
+    return datasets.length;
+  } catch (error) {
+    console.error("Error fetching datasets:", error);
+    return [];
   }
 }
 

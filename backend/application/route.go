@@ -38,6 +38,7 @@ func (a *App) datasetRoute(g *echo.Group) {
 	g.POST("", datasetHandler.Create)
 	g.GET("", datasetHandler.ListAll)
 	g.GET("/:id", datasetHandler.FindById)
+	g.GET("/user/:userID", datasetHandler.ListByUserID)
 }
 
 func (a *App) userRoute(g *echo.Group) {
