@@ -12,10 +12,15 @@ export default async function Page({
     return <p>Dataset not found</p>;
   }
 
-  createPayment(datasetId);
+ const paymentId = await createPayment(datasetId);
+
+ // get by id
+
+ // 
 
   const dataset: Dataset = await findById(datasetId);
   console.log(dataset.description);
+
 
   const access_token = await generate(dataset.accessToken);
 

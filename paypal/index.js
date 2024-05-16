@@ -85,7 +85,7 @@ app.get('/success', (req, res) => {
       res.redirect('http://localhost:3000/paypal/failed'); // Redirect to a failure page on your frontend
     } else {
       console.log('Payment Success:', JSON.stringify(payment));
-      res.redirect(`http://localhost:3000/paypal/success?datasetId=${req.query.datasetId}`);
+      res.redirect(`http://localhost:3000/dashboard/paypal/success?datasetId=${req.query.datasetId}`);
     }
   });
 });
