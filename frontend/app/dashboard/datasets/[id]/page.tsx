@@ -1,7 +1,7 @@
 import Breadcrumbs from "@/app/ui/breadcrumbs";
-import { findById, generate } from "@/lib/data";
+import { findById, generate, getUser } from "@/lib/data";
 import { Dataset } from "@/lib/definitions";
-import { clerkClient } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import Modal from "@/app/ui/modal";
 import PaymentButton from "@/components/ui/paypalButton";
 
@@ -30,19 +30,19 @@ export default async function Page({
   params: { id: string };
   searchParams?: { [key: string]: string | undefined };
 }) {
+  const { userId } = auth();
+  if (!userId) {
+    console.error("No user ID found");
+    return <div>Check your connection</div>;
+  }
   const id = params.id;
 
   let purpose = searchParams?.purpose;
   let price = searchParams?.price;
 
   const dataset: Dataset = await findById(id);
-  console.log(dataset.description);
 
-  const access_token = await generate(dataset.accessToken);
-
-  if (access_token == null) {
-    return <p>Napaka</p>;
-  }
+  const mongoUser = await getUser(dataset.userID);
 
   return (
     <main>
@@ -130,11 +130,14 @@ export default async function Page({
         <Modal description={dataset.description} />
       </div>
       <div className="mt-10">
-        <PaymentButton datasetId={dataset.id} />
+        {mongoUser.id !== userId && (
+          <PaymentButton
+            datasetId={id}
+            payee={mongoUser.email}
+            amount={price}
+          />
+        )}
       </div>
-
-      <p className="mt-52">Your access token:</p>
-      <strong>{access_token.access_token}</strong>
     </main>
   );
 }
