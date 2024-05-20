@@ -67,6 +67,6 @@ func (a *App) paymentRoute(g *echo.Group) {
 	g.PUT("/:id", paymentHandler.UpdateAccessToken)
 	g.PUT("/status/:id", paymentHandler.UpdatePaymentStatus)
 	g.GET("/:id", paymentHandler.GetByID)
-	g.GET("/purchased/:userID", paymentHandler.FindByUserID)
+	// g.GET("/purchased/:userID", paymentHandler.FindByUserID)
 	g.GET("/user/:userID", paymentHandler.ListAllByDatasetUserID)
 }
