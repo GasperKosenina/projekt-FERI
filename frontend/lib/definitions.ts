@@ -11,3 +11,12 @@ export type Dataset = {
   updatedAt?: Date;
   userID: string;
 };
+
+export type Payment = {
+  id?: string;
+  datasetId: string;
+  userId: string;
+  accessToken: boolean;
+  paymentStatus: boolean;
+  createdAt?: Date;
+};
