@@ -1,4 +1,5 @@
 import { getDatasetsLengthByUser } from '@/lib/data';
+import { Dataset } from '@/lib/definitions';
 import { auth } from '@clerk/nextjs/server';
 import {
   BanknotesIcon,
@@ -28,12 +29,13 @@ export default async function CardWrapper() {
   }
 
 
-  let dolzina: number = 0;
+  let datasets: Dataset[] = [];
   const data = await getDatasetsLengthByUser(userId);
   if (data) {
-    dolzina = data;
+    datasets = data;
   }
 
+  let dolzina = datasets.length;
 
 
 

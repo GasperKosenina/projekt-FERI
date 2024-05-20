@@ -417,7 +417,8 @@ export async function getDatasetsLengthByUser(userID: string) {
     }
 
     const datasets = await response.json();
-    return datasets.length;
+    
+    return datasets;
   } catch (error) {
     console.error("Error fetching datasets:", error);
     return [];

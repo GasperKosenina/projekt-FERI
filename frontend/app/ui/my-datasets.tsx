@@ -26,7 +26,7 @@ export default async function MyDatasets() {
     datasets = data;
   }
 
-  const datasetsLength = datasets.length;
+  const datasetsLength = datasets?.length;
 
   return (
     <div className="flex w-full flex-col md:col-span-4">
