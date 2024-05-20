@@ -11,8 +11,7 @@ export default async function MyTokens() {
     { id: 1, name: "John Doe", email: "john@example.com", amount: "$500.00", image_url: "/john.jpg" },
     { id: 2, name: "Jane Smith", email: "jane@example.com", amount: "$750.00", image_url: "/jane.jpg" },
     { id: 3, name: "Alice Johnson", email: "alice@example.com", amount: "$600.00", image_url: "/alice.jpg" },
-    { id: 4, name: "Bob Brown", email: "bob@example.com", amount: "$900.00", image_url: "/bob.jpg" },
-    { id: 5, name: "Eve White", email: "eve@example.com", amount: "$800.00", image_url: "/eve.jpg" }
+    { id: 4, name: "Bob Brown", email: "bob@example.com", amount: "$900.00", image_url: "/bob.jpg" }
   ];
 
 

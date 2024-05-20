@@ -3,6 +3,8 @@ import clsx from 'clsx';
 import { getDatasetsByUser } from '@/lib/data';
 import { Dataset } from '@/lib/definitions';
 import { auth } from '@clerk/nextjs/server';
+import Link from 'next/link';
+import { PlusIcon } from 'lucide-react';
 
 
 function formatDate(dateString: any) {
@@ -29,6 +31,8 @@ export default async function MyDatasets() {
         datasets = data;
     }
 
+    const datasetsLength = datasets.length;
+
 
     return (
         <div className="flex w-full flex-col md:col-span-4">
@@ -36,37 +40,40 @@ export default async function MyDatasets() {
                 Published Datasets
             </strong>
             <div className="flex-grow bg-gray-50 p-4 rounded-xl">
-
-                <div className="bg-white flex flex-col px-4">
-                    {datasets.map((dataset, i) => (
-                        <div
-                            key={dataset.id}
-                            className={clsx(
-                                'flex items-center justify-between py-4',
-                                {
-                                    'border-t': i !== 0,
-                                },
-                            )}
-                            style={{ height: '80px' }} // Adjust height as needed
-                        >
-                            <div className="flex items-center">
-                                <div className="min-w-0">
-                                    <p className="truncate text-sm font-semibold md:text-base">
-                                        {dataset.name}
-                                    </p>
-                                    <p className="hidden text-sm text-gray-500 sm:block">
-                                        {formatDate(dataset.createdAt)}
-                                    </p>
-                                </div>
-                            </div>
-                            <p
-                                className={`truncate text-sm font-medium md:text-base`}
+                {datasetsLength === 0 ? (
+                    <p className="truncate text-sm font-semibold md:text-base">You do not have any datasets published!</p>
+                ) : (
+                    <div className="bg-white flex flex-col px-4">
+                        {datasets.map((dataset, i) => (
+                            <div
+                                key={dataset.id}
+                                className={clsx(
+                                    'flex items-center justify-between py-4',
+                                    {
+                                        'border-t': i !== 0,
+                                    },
+                                )}
+                                style={{ height: '80px' }}
                             >
-                                {dataset.category}
-                            </p>
-                        </div>
-                    ))}
-                </div>
+                                <div className="flex items-center">
+                                    <div className="min-w-0">
+                                        <p className="truncate text-sm font-semibold md:text-base">
+                                            {dataset.name}
+                                        </p>
+                                        <p className="hidden text-sm text-gray-500 sm:block">
+                                            {formatDate(dataset.createdAt)}
+                                        </p>
+                                    </div>
+                                </div>
+                                <p
+                                    className={`truncate text-sm font-medium md:text-base`}
+                                >
+                                    {dataset.category}
+                                </p>
+                            </div>
+                        ))}
+                    </div>
+                )}
                 <div className="flex items-center pb-2 pt-6">
                     <ArrowPathIcon className="h-5 w-5 text-gray-500" />
                     <h3 className="ml-2 text-sm text-gray-500 ">Updated just now</h3>
@@ -74,4 +81,5 @@ export default async function MyDatasets() {
             </div>
         </div>
     );
+
 }

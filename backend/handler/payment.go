@@ -41,7 +41,7 @@ func (p *Payment) Create(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
 	}
 
-	return c.JSON(http.StatusCreated, &createdPayment.ID)
+	return c.JSON(http.StatusCreated, &createdPayment)
 }
 
 func (p *Payment) UpdateAccessToken(c echo.Context) error {

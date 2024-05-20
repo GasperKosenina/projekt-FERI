@@ -132,7 +132,6 @@ export async function listAll() {
 }
 
 export async function findById(id: string) {
-  noStore();
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/dataset/${id}`,
@@ -357,7 +356,7 @@ export async function createPayment(datasetId: string) {
     }
 
     const data = await response.json();
-    console.log(data);
+    //console.log(data);
     return data;
   } catch (error) {
     console.error("Error creating payment:", error);
@@ -368,7 +367,7 @@ export async function createPayment(datasetId: string) {
 export async function getDatasetsByUser(userID: string) {
   noStore();
 
-  
+
   try {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
@@ -394,12 +393,10 @@ export async function getDatasetsByUser(userID: string) {
   }
 }
 
-
-
 export async function getDatasetsLengthByUser(userID: string) {
   noStore();
 
-  
+
   try {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
@@ -425,6 +422,53 @@ export async function getDatasetsLengthByUser(userID: string) {
   }
 }
 
+export async function updateToken(id: string) {
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        accessToken: true
+      }),
+    });
+  } catch (error) {
+    console.error("Error setting token status:", error);
+  }
+}
+
+
+export async function getPaymentById(id: string) {
+  noStore();
+
+  await new Promise((resolve) => setTimeout(resolve, 2000));
+
+
+  try {
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/payment/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const datasets = await response.json();
+    return datasets;
+  } catch (error) {
+    console.error("Error fetching payment:", error);
+    return [];
+  }
+}
 
 
 
