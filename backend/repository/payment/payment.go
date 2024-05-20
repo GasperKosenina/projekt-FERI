@@ -78,7 +78,7 @@ func (p *MongoRepository) FindByID(ctx context.Context, id string) (*model.Payme
 func (p *MongoRepository) FindByUserID(ctx context.Context, userID string) ([]*model.Payment, error) {
 	collection := p.Client.Database("projekt").Collection("payment")
 
-	filter := bson.M{"userId": userID}
+	filter := bson.M{"userId": userID, "paymentStatus": true}
 
 	cursor, err := collection.Find(ctx, filter)
 	if err != nil {

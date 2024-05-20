@@ -1,32 +1,52 @@
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
-import Image from 'next/image';
+import { getPurchasedDatasets } from '@/lib/data';
+import { Dataset } from '@/lib/definitions';
+import { auth, clerkClient } from '@clerk/nextjs/server';
+
+
+async function getDataProvider(userId: string) {
+  try {
+    const user = await clerkClient.users.getUser(userId);
+    return user.username;
+  }
+  catch (error) {
+    return ("No Data Provider")
+  }
+}
 
 
 
 
 export default async function MyTokens() {
+  const { userId } = auth();
+  if (!userId) {
+    console.error("No user ID found");
+    return;
+  }
 
-  const latestInvoices = [
-    { id: 1, name: "John Doe", email: "john@example.com", amount: "$500.00", image_url: "/john.jpg" },
-    { id: 2, name: "Jane Smith", email: "jane@example.com", amount: "$750.00", image_url: "/jane.jpg" },
-    { id: 3, name: "Alice Johnson", email: "alice@example.com", amount: "$600.00", image_url: "/alice.jpg" },
-    { id: 4, name: "Bob Brown", email: "bob@example.com", amount: "$900.00", image_url: "/bob.jpg" }
-  ];
+  let purchasedDatasets: Dataset[] = [];
+  const data = await getPurchasedDatasets(userId);
+  if (data) {
+    purchasedDatasets = data;
+  }
+
+
+  const datasetsLength = purchasedDatasets.length;
 
 
 
   return (
     <div className="flex w-full flex-col md:col-span-4">
-      <strong className="mb-4 text-lg text-blue-700">
+      <strong className="mb-4 text-lg text-blue-600">
         Purchased Datasets
       </strong>
       <div className="flex grow flex-col justify-between rounded-xl bg-gray-50 p-4">
         <div className="bg-white px-6">
-          {latestInvoices.map((invoice, i) => {
+          {purchasedDatasets.map(async (dataset, i) => {
             return (
               <div
-                key={invoice.id}
+                key={dataset.id}
                 className={clsx(
                   'flex flex-row items-center justify-between py-4',
                   {
@@ -37,17 +57,17 @@ export default async function MyTokens() {
                 <div className="flex items-center">
                   <div className="min-w-0">
                     <p className="truncate text-sm font-semibold md:text-base">
-                      {invoice.name}
+                      {dataset.name}
                     </p>
                     <p className="hidden text-sm text-gray-500 sm:block">
-                      {invoice.email}
+                      <span>{(await getDataProvider(dataset.userID))}</span>
                     </p>
                   </div>
                 </div>
                 <p
                   className={`truncate text-sm font-medium md:text-base`}
                 >
-                  {invoice.amount}
+                  {dataset.category}
                 </p>
               </div>
             );

@@ -39,6 +39,7 @@ func (a *App) datasetRoute(g *echo.Group) {
 	g.GET("", datasetHandler.ListAll)
 	g.GET("/:id", datasetHandler.FindById)
 	g.GET("/user/:userID", datasetHandler.ListByUserID)
+
 }
 
 func (a *App) userRoute(g *echo.Group) {
@@ -69,4 +70,5 @@ func (a *App) paymentRoute(g *echo.Group) {
 	g.GET("/:id", paymentHandler.GetByID)
 	// g.GET("/purchased/:userID", paymentHandler.FindByUserID)
 	g.GET("/user/:userID", paymentHandler.ListAllByDatasetUserID)
+	g.GET("/purchased/:userID", paymentHandler.ListPurchasedDatasetsByUserID)
 }

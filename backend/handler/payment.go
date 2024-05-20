@@ -133,3 +133,31 @@ func (p *Payment) ListAllByDatasetUserID(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, allPayments)
 }
+
+func (p *Payment) ListPurchasedDatasetsByUserID(c echo.Context) error {
+	userID := c.Param("userID")
+	if userID == "" {
+		return c.JSON(http.StatusBadRequest, "Bad Request")
+	}
+
+	payments, err := p.Repository.FindByUserID(c.Request().Context(), userID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
+	}
+
+	var datasetIDs []string
+	for _, payment := range payments {
+		datasetIDs = append(datasetIDs, payment.DatasetID)
+	}
+
+	var purchasedDatasets []*model.Dataset
+	for _, datasetID := range datasetIDs {
+		dataset, err := p.DatasetRepository.FindByID(c.Request().Context(), datasetID)
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, "Internal Server Error")
+		}
+		purchasedDatasets = append(purchasedDatasets, dataset)
+	}
+
+	return c.JSON(http.StatusOK, purchasedDatasets)
+}

@@ -44,7 +44,6 @@ export default async function MyDatasets() {
                 className={clsx("flex items-center justify-between py-4", {
                   "border-t": i !== 0,
                 })}
-                style={{ height: "80px" }}
               >
                 <div className="flex items-center">
                   <div className="min-w-0">

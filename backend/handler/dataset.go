@@ -7,11 +7,13 @@ import (
 
 	"github.com/GasperKosenina/projekt-FERI/model"
 	"github.com/GasperKosenina/projekt-FERI/repository/dataset"
+	"github.com/GasperKosenina/projekt-FERI/repository/payment"
 	"github.com/labstack/echo/v4"
 )
 
 type Dataset struct {
-	Repository *dataset.MongoRepository
+	Repository        *dataset.MongoRepository
+	PaymentRepository *payment.MongoRepository
 }
 
 func (d *Dataset) Create(c echo.Context) error {

@@ -485,6 +485,36 @@ export async function getPaymentById(id: string) {
   }
 }
 
+export async function getPurchasedDatasets(userID: string) {
+  noStore();
+
+
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/payment/purchased/${userID}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const datasets = await response.json();
+    return datasets;
+  } catch (error) {
+    console.error("Error fetching datasets:", error);
+    return [];
+  }
+}
+
+
 
 
 
