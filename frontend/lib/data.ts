@@ -249,7 +249,7 @@ export async function getUser(userId: string) {
   }
 }
 
-export async function paypal(datasetId: string, payee: string, amount: string) {
+export async function paypal(datasetId: string, payee: string, amount: string, payment_id: string) {
   try {
     const response = await fetch(`http://localhost:5001/pay`, {
       method: "POST",
@@ -260,6 +260,7 @@ export async function paypal(datasetId: string, payee: string, amount: string) {
         datasetId: datasetId,
         payee: payee,
         amount: amount,
+        payment_id: payment_id
       }),
     });
 
@@ -437,11 +438,27 @@ export async function updateToken(id: string) {
   }
 }
 
+export async function updateStatus(id: string) {
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment/status/${id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        paymentStatus: true
+      }),
+    });
+  } catch (error) {
+    console.error("Error setting payment status:", error);
+  }
+}
+
 
 export async function getPaymentById(id: string) {
   noStore();
 
-  await new Promise((resolve) => setTimeout(resolve, 2000));
 
 
   try {

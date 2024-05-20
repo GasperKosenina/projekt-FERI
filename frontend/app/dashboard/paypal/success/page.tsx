@@ -1,6 +1,5 @@
-import { createPayment, findById, generate, getPaymentById, updateToken } from "@/lib/data";
+import { createPayment, findById, generate, getPaymentById, updateToken, updateStatus } from "@/lib/data";
 import { Dataset } from "@/lib/definitions";
-import { getPayment } from "@/app/ui/paymentOnlyOnce";
 
 export default async function Page({
   searchParams,
@@ -8,29 +7,28 @@ export default async function Page({
   searchParams?: { [key: string]: string | undefined };
 }) {
   const datasetId = searchParams?.datasetId;
+  const payment_id = searchParams?.payment_id;
+  console.log(payment_id)
 
   if (datasetId == null) {
     return <p>Dataset not found</p>;
   }
-
-  const createPayment = await getPayment(datasetId);
-  console.log(createPayment)
-
+  if (payment_id == null) {
+    return <p>Payment not found</p>;
+  }
 
   const dataset: Dataset = await findById(datasetId);
+  const payment = await getPaymentById(payment_id)
 
-
-  const payment = await getPaymentById(createPayment.id)
+  await updateStatus(payment_id)
 
   let access_token;
 
 
   if (!payment.accessToken) {
     access_token = await generate(dataset.accessToken);
-    updateToken(createPayment.id);
+    await updateToken(payment_id);
   }
-
-
 
 
   if (access_token == null) {

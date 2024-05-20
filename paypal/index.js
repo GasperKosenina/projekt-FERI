@@ -26,6 +26,8 @@ app.post('/pay', (req, res) => {
   const payeeEmail = req.body.payee 
   const datasetId = req.body.datasetId;
   const amount = req.body.amount;
+  const payment_id = req.body.payment_id;
+  console.log(payment_id);
 
   const create_payment_json = {
     "intent": "sale",
@@ -43,7 +45,7 @@ app.post('/pay', (req, res) => {
       "description": "Transfer between sandbox accounts"
     }],
     "redirect_urls": {
-      "return_url": `http://localhost:${PORT}/success?datasetId=${datasetId}&amount=${amount}`,
+      "return_url": `http://localhost:${PORT}/success?datasetId=${datasetId}&amount=${amount}&payment_id=${payment_id}`,
       "cancel_url": `http://localhost:${PORT}/cancel`
     }
   };
@@ -71,6 +73,7 @@ app.get('/success', (req, res) => {
   const payerId = req.query.PayerID;
   const paymentId = req.query.paymentId;
   const amount = req.query.amount;
+  console.log(req.query.payment_id)
 
   const execute_payment_json = {
     "payer_id": payerId,
@@ -88,7 +91,7 @@ app.get('/success', (req, res) => {
       res.redirect('http://localhost:3000/paypal/failed'); // Redirect to a failure page on your frontend
     } else {
       console.log('Payment Success:', JSON.stringify(payment));
-      res.redirect(`http://localhost:3000/dashboard/paypal/success?datasetId=${req.query.datasetId}`);
+      res.redirect(`http://localhost:3000/dashboard/paypal/success?datasetId=${req.query.datasetId}&payment_id=${req.query.payment_id}`);
     }
   });
 });

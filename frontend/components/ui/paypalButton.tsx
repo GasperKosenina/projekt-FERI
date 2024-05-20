@@ -1,5 +1,5 @@
 "use client";
-import { paypal } from "@/lib/data";
+import { paypal, createPayment } from "@/lib/data";
 
 interface PaymentButtonProps {
   datasetId: string | undefined;
@@ -12,6 +12,8 @@ export default function PaymentButton({
   payee,
   amount,
 }: PaymentButtonProps) {
+
+
   const handlePay = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!datasetId) {
@@ -20,7 +22,10 @@ export default function PaymentButton({
     if (!payee || !amount) {
       return;
     }
-    const approvalUrl = await paypal(datasetId, payee, amount);
+    const payment = await createPayment(datasetId);
+    console.log(payment.id);
+    console.log(payment)
+    const approvalUrl = await paypal(datasetId, payee, amount, payment.id);
     if (approvalUrl) {
       window.location.href = approvalUrl;
     }

@@ -43,9 +43,21 @@ func (p *MongoRepository) UpdateAccessToken(ctx context.Context, id string, acce
 	if err != nil {
 		return err
 	}
-
 	return nil
+}
 
+func (p *MongoRepository) UpdatePaymentStatus(ctx context.Context, id string, paymentStatus bool) error {
+	collection := p.Client.Database("projekt").Collection("payment")
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	_, err = collection.UpdateOne(ctx, bson.M{"_id": objectID}, bson.M{"$set": bson.M{"paymentStatus": paymentStatus}})
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (p *MongoRepository) FindByID(ctx context.Context, id string) (*model.Payment, error) {
