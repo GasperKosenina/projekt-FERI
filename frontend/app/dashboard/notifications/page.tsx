@@ -45,22 +45,32 @@ export default async function Page() {
               </tr>
             </thead>
             <tbody>
-              {payments.map(async (payment) => (
-                <tr key={payment.id} className="border-t">
-                  <td className="py-2 px-4">
-                    {await getDataProviderName(payment.userId)}
-                  </td>
-                  <td className="py-2 px-4">{formatDate(payment.createdAt)}</td>
-                  <td className="py-2 px-4">{payment.datasetId}</td>
-                  <td className="py-2 px-4 text-center">
-                    {payment.paymentStatus ? (
-                      <CheckCircleIcon className="text-green-500 inline-block" />
-                    ) : (
-                      <span className="text-red-500">Failed</span>
-                    )}
+              {payments == null ? (
+                <tr>
+                  <td colSpan={4} className="text-center py-4">
+                    No payments found
                   </td>
                 </tr>
-              ))}
+              ) : (
+                payments.map(async (payment) => (
+                  <tr key={payment.id} className="border-t">
+                    <td className="py-2 px-4">
+                      {await getDataProviderName(payment.userId)}
+                    </td>
+                    <td className="py-2 px-4">
+                      {formatDate(payment.createdAt)}
+                    </td>
+                    <td className="py-2 px-4">{payment.datasetId}</td>
+                    <td className="py-2 px-4 text-center">
+                      {payment.paymentStatus ? (
+                        <CheckCircleIcon className="text-green-500 inline-block" />
+                      ) : (
+                        <span className="text-red-500">Failed</span>
+                      )}
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
