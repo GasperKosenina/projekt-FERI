@@ -106,7 +106,7 @@ export async function postDataset(prevState: State, formData: FormData) {
   }
 
   revalidatePath("/dashboard/datasets");
-  redirect("/dashboard/datasets");
+  redirect("/dashboard");
 }
 
 export async function listAll() {
@@ -492,7 +492,6 @@ export async function getPaymentById(id: string) {
 export async function getPurchasedDatasets(userID: string) {
   noStore();
 
-
   try {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
@@ -517,7 +516,6 @@ export async function getPurchasedDatasets(userID: string) {
     return [];
   }
 }
-
 
 export async function getPaymentsByUser(userID: string) {
   noStore();
