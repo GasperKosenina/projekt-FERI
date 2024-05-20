@@ -249,15 +249,18 @@ export async function getUser(userId: string) {
   }
 }
 
-export async function paypal(datasetId: string) {
-  console.log(datasetId);
+export async function paypal(datasetId: string, payee: string, amount: string) {
   try {
     const response = await fetch(`http://localhost:5001/pay`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ datasetId: datasetId }),
+      body: JSON.stringify({
+        datasetId: datasetId,
+        payee: payee,
+        amount: amount,
+      }),
     });
 
     if (!response.ok) {
@@ -275,12 +278,8 @@ export async function paypal(datasetId: string) {
   }
 }
 
-
-
-
 const EmailSchema = z.object({
-  email: z
-    .string().email()
+  email: z.string().email(),
 });
 
 export type State1 = {
@@ -290,14 +289,12 @@ export type State1 = {
   message?: string | null;
 };
 
-
 export async function updateUserWithEmail(formData: FormData) {
   const { userId } = auth();
   if (!userId) {
     console.error("No user ID found");
     return;
   }
-
 
   const validatedData = EmailSchema.safeParse({
     email: formData.get("email") as string,
@@ -311,15 +308,17 @@ export async function updateUserWithEmail(formData: FormData) {
     };
   }
 
-
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/email/${userId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(validatedData.data),
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/user/email/${userId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(validatedData.data),
+      }
+    );
 
     if (!response.ok) {
       console.error("Error setting user email:", response.statusText);
@@ -362,7 +361,6 @@ export async function createPayment(datasetId: string) {
     console.error("Error creating payment:", error);
   }
 }
-
 
 export async function getDatasetsByUser(userID: string) {
   noStore();
