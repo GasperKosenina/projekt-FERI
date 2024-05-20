@@ -98,7 +98,7 @@ app.get('/success', (req, res) => {
 
 // POT ZA PREKLIC PLACILA
 app.get('/cancel', (req, res) => {
-  res.send('Payment Cancelled');
+  res.redirect('http://localhost:3000/dashboard')
 });
 
 app.listen(PORT, () => {
