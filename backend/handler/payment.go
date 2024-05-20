@@ -106,6 +106,7 @@ func (p *Payment) GetByID(c echo.Context) error {
 }
 
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
 func (p *Payment) FindByUserID(c echo.Context) error {
 	userID := c.Param("userID")
 	if userID == "" {
@@ -114,6 +115,8 @@ func (p *Payment) FindByUserID(c echo.Context) error {
 
 	payments, err := p.Repository.FindByUserID(c.Request().Context(), userID)
 =======
+=======
+>>>>>>> Stashed changes
 func (p *Payment) ListAllByDatasetUserID(c echo.Context) error {
 	userID := c.Param("userID")
 	if userID == "" {
@@ -131,6 +134,9 @@ func (p *Payment) ListAllByDatasetUserID(c echo.Context) error {
 	}
 
 	payments, err := p.Repository.FindPaymentsByUserID(c.Request().Context(), userID, datasetIDs)
+<<<<<<< Updated upstream
+>>>>>>> Stashed changes
+=======
 >>>>>>> Stashed changes
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
@@ -138,6 +144,10 @@ func (p *Payment) ListAllByDatasetUserID(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, payments)
 <<<<<<< Updated upstream
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 =======
 
 >>>>>>> Stashed changes
