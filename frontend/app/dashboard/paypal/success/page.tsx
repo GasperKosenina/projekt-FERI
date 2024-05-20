@@ -1,5 +1,6 @@
-import { createPayment, findById, generate, getPaymentById, updateToken, updateStatus } from "@/lib/data";
+import { findById, generate, getPaymentById, updateToken, updateStatus } from "@/lib/data";
 import { Dataset } from "@/lib/definitions";
+import PaymentSuccess from "@/app/ui/showToken";
 
 export default async function Page({
   searchParams,
@@ -36,10 +37,6 @@ export default async function Page({
   }
 
   return (
-    <div>
-      <h1>Payment successful!</h1>
-      <p>Thank you for your payment.</p>
-      {access_token.access_token}
-    </div>
+    <PaymentSuccess access_token={access_token.access_token} />
   );
 }
