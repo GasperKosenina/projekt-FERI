@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
 import { any, z } from "zod";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
 const PriceItemSchema = z.object({
   purpose: z.string(),
@@ -249,7 +249,12 @@ export async function getUser(userId: string) {
   }
 }
 
-export async function paypal(datasetId: string, payee: string, amount: string, payment_id: string) {
+export async function paypal(
+  datasetId: string,
+  payee: string,
+  amount: string,
+  payment_id: string
+) {
   try {
     const response = await fetch(`http://localhost:5001/pay`, {
       method: "POST",
@@ -260,7 +265,7 @@ export async function paypal(datasetId: string, payee: string, amount: string, p
         datasetId: datasetId,
         payee: payee,
         amount: amount,
-        payment_id: payment_id
+        payment_id: payment_id,
       }),
     });
 
@@ -366,7 +371,6 @@ export async function createPayment(datasetId: string) {
 export async function getDatasetsByUser(userID: string) {
   noStore();
 
-
   try {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
@@ -395,7 +399,6 @@ export async function getDatasetsByUser(userID: string) {
 export async function getDatasetsLengthByUser(userID: string) {
   noStore();
 
-
   try {
     await new Promise((resolve) => setTimeout(resolve, 2000));
 
@@ -422,47 +425,47 @@ export async function getDatasetsLengthByUser(userID: string) {
 }
 
 export async function updateToken(id: string) {
-
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        accessToken: true
-      }),
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/payment/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          accessToken: true,
+        }),
+      }
+    );
   } catch (error) {
     console.error("Error setting token status:", error);
   }
 }
 
 export async function updateStatus(id: string) {
-
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment/status/${id}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        paymentStatus: true
-      }),
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/payment/status/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          paymentStatus: true,
+        }),
+      }
+    );
   } catch (error) {
     console.error("Error setting payment status:", error);
   }
 }
 
-
 export async function getPaymentById(id: string) {
   noStore();
 
-
-
   try {
-
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/payment/${id}`,
       {
@@ -485,7 +488,51 @@ export async function getPaymentById(id: string) {
   }
 }
 
+export async function getPaymentsByUser(userID: string) {
+  noStore();
 
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/payment/dataset/${userID}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
+    if (!response.ok) {
+      return [];
+    }
 
+    const payments = await response.json();
+    return payments;
+  } catch (error) {
+    console.error("Error fetching payment:", error);
+    return [];
+  }
+}
 
+export async function getDataProviderName(userId: string) {
+  try {
+    const user = await clerkClient.users.getUser(userId);
+    if (user.firstName) {
+      return user.firstName;
+    }
+    return user.username;
+  } catch (error) {
+    return "No Data Provider";
+  }
+}
+export async function getDataProviderPicture(userId: string) {
+  try {
+    const user = await clerkClient.users.getUser(userId);
+    if (user.imageUrl) {
+      return user.imageUrl;
+    }
+    return "/default-avatar.png";
+  } catch (error) {
+    return "No Data Provider";
+  }
+}
