@@ -101,3 +101,17 @@ func (p *Payment) GetByID(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, payment)
 }
+
+func (p *Payment) FindByUserID(c echo.Context) error {
+	userID := c.Param("userID")
+	if userID == "" {
+		return c.JSON(http.StatusBadRequest, "Invalid User ID")
+	}
+
+	payments, err := p.Repository.FindByUserID(c.Request().Context(), userID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
+	}
+
+	return c.JSON(http.StatusOK, payments)
+}
