@@ -5,12 +5,15 @@ import (
 	"time"
 
 	"github.com/GasperKosenina/projekt-FERI/model"
+	"github.com/GasperKosenina/projekt-FERI/repository/dataset"
 	"github.com/GasperKosenina/projekt-FERI/repository/payment"
 	"github.com/labstack/echo/v4"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Payment struct {
-	Repository *payment.MongoRepository
+	Repository        *payment.MongoRepository
+	DatasetRepository *dataset.MongoRepository
 }
 
 func (p *Payment) Create(c echo.Context) error {
@@ -102,6 +105,7 @@ func (p *Payment) GetByID(c echo.Context) error {
 	return c.JSON(http.StatusOK, payment)
 }
 
+<<<<<<< Updated upstream
 func (p *Payment) FindByUserID(c echo.Context) error {
 	userID := c.Param("userID")
 	if userID == "" {
@@ -109,9 +113,32 @@ func (p *Payment) FindByUserID(c echo.Context) error {
 	}
 
 	payments, err := p.Repository.FindByUserID(c.Request().Context(), userID)
+=======
+func (p *Payment) ListAllByDatasetUserID(c echo.Context) error {
+	userID := c.Param("userID")
+	if userID == "" {
+		return c.JSON(http.StatusBadRequest, "Bad Request")
+	}
+
+	datasets, err := p.DatasetRepository.ListByUserID(c.Request().Context(), userID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
+	}
+
+	var datasetIDs []primitive.ObjectID
+	for _, dataset := range datasets {
+		datasetIDs = append(datasetIDs, dataset.ID)
+	}
+
+	payments, err := p.Repository.FindPaymentsByUserID(c.Request().Context(), userID, datasetIDs)
+>>>>>>> Stashed changes
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
 	}
 
 	return c.JSON(http.StatusOK, payments)
+<<<<<<< Updated upstream
+=======
+
+>>>>>>> Stashed changes
 }

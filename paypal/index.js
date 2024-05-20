@@ -27,7 +27,6 @@ app.post('/pay', (req, res) => {
   const datasetId = req.body.datasetId;
   const amount = req.body.amount;
   const payment_id = req.body.payment_id;
-  console.log(payment_id);
 
   const create_payment_json = {
     "intent": "sale",
@@ -73,7 +72,6 @@ app.get('/success', (req, res) => {
   const payerId = req.query.PayerID;
   const paymentId = req.query.paymentId;
   const amount = req.query.amount;
-  console.log(req.query.payment_id)
 
   const execute_payment_json = {
     "payer_id": payerId,
