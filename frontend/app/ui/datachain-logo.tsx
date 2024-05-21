@@ -2,16 +2,15 @@ import Image from 'next/image';
 
 export default function DataChainLogo() {
   return (
-    <div className="flex flex-row items-center leading-none text-white p-4 rounded">
+    <div className="flex ml-8 rounded">
       <Image
-        src="/DS_logo2.png" // Uporabite pot do slike, ki ste jo naložili
+        src="/DS_logo1.png" 
         alt="Data Chain Logo"
-        width={120} // Spremenjena širina slike
-        height={130} // Spremenjena višina slike
+        width={150} 
+        height={150} 
         priority
-        className="rounded-lg" // Dodan Tailwind CSS razred za zaobljene robove
-        style={{ marginBottom: "-13px", marginLeft: "-11px" }} // Prilagojene margine
       />
     </div>
   );
 }
+

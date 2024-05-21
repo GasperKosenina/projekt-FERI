@@ -7,7 +7,7 @@ interface ModalProps {
   description: any;
 }
 
-export default function Modal({ description }: ModalProps) {
+export default function Modal1({ description }: ModalProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const toggleModal = () => {

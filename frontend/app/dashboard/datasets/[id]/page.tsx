@@ -2,7 +2,8 @@ import Breadcrumbs from "@/app/ui/breadcrumbs";
 import { findById, generate } from "@/lib/data";
 import { Dataset } from "@/lib/definitions";
 import { clerkClient } from "@clerk/nextjs/server";
-import Modal from "@/app/ui/modal";
+import Modal1 from "@/app/ui/modal_jsonschema";
+import Modal2 from "@/app/ui/modal_success";
 import PaymentButton from "@/components/ui/paypalButton";
 
 async function getDataProvider(userId: string) {
@@ -58,77 +59,78 @@ export default async function Page({
       />
 
       <div>
-        <div className="mt-20 border-t border-gray-100">
-          <dl className="divide-y divide-gray-100">
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium leading-6 text-gray-900">
-                Dataset
-              </dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {dataset.name}
-              </dd>
-            </div>
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium leading-6 text-gray-900">
-                URL
-              </dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {dataset.url}
-              </dd>
-            </div>
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium leading-6 text-gray-900">
-                Data Provider
-              </dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                <span>{await getDataProvider(dataset.userID)} </span>
-              </dd>
-            </div>
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium leading-6 text-gray-900">
-                Category
-              </dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {dataset.category}
-              </dd>
-            </div>
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium leading-6 text-gray-900">
-                Duration
-              </dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {dataset.duration} seconds
-              </dd>
-            </div>
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium leading-6 text-gray-900">
-                Purpose
-              </dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {purpose}
-              </dd>
-            </div>
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium leading-6 text-gray-900">
-                Price
-              </dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {price}€
-              </dd>
-            </div>
-            <div className="px-4 py-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-              <dt className="text-sm font-medium leading-6 text-gray-900">
-                Date
-              </dt>
-              <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">
-                {formatDate(dataset.createdAt)}
-              </dd>
-            </div>
-          </dl>
+        <div className="mt-8 mx-auto w-full max-w-full bg-white overflow-hidden sm:rounded-lg outline outline-1 outline-gray-200">
+          <div className="outline outline-1 border-gray-200">
+            <dl className="divide-y divide-gray-200">
+              <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Full name</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                  {dataset.name}
+                </dd>
+              </div>
+              <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">URL</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                  <a href={dataset.url} className="text-blue-500 hover:underline">
+                    {dataset.url}
+                  </a>
+                </dd>
+              </div>
+              <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Data Provider</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                  {await getDataProvider(dataset.userID)}
+                </dd>
+              </div>
+              <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Category</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                  {dataset.category}
+                </dd>
+              </div>
+              <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Duration</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                  {dataset.duration} seconds
+                </dd>
+              </div>
+              <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Purpose</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                  {purpose}
+                </dd>
+              </div>
+              <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Price</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                  {price}
+                </dd>
+              </div>
+              <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Date</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                  {formatDate(dataset.createdAt)}
+                </dd>
+              </div>
+            </dl>
+          </div>
         </div>
+        
+        {/* Vključitev prve modalne komponente */}
+        <Modal1 description={dataset.description} />
 
-        <Modal description={dataset.description} />
+        {/* Vključitev druge modalne komponente */}
+        <Modal2 accessToken={access_token.access_token} />
+
+        <div className="flex flex-col items-start mt-10">
+          <button className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-lg inline-flex items-center">
+            Buy now with 
+            <span className="ml-2 text-blue-700 font-bold italic" style={{ fontFamily: "Arial" }}>Pay</span>
+            <span className="text-blue-400 font-bold italic" style={{ fontFamily: "Arial" }}>Pal</span>
+          </button>
+        </div>
       </div>
+
       <div className="mt-10">
         <PaymentButton datasetId={dataset.id} />
       </div>
