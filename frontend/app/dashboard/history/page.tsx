@@ -48,7 +48,7 @@ export default async function Page() {
         <h1 className="text-2xl font-bold mb-8">
           Purchase History Of Your Datasets
         </h1>
-        <div className="bg-white shadow-md rounded-lg overflow-hidden">
+        <div className="bg-white outline outline-1 outline-gray-200 rounded-lg overflow-hidden">
           <table className="min-w-full bg-white">
             <thead>
               <tr>
@@ -57,6 +57,7 @@ export default async function Page() {
                   Purchased At
                 </th>
                 <th className="py-2 px-4 bg-gray-200 text-left">Dataset</th>
+                <th className="py-2 px-4 bg-gray-200 text-left">Amount</th>
                 <th className="py-2 px-4 bg-gray-200 text-center">
                   Paid Success
                 </th>
@@ -72,6 +73,7 @@ export default async function Page() {
                   <td className="py-2 px-4">
                     {await getDatasetNameById(payment.datasetId)}
                   </td>
+                  <td className="py-2 px-4">{payment.amount}$</td>
                   <td className="py-2 px-4 text-center">
                     {payment.paymentStatus ? (
                       <CheckCircleIcon className="text-green-500 inline-block" />

@@ -8,7 +8,7 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 
 const PriceItemSchema = z.object({
   purpose: z.string(),
-  price: z.number().min(0, { message: "Price must be greater or equal to 0" }),
+  price: z.number().min(0, { message: "Price must be greater or equal to 1" }),
 });
 
 const DatasetSchema = z.object({
@@ -602,7 +602,6 @@ export async function getDataProviderPicture(userId: string) {
   }
 }
 
-
 export async function getPaymentByDataset(datasetID: string) {
   noStore();
 
@@ -628,5 +627,3 @@ export async function getPaymentByDataset(datasetID: string) {
     return [];
   }
 }
-
-

@@ -21,40 +21,97 @@ import {
   ArrowDownIcon,
   CheckBadgeIcon,
 } from "@heroicons/react/24/outline";
-import { useState } from "react";
+import { useState, ChangeEvent, FormEvent } from "react";
 import { postDataset } from "@/lib/data";
 import { useFormState } from "react-dom";
 import { ChevronRight } from "lucide-react";
 
+interface Checkbox {
+  id: number;
+  label: string;
+  checked: boolean;
+  price: number;
+  isFree: boolean;
+}
+
 export default function Form() {
-  const [position, setPosition] = useState("");
+  const [position, setPosition] = useState<string>("");
   const initialState = { message: "", errors: {} };
   const [state, dispatch] = useFormState(postDataset, initialState);
 
-
-  const [checkboxes, setCheckboxes] = useState([
-    { id: 1, label: 'Research (using dataset for scientific research)', checked: false, price: 0 },
-    { id: 2, label: 'Education (using dataset for pedagogical purposes)', checked: false, price: 0 },
-    { id: 3, label: 'Public administration processes', checked: false, price: 0 },
-    { id: 4, label: 'Comparative analysis (benchmarking)', checked: false, price: 0 },
-    { id: 5, label: 'Machine learning', checked: false, price: 0 },
-    { id: 6, label: 'Business analytics (commercial)', checked: false, price: 0 },
+  const [checkboxes, setCheckboxes] = useState<Checkbox[]>([
+    {
+      id: 1,
+      label: "Research (using dataset for scientific research)",
+      checked: false,
+      price: 0,
+      isFree: true,
+    },
+    {
+      id: 2,
+      label: "Education (using dataset for pedagogical purposes)",
+      checked: false,
+      price: 0,
+      isFree: true,
+    },
+    {
+      id: 3,
+      label: "Public administration processes",
+      checked: false,
+      price: 0,
+      isFree: true,
+    },
+    {
+      id: 4,
+      label: "Comparative analysis (benchmarking)",
+      checked: false,
+      price: 0,
+      isFree: true,
+    },
+    {
+      id: 5,
+      label: "Machine learning",
+      checked: false,
+      price: 0,
+      isFree: true,
+    },
+    {
+      id: 6,
+      label: "Business analytics (commercial)",
+      checked: false,
+      price: 0,
+      isFree: true,
+    },
   ]);
 
-  const handleCheckboxChange = (id: any) => {
-    setCheckboxes(prevCheckboxes =>
-      prevCheckboxes.map(checkbox =>
-        checkbox.id === id ? { ...checkbox, checked: !checkbox.checked } : checkbox
-
+  const handleCheckboxChange = (id: number) => {
+    setCheckboxes((prevCheckboxes) =>
+      prevCheckboxes.map((checkbox) =>
+        checkbox.id === id
+          ? { ...checkbox, checked: !checkbox.checked }
+          : checkbox
       )
     );
   };
 
-  const handlePriceChange = (id: any, event: any) => {
+  const handlePriceChange = (
+    id: number,
+    event: ChangeEvent<HTMLInputElement>
+  ) => {
     const newPrice = parseFloat(event.target.value);
-    setCheckboxes(prevCheckboxes =>
-      prevCheckboxes.map(checkbox =>
+    setCheckboxes((prevCheckboxes) =>
+      prevCheckboxes.map((checkbox) =>
         checkbox.id === id ? { ...checkbox, price: newPrice } : checkbox
+      )
+    );
+  };
+
+  const handleFreePaidChange = (id: number, isFree: boolean) => {
+    setCheckboxes((prevCheckboxes) =>
+      prevCheckboxes.map((checkbox) =>
+        checkbox.id === id
+          ? { ...checkbox, isFree, price: isFree ? 0 : checkbox.price }
+          : checkbox
       )
     );
   };
@@ -64,29 +121,28 @@ export default function Form() {
     formData.append("category", category);
   };
 
-
-
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
+  const handleSubmit = (e: FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     const formData = new FormData(e.currentTarget);
     appendCategory(formData);
 
     const purposeAndPriceArray: { purpose: string; price: number }[] = [];
 
-    checkboxes.forEach(checkbox => {
+    checkboxes.forEach((checkbox) => {
       if (checkbox.checked) {
-        const purposeAndPriceObject = { purpose: checkbox.label, price: checkbox.price };
+        const purposeAndPriceObject = {
+          purpose: checkbox.label,
+          price: checkbox.price,
+        };
         purposeAndPriceArray.push(purposeAndPriceObject);
       }
     });
 
     const purposeAndPriceString = JSON.stringify(purposeAndPriceArray);
-    formData.append('purposeAndPrice', purposeAndPriceString);
+    formData.append("purposeAndPrice", purposeAndPriceString);
 
     dispatch(formData);
   };
-
-
 
   return (
     <>
@@ -98,7 +154,12 @@ export default function Form() {
                 Name
               </label>
               <ChevronRight className="h-5 w-5 text-gray-500" />
-              <p className="text-sm text-gray-500">Name of the dataset</p>
+              <p
+                className="text-sm text-gray-500"
+                title="This is the name of dataset"
+              >
+                Name of the dataset
+              </p>
             </div>
             <div className="relative mt-2 rounded-md">
               <div className="relative">
@@ -309,10 +370,10 @@ export default function Form() {
             </div>
           </div>
           <div className="mb-8">
-            <div className="max-wmx-auto mt-4 bg-gray-50">
+            <div className="max-w-mx-auto mt-4 bg-gray-50">
               <div className="flex mb-2 gap-1">
                 <label
-                  htmlFor="duration"
+                  htmlFor="purpose"
                   className="mb-2 block text-sm font-medium"
                 >
                   Purpose
@@ -323,7 +384,7 @@ export default function Form() {
                 </p>
               </div>
 
-              {checkboxes.map(checkbox => (
+              {checkboxes.map((checkbox) => (
                 <div key={checkbox.id} className="flex items-center mb-2">
                   <input
                     type="checkbox"
@@ -333,17 +394,64 @@ export default function Form() {
                     className="mr-2"
                     aria-describedby="price-error"
                   />
-                  <label htmlFor={`checkbox-${checkbox.id}`} className="text-sm">{checkbox.label}</label>
+                  <label
+                    htmlFor={`checkbox-${checkbox.id}`}
+                    className="text-sm"
+                  >
+                    {checkbox.label}
+                  </label>
                   {checkbox.checked && (
-                    <input
-                      type="number"
-                      value={checkbox.price}
-                      onChange={(event) => handlePriceChange(checkbox.id, event)}
-                      className="ml-auto px-2 py-2 border border-gray-300 rounded text-sm outline-2 placeholder:text-gray-500"
-                      step="0.01"
-                      placeholder="Enter EUR Price"
-
-                    />
+                    <div className="ml-auto flex items-center">
+                      <div className="flex items-center mr-2">
+                        <input
+                          type="radio"
+                          id={`free-${checkbox.id}`}
+                          name={`price-option-${checkbox.id}`}
+                          checked={checkbox.isFree}
+                          onChange={() =>
+                            handleFreePaidChange(checkbox.id, true)
+                          }
+                        />
+                        <label
+                          htmlFor={`free-${checkbox.id}`}
+                          className="text-sm ml-1"
+                        >
+                          Free
+                        </label>
+                      </div>
+                      {!checkbox.isFree ? (
+                        <div className="flex items-center ml-2">
+                          <input
+                            type="number"
+                            value={checkbox.price}
+                            onChange={(event) =>
+                              handlePriceChange(checkbox.id, event)
+                            }
+                            className="px-2 py-2 border border-gray-300 rounded text-sm outline-2 placeholder:text-gray-500"
+                            step="0.01"
+                            placeholder="Enter EUR Price"
+                          />
+                        </div>
+                      ) : (
+                        <div className="flex items-center">
+                          <input
+                            type="radio"
+                            id={`paid-${checkbox.id}`}
+                            name={`price-option-${checkbox.id}`}
+                            checked={!checkbox.isFree}
+                            onChange={() =>
+                              handleFreePaidChange(checkbox.id, false)
+                            }
+                          />
+                          <label
+                            htmlFor={`paid-${checkbox.id}`}
+                            className="text-sm ml-1"
+                          >
+                            Paid
+                          </label>
+                        </div>
+                      )}
+                    </div>
                   )}
                 </div>
               ))}
@@ -357,6 +465,7 @@ export default function Form() {
                 ))}
             </div>
           </div>
+
           <div aria-live="polite" aria-atomic="true">
             {state.message ? (
               <p className="mt-2 text-sm text-red-500">{state.message}</p>
