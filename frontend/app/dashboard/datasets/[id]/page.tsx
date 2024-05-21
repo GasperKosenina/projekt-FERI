@@ -1,10 +1,11 @@
 import Breadcrumbs from "@/app/ui/breadcrumbs";
-import { findById, generate } from "@/lib/data";
+import { findById, generate, getUser} from "@/lib/data";
 import { Dataset } from "@/lib/definitions";
-import { clerkClient } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import Modal1 from "@/app/ui/modal_jsonschema";
 import Modal2 from "@/app/ui/modal_success";
 import PaymentButton from "@/components/ui/paypalButton";
+
 
 async function getDataProvider(userId: string) {
   try {
@@ -31,19 +32,19 @@ export default async function Page({
   params: { id: string };
   searchParams?: { [key: string]: string | undefined };
 }) {
+  const { userId } = auth();
+  if (!userId) {
+    console.error("No user ID found");
+    return <div>Check your connection</div>;
+  }
   const id = params.id;
 
   let purpose = searchParams?.purpose;
   let price = searchParams?.price;
 
   const dataset: Dataset = await findById(id);
-  console.log(dataset.description);
 
-  const access_token = await generate(dataset.accessToken);
-
-  if (access_token == null) {
-    return <p>Napaka</p>;
-  }
+  const mongoUser = await getUser(dataset.userID);
 
   return (
     <main>
@@ -119,8 +120,6 @@ export default async function Page({
         {/* Vključitev prve modalne komponente */}
         <Modal1 description={dataset.description} />
 
-        {/* Vključitev druge modalne komponente */}
-        <Modal2 accessToken={access_token.access_token} />
 
         <div className="flex flex-col items-start mt-10">
           <button className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-lg inline-flex items-center">
@@ -132,11 +131,14 @@ export default async function Page({
       </div>
 
       <div className="mt-10">
-        <PaymentButton datasetId={dataset.id} />
+        {mongoUser.id !== userId && (
+          <PaymentButton
+            datasetId={id}
+            payee={mongoUser.email}
+            amount={price}
+          />
+        )}
       </div>
-
-      <p className="mt-52">Your access token:</p>
-      <strong>{access_token.access_token}</strong>
     </main>
   );
 }

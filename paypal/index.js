@@ -23,8 +23,11 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 // OBDELAVA TRANSAKCIJ
 app.post('/pay', (req, res) => {
-  const payeeEmail = "janeznovak@personal.example.com";
+  const payeeEmail = req.body.payee 
   const datasetId = req.body.datasetId;
+  const amount = req.body.amount;
+  const payment_id = req.body.payment_id;
+
   const create_payment_json = {
     "intent": "sale",
     "payer": {
@@ -32,7 +35,7 @@ app.post('/pay', (req, res) => {
     },
     "transactions": [{
       "amount": {
-        "total": "100.00",
+        "total": amount,
         "currency": "USD"
       },
       "payee": {
@@ -41,7 +44,7 @@ app.post('/pay', (req, res) => {
       "description": "Transfer between sandbox accounts"
     }],
     "redirect_urls": {
-      "return_url": `http://localhost:${PORT}/success?datasetId=${datasetId}`,
+      "return_url": `http://localhost:${PORT}/success?datasetId=${datasetId}&amount=${amount}&payment_id=${payment_id}`,
       "cancel_url": `http://localhost:${PORT}/cancel`
     }
   };
@@ -68,13 +71,14 @@ app.post('/pay', (req, res) => {
 app.get('/success', (req, res) => {
   const payerId = req.query.PayerID;
   const paymentId = req.query.paymentId;
+  const amount = req.query.amount;
 
   const execute_payment_json = {
     "payer_id": payerId,
     "transactions": [{
       "amount": {
         "currency": "USD",
-        "total": "100.00"
+        "total": amount
       }
     }]
   };
@@ -85,14 +89,14 @@ app.get('/success', (req, res) => {
       res.redirect('http://localhost:3000/paypal/failed'); // Redirect to a failure page on your frontend
     } else {
       console.log('Payment Success:', JSON.stringify(payment));
-      res.redirect(`http://localhost:3000/paypal/success?datasetId=${req.query.datasetId}`);
+      res.redirect(`http://localhost:3000/dashboard/paypal/success?datasetId=${req.query.datasetId}&payment_id=${req.query.payment_id}`);
     }
   });
 });
 
 // POT ZA PREKLIC PLACILA
 app.get('/cancel', (req, res) => {
-  res.send('Payment Cancelled');
+  res.redirect('http://localhost:3000/dashboard')
 });
 
 app.listen(PORT, () => {

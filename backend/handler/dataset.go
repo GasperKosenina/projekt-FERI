@@ -7,11 +7,13 @@ import (
 
 	"github.com/GasperKosenina/projekt-FERI/model"
 	"github.com/GasperKosenina/projekt-FERI/repository/dataset"
+	"github.com/GasperKosenina/projekt-FERI/repository/payment"
 	"github.com/labstack/echo/v4"
 )
 
 type Dataset struct {
-	Repository *dataset.MongoRepository
+	Repository        *dataset.MongoRepository
+	PaymentRepository *payment.MongoRepository
 }
 
 func (d *Dataset) Create(c echo.Context) error {
@@ -77,4 +79,18 @@ func (d *Dataset) FindById(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, dataset)
+}
+
+func (d *Dataset) ListByUserID(c echo.Context) error {
+	userID := c.Param("userID")
+	if userID == "" {
+		return c.JSON(http.StatusBadRequest, "Invalid User ID")
+	}
+
+	datasets, err := d.Repository.ListByUserID(c.Request().Context(), userID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
+	}
+
+	return c.JSON(http.StatusOK, datasets)
 }

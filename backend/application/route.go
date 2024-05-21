@@ -38,6 +38,8 @@ func (a *App) datasetRoute(g *echo.Group) {
 	g.POST("", datasetHandler.Create)
 	g.GET("", datasetHandler.ListAll)
 	g.GET("/:id", datasetHandler.FindById)
+	g.GET("/user/:userID", datasetHandler.ListByUserID)
+
 }
 
 func (a *App) userRoute(g *echo.Group) {
@@ -57,9 +59,16 @@ func (a *App) paymentRoute(g *echo.Group) {
 		Repository: &payment.MongoRepository{
 			Client: a.db,
 		},
+		DatasetRepository: &dataset.MongoRepository{
+			Client: a.db,
+		},
 	}
 
 	g.POST("", paymentHandler.Create)
-	g.PUT("/:id", paymentHandler.UpdateStatus)
+	g.PUT("/:id", paymentHandler.UpdateAccessToken)
+	g.PUT("/status/:id", paymentHandler.UpdatePaymentStatus)
 	g.GET("/:id", paymentHandler.GetByID)
+	g.GET("/purchased/:userID", paymentHandler.ListPurchasedDatasetsByUserID)
+	g.GET("/dataset/:userID", paymentHandler.ListAllByDatasetUserID)
+	g.GET("/purchased-dataset/:datasetID", paymentHandler.GetByDatasetID)
 }

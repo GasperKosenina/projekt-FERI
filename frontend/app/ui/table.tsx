@@ -1,9 +1,14 @@
 import { Dataset } from "@/lib/definitions";
-import { listAll } from "@/lib/data";
+import {
+  getDataProviderName,
+  getDataProviderPicture,
+  listAll,
+} from "@/lib/data";
 import Link from "next/link";
 import { clerkClient } from "@clerk/nextjs/server";
 import { getUser } from "@/lib/data";
 import { auth } from "@clerk/nextjs/server";
+import Image from "next/image";
 
 function formatDate(dateString: any) {
   const date = new Date(dateString);
@@ -14,20 +19,7 @@ function formatDate(dateString: any) {
   });
 }
 
-async function getDataProvider(userId: string) {
-  try {
-    const user = await clerkClient.users.getUser(userId);
-    return user.username;
-  }
-  catch (error) {
-    return ("No Data Provider")
-  }
-}
-
-
 export default async function Table({ query }: { query: string }) {
-
-
   const { userId } = auth();
 
   if (!userId) {
@@ -38,15 +30,12 @@ export default async function Table({ query }: { query: string }) {
   const mongoUser = await getUser(userId);
   const tipUserja = mongoUser.type;
 
-
   let datasets: Dataset[] = [];
 
   const data = await listAll();
   if (data) {
     datasets = data;
   }
-
-
 
   const filteredDatasets = datasets.filter((dataset) =>
     dataset.name.toLowerCase().includes(query.toLowerCase())
@@ -56,15 +45,13 @@ export default async function Table({ query }: { query: string }) {
     return <p className="mt-10">No datasets found</p>;
   }
 
-
-
   return (
     <div className="mt-6 flow-root">
       <div className="inline-block min-w-full align-middle">
         <div className="rounded-lg bg-gray-50 p-2 md:pt-0">
           <div className="md:hidden">
             {filteredDatasets?.map((dataset) => (
-              < div
+              <div
                 key={dataset.id}
                 className="mb-2 w-full rounded-md bg-white p-4"
               >
@@ -75,10 +62,7 @@ export default async function Table({ query }: { query: string }) {
                         <strong>{dataset.name}</strong>
                       </div>
                     </Link>
-                    <p className="text-sm text-gray-500">{
-
-                      dataset.userID
-                    }</p>
+                    <p className="text-sm text-gray-500">{dataset.userID}</p>
                   </div>
                 </div>
                 <div className="flex w-full items-center justify-between pt-4">
@@ -123,17 +107,21 @@ export default async function Table({ query }: { query: string }) {
               {filteredDatasets?.map(async (dataset) => (
                 <>
                   {dataset.price.map(async (priceItem, index) => {
-
                     if (
                       (tipUserja === "individual" &&
-                        (priceItem.purpose === "Education (using dataset for pedagogical purposes)" ||
-                          priceItem.purpose === "Comparative analysis (benchmarking)" ||
+                        (priceItem.purpose ===
+                          "Education (using dataset for pedagogical purposes)" ||
+                          priceItem.purpose ===
+                            "Comparative analysis (benchmarking)" ||
                           priceItem.purpose === "Machine learning")) ||
                       (tipUserja === "company" &&
-                        (priceItem.purpose === "Business analytics (commercial)")) ||
+                        priceItem.purpose ===
+                          "Business analytics (commercial)") ||
                       (tipUserja === "research-institution" &&
-                        priceItem.purpose === "Research (using dataset for scientific research)") ||
-                      ((tipUserja === "public-administration" || tipUserja === "state-administration") &&
+                        priceItem.purpose ===
+                          "Research (using dataset for scientific research)") ||
+                      ((tipUserja === "public-administration" ||
+                        tipUserja === "state-administration") &&
                         priceItem.purpose === "Public administration processes")
                     ) {
                       return (
@@ -143,7 +131,9 @@ export default async function Table({ query }: { query: string }) {
                         >
                           <td className="whitespace-nowrap py-10 pl-6 pr-3">
                             <div className="flex items-center gap-3 hover:text-gray-500">
-                              <Link href={`/dashboard/datasets/${dataset.id}?purpose=${priceItem.purpose}&price=${priceItem.price}`}>
+                              <Link
+                                href={`/dashboard/datasets/${dataset.id}?purpose=${priceItem.purpose}&price=${priceItem.price}`}
+                              >
                                 <strong>{dataset.name}</strong>
                               </Link>
                             </div>
@@ -153,7 +143,18 @@ export default async function Table({ query }: { query: string }) {
                               dataset.category.slice(1)}
                           </td>
                           <td className="whitespace-nowrap px-3 py-10">
-                            <span>{(await getDataProvider(dataset.userID))}</span>
+                            <span className="flex items-center gap-2">
+                              <Image
+                                src={await getDataProviderPicture(
+                                  dataset.userID
+                                )}
+                                alt="Picture of the data provider"
+                                width={30}
+                                height={30}
+                                className="rounded-full"
+                              />
+                              {await getDataProviderName(dataset.userID)}
+                            </span>
                           </td>
                           <td className="whitespace-nowrap px-3 py-10">
                             {priceItem.purpose}
@@ -174,6 +175,6 @@ export default async function Table({ query }: { query: string }) {
           </table>
         </div>
       </div>
-    </div >
+    </div>
   );
 }

@@ -1,10 +1,10 @@
 "use server";
-import { Dataset } from "./definitions";
+import { Dataset, Payment } from "./definitions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
 import { any, z } from "zod";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 
 const PriceItemSchema = z.object({
   purpose: z.string(),
@@ -38,8 +38,7 @@ const DatasetSchema = z.object({
   category: z.string().nonempty({ message: "Please select a category" }),
   duration: z
     .number({ message: "Duration must be a number" })
-    .gt(0, { message: "Duration must be greater than 0" })
-    .max(1440, { message: "Duration must be less than 1441" }),
+    .gt(0, { message: "Duration must be greater than 0" }),
   userID: z.string(),
 });
 
@@ -106,7 +105,7 @@ export async function postDataset(prevState: State, formData: FormData) {
   }
 
   revalidatePath("/dashboard/datasets");
-  redirect("/dashboard/datasets");
+  redirect("/dashboard");
 }
 
 export async function listAll() {
@@ -149,6 +148,29 @@ export async function findById(id: string) {
 
     const dataset = await response.json();
     return dataset;
+  } catch (error) {
+    console.error("Error fetching datasets:", error);
+    return [];
+  }
+}
+export async function getDatasetNameById(id: string) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/dataset/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const dataset: Dataset = await response.json();
+    return dataset.name;
   } catch (error) {
     console.error("Error fetching datasets:", error);
     return [];
@@ -225,6 +247,7 @@ export async function postUser(formData: FormData) {
 }
 
 export async function getUser(userId: string) {
+  noStore();
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/user/${userId}`,
@@ -248,15 +271,24 @@ export async function getUser(userId: string) {
   }
 }
 
-export async function paypal(datasetId: string) {
-  console.log(datasetId);
+export async function paypal(
+  datasetId: string,
+  payee: string,
+  amount: string,
+  payment_id: string
+) {
   try {
     const response = await fetch(`http://localhost:5001/pay`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ datasetId: datasetId }),
+      body: JSON.stringify({
+        datasetId: datasetId,
+        payee: payee,
+        amount: amount,
+        payment_id: payment_id,
+      }),
     });
 
     if (!response.ok) {
@@ -274,10 +306,8 @@ export async function paypal(datasetId: string) {
   }
 }
 
-
 const EmailSchema = z.object({
-  email: z
-    .string().email()
+  email: z.string().email(),
 });
 
 export type State1 = {
@@ -287,15 +317,12 @@ export type State1 = {
   message?: string | null;
 };
 
-
-
 export async function updateUserWithEmail(formData: FormData) {
   const { userId } = auth();
   if (!userId) {
     console.error("No user ID found");
     return;
   }
-
 
   const validatedData = EmailSchema.safeParse({
     email: formData.get("email") as string,
@@ -309,15 +336,17 @@ export async function updateUserWithEmail(formData: FormData) {
     };
   }
 
-
   try {
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/user/email/${userId}`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(validatedData.data),
-    });
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/user/email/${userId}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(validatedData.data),
+      }
+    );
 
     if (!response.ok) {
       console.error("Error setting user email:", response.statusText);
@@ -329,8 +358,7 @@ export async function updateUserWithEmail(formData: FormData) {
 
   redirect(`/dashboard`);
 }
-
-export async function createPayment(datasetId: string) {
+export async function createPayment(datasetId: string, amount: number) {
   const { userId } = auth();
   if (!userId) {
     console.error("No user ID found");
@@ -346,6 +374,7 @@ export async function createPayment(datasetId: string) {
       body: JSON.stringify({
         datasetId: datasetId,
         userId: userId,
+        amount: amount,
       }),
     });
 
@@ -354,15 +383,228 @@ export async function createPayment(datasetId: string) {
     }
 
     const data = await response.json();
-    console.log(data);
+    //console.log(data);
     return data;
   } catch (error) {
     console.error("Error creating payment:", error);
   }
 }
+export async function getDatasetsByUser(userID: string) {
+  noStore();
+
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/dataset/user/${userID}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const datasets = await response.json();
+    return datasets;
+  } catch (error) {
+    console.error("Error fetching datasets:", error);
+    return [];
+  }
+}
+export async function getDatasetsLengthByUser(userID: string) {
+  noStore();
+
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/dataset/user/${userID}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const datasets = await response.json();
+
+    return datasets;
+  } catch (error) {
+    console.error("Error fetching datasets:", error);
+    return [];
+  }
+}
+export async function updateToken(id: string) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/payment/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          accessToken: true,
+        }),
+      }
+    );
+  } catch (error) {
+    console.error("Error setting token status:", error);
+  }
+}
+export async function updateStatus(id: string) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/payment/status/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          paymentStatus: true,
+        }),
+      }
+    );
+  } catch (error) {
+    console.error("Error setting payment status:", error);
+  }
+}
+export async function getPaymentById(id: string) {
+  noStore();
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/payment/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const datasets = await response.json();
+    return datasets;
+  } catch (error) {
+    console.error("Error fetching payment:", error);
+    return [];
+  }
+}
+export async function getPurchasedDatasets(userID: string) {
+  noStore();
+
+  try {
+    await new Promise((resolve) => setTimeout(resolve, 2000));
+
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/payment/purchased/${userID}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const datasets = await response.json();
+    return datasets;
+  } catch (error) {
+    console.error("Error fetching datasets:", error);
+    return [];
+  }
+}
+export async function getPaymentsByUser(userID: string) {
+  noStore();
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/payment/dataset/${userID}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const payments = await response.json();
+    return payments;
+  } catch (error) {
+    console.error("Error fetching payment:", error);
+    return [];
+  }
+}
+export async function getDataProviderName(userId: string) {
+  try {
+    const user = await clerkClient.users.getUser(userId);
+    if (user.firstName) {
+      return user.firstName;
+    }
+    return user.username;
+  } catch (error) {
+    return "No Data Provider";
+  }
+}
+export async function getDataProviderPicture(userId: string) {
+  try {
+    const user = await clerkClient.users.getUser(userId);
+    if (user.imageUrl) {
+      return user.imageUrl;
+    }
+    return "/default-avatar.png";
+  } catch (error) {
+    return "No Data Provider";
+  }
+}
 
 
+export async function getPaymentByDataset(datasetID: string) {
+  noStore();
 
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/payment/purchased-dataset/${datasetID}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
+    if (!response.ok) {
+      return [];
+    }
+
+    const payment = await response.json();
+    return payment;
+  } catch (error) {
+    console.error("Error fetching payment:", error);
+    return [];
+  }
+}
 
 

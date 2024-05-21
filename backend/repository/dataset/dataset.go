@@ -53,3 +53,21 @@ func (m *MongoRepository) FindByID(ctx context.Context, id string) (*model.Datas
 	}
 	return &dataset, nil
 }
+
+func (m *MongoRepository) ListByUserID(ctx context.Context, userID string) ([]*model.Dataset, error) {
+	collection := m.Client.Database("projekt").Collection("dataset")
+
+	filter := bson.M{"userID": userID}
+
+	cursor, err := collection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var datasets []*model.Dataset
+	if err := cursor.All(ctx, &datasets); err != nil {
+		return nil, err
+	}
+	return datasets, nil
+}

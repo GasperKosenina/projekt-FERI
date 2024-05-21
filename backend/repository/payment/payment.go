@@ -13,26 +13,47 @@ type MongoRepository struct {
 	Client *mongo.Client
 }
 
-func (p *MongoRepository) Insert(ctx context.Context, payment *model.Payment) error {
+func (p *MongoRepository) Insert(ctx context.Context, payment *model.Payment) (*model.Payment, error) {
 	collection := p.Client.Database("projekt").Collection("payment")
-	_, err := collection.InsertOne(ctx, payment)
+
+	result, err := collection.InsertOne(ctx, payment)
 	if err != nil {
-		return err
+		return nil, err
 	}
-	return nil
+
+	insertedID := result.InsertedID.(primitive.ObjectID)
+
+	var createdPayment model.Payment
+	err = collection.FindOne(ctx, bson.M{"_id": insertedID}).Decode(&createdPayment)
+	if err != nil {
+		return nil, err
+	}
+
+	return &createdPayment, nil
 }
 
-func (p *MongoRepository) UpdateStatus(ctx context.Context, id string, status string) error {
+func (p *MongoRepository) UpdateAccessToken(ctx context.Context, id string, accessToken bool) error {
 	collection := p.Client.Database("projekt").Collection("payment")
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return err
 	}
 
-	filter := bson.M{"_id": objectID}
-	update := bson.M{"$set": bson.M{"status": status}}
+	_, err = collection.UpdateOne(ctx, bson.M{"_id": objectID}, bson.M{"$set": bson.M{"accessToken": accessToken}})
+	if err != nil {
+		return err
+	}
+	return nil
+}
 
-	_, err = collection.UpdateOne(ctx, filter, update)
+func (p *MongoRepository) UpdatePaymentStatus(ctx context.Context, id string, paymentStatus bool) error {
+	collection := p.Client.Database("projekt").Collection("payment")
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	_, err = collection.UpdateOne(ctx, bson.M{"_id": objectID}, bson.M{"$set": bson.M{"paymentStatus": paymentStatus}})
 	if err != nil {
 		return err
 	}
@@ -52,4 +73,58 @@ func (p *MongoRepository) FindByID(ctx context.Context, id string) (*model.Payme
 		return nil, err
 	}
 	return payment, nil
+}
+
+func (p *MongoRepository) FindByUserID(ctx context.Context, userID string) ([]*model.Payment, error) {
+	collection := p.Client.Database("projekt").Collection("payment")
+
+	filter := bson.M{"userId": userID, "paymentStatus": true}
+
+	cursor, err := collection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var payments []*model.Payment
+	if err := cursor.All(ctx, &payments); err != nil {
+		return nil, err
+	}
+	return payments, nil
+}
+
+func (p *MongoRepository) FindByDatasetID(ctx context.Context, datasetID string) ([]*model.Payment, error) {
+	collection := p.Client.Database("projekt").Collection("payment")
+
+	filter := bson.M{"datasetId": datasetID, "paymentStatus": true}
+
+	cursor, err := collection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var payments []*model.Payment
+	if err := cursor.All(ctx, &payments); err != nil {
+		return nil, err
+	}
+
+	return payments, nil
+}
+
+func (p *MongoRepository) FindOneByDatasetID(ctx context.Context, datasetID string) (*model.Payment, error) {
+	collection := p.Client.Database("projekt").Collection("payment")
+
+	filter := bson.M{"datasetId": datasetID, "paymentStatus": true}
+
+	var payment model.Payment
+	err := collection.FindOne(ctx, filter).Decode(&payment)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, nil // No documents found
+		}
+		return nil, err
+	}
+
+	return &payment, nil
 }
