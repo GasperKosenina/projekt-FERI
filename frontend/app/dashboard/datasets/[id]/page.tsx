@@ -1,10 +1,10 @@
 import Breadcrumbs from "@/app/ui/breadcrumbs";
-import { findById, generate, getUser} from "@/lib/data";
+import { findById, generate, getUser } from "@/lib/data";
 import { Dataset } from "@/lib/definitions";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import Modal1 from "@/app/ui/modal_jsonschema";
-import Modal2 from "@/app/ui/modal_success";
 import PaymentButton from "@/components/ui/paypalButton";
+import RequestAccess from "@/app/ui/request-access";
 
 
 async function getDataProvider(userId: string) {
@@ -113,30 +113,16 @@ export default async function Page({
                   {formatDate(dataset.createdAt)}
                 </dd>
               </div>
+              <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">Dataset description</dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                  <Modal1 description={dataset.description} />
+                </dd>
+              </div>
             </dl>
           </div>
         </div>
-        
-        <Modal1 description={dataset.description} />
-
-
-        <div className="flex flex-col items-start mt-10">
-          <button className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-lg inline-flex items-center">
-            Buy now with 
-            <span className="ml-2 text-blue-700 font-bold italic" style={{ fontFamily: "Arial" }}>Pay</span>
-            <span className="text-blue-400 font-bold italic" style={{ fontFamily: "Arial" }}>Pal</span>
-          </button>
-        </div>
-      </div>
-
-      <div className="mt-10">
-        {mongoUser.id !== userId && (
-          <PaymentButton
-            datasetId={id}
-            payee={mongoUser.email}
-            amount={price}
-          />
-        )}
+        <RequestAccess dataset={dataset} datasetId={id} amount={price} mongoUser={mongoUser} userId={userId} />
       </div>
     </main>
   );

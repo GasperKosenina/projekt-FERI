@@ -19,7 +19,7 @@ export default function Modal1({ description }: ModalProps) {
   return (
     <div>
       <ButtonComponent
-        className="bg-gray-400 hover:bg-gray-500 active:bg-gray-500 text-white font-bold py-2 px-4 rounded mt-5"
+        className="bg-gray-100 hover:bg-gray-200 active:bg-white text-gray-400 text-sm rounded mr-10 "
         onClick={toggleModal}
       >
         Show JSON schema

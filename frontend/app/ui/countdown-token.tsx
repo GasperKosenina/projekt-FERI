@@ -16,7 +16,7 @@ function Countdown({ expiresAt }: CountdownProps) {
 
             if (difference <= 0) {
                 setCountdown("Your token has already expired");
-                clearInterval(interval); // Stop the interval if token has expired
+                clearInterval(interval); 
             } else {
                 const days = Math.floor(difference / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
