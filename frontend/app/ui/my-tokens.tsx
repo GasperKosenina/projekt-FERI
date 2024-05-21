@@ -3,6 +3,7 @@ import clsx from 'clsx';
 import { getPurchasedDatasets } from '@/lib/data';
 import { Dataset } from '@/lib/definitions';
 import { auth, clerkClient } from '@clerk/nextjs/server';
+import Link from 'next/link';
 
 
 async function getDataProvider(userId: string) {
@@ -58,7 +59,11 @@ export default async function MyTokens() {
                 >
                   <div className="flex items-center">
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-semibold md:text-base">{dataset.name}</p>
+                      <Link
+                        href={`/dashboard/datasets/purchased/${dataset.id}`}
+                      >
+                        <p className="truncate text-sm font-semibold md:text-base">{dataset.name}</p>
+                      </Link>
                       <p className="hidden text-sm text-gray-500 sm:block">
                         <span>{await getDataProvider(dataset.userID)}</span>
                       </p>

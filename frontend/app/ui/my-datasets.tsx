@@ -3,6 +3,7 @@ import clsx from "clsx";
 import { getDatasetsByUser } from "@/lib/data";
 import { Dataset } from "@/lib/definitions";
 import { auth } from "@clerk/nextjs/server";
+import Link from "next/link";
 
 function formatDate(dateString: any) {
   const date = new Date(dateString);

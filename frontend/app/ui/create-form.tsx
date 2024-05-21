@@ -280,11 +280,11 @@ export default function Form() {
                   htmlFor="duration"
                   className="mb-2 block text-sm font-medium"
                 >
-                  Token Duration
+                  Token Expiration (Hours)
                 </label>
                 <ChevronRight className="h-5 w-5 text-gray-500" />
                 <p className="text-sm text-gray-500">
-                  Enter the duration of the token in minutes (1 - 1440)
+                  Enter the duration of the token in hours
                 </p>
               </div>
               <div className="relative">
@@ -292,7 +292,7 @@ export default function Form() {
                   id="duration"
                   name="duration"
                   type="text"
-                  placeholder="Enter token duration"
+                  placeholder="Enter token expiration in hours"
                   className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                   aria-describedby="duration-error"
                 />

@@ -110,3 +110,20 @@ func (p *MongoRepository) FindByDatasetID(ctx context.Context, datasetID string)
 	}
 	return payments, nil
 }
+
+func (p *MongoRepository) FindOneByDatasetID(ctx context.Context, datasetID string) (*model.Payment, error) {
+	collection := p.Client.Database("projekt").Collection("payment")
+
+	filter := bson.M{"datasetId": datasetID, "paymentStatus": true}
+
+	var payment model.Payment
+	err := collection.FindOne(ctx, filter).Decode(&payment)
+	if err != nil {
+		if err == mongo.ErrNoDocuments {
+			return nil, nil // No documents found
+		}
+		return nil, err
+	}
+
+	return &payment, nil
+}

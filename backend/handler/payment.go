@@ -161,3 +161,20 @@ func (p *Payment) ListPurchasedDatasetsByUserID(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, purchasedDatasets)
 }
+
+func (p *Payment) GetByDatasetID(c echo.Context) error {
+	datasetID := c.Param("datasetID")
+	if datasetID == "" {
+		return c.JSON(http.StatusBadRequest, "Bad Request")
+	}
+
+	payment, err := p.Repository.FindOneByDatasetID(c.Request().Context(), datasetID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
+	}
+	if payment == nil {
+		return c.JSON(http.StatusNotFound, "No payment found for the given datasetID")
+	}
+
+	return c.JSON(http.StatusOK, payment)
+}

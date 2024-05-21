@@ -1,5 +1,5 @@
 "use server";
-import { Dataset } from "./definitions";
+import { Dataset, Payment } from "./definitions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
@@ -38,8 +38,7 @@ const DatasetSchema = z.object({
   category: z.string().nonempty({ message: "Please select a category" }),
   duration: z
     .number({ message: "Duration must be a number" })
-    .gt(0, { message: "Duration must be greater than 0" })
-    .max(1440, { message: "Duration must be less than 1441" }),
+    .gt(0, { message: "Duration must be greater than 0" }),
   userID: z.string(),
 });
 
@@ -417,7 +416,7 @@ export async function getDatasetsLengthByUser(userID: string) {
     }
 
     const datasets = await response.json();
-    
+
     return datasets;
   } catch (error) {
     console.error("Error fetching datasets:", error);
@@ -565,3 +564,32 @@ export async function getDataProviderPicture(userId: string) {
     return "No Data Provider";
   }
 }
+
+
+export async function getPaymentByDataset(datasetID: string) {
+  noStore();
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/payment/purchased-dataset/${datasetID}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const payment = await response.json();
+    return payment;
+  } catch (error) {
+    console.error("Error fetching payment:", error);
+    return [];
+  }
+}
+
+
