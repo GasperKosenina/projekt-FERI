@@ -39,7 +39,7 @@ const PaymentSuccess = ({ access_token }: PaymentSuccessProps) => {
                 <button
                     onClick={copyTokenToClipboard}
                     className="ml-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md flex items-center focus:outline-none"
-                    disabled={copied} // Onemogoči gumb, če je že kopirano
+                    disabled={copied} 
                 >
                     {copied ? (
                         <>

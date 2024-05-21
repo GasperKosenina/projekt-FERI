@@ -1,4 +1,4 @@
-import { findById, generate, getPaymentById, updateToken, updateStatus } from "@/lib/data";
+import { findById, generate, getPaymentById, updateToken, updateStatus, updateTokenCreatedAt } from "@/lib/data";
 import { Dataset } from "@/lib/definitions";
 import PaymentSuccess from "@/app/ui/showToken";
 
@@ -23,12 +23,14 @@ export default async function Page({
 
   await updateStatus(payment_id)
 
+
   let access_token;
 
 
   if (!payment.accessToken) {
     access_token = await generate(dataset.accessToken);
     await updateToken(payment_id);
+    await updateTokenCreatedAt(payment_id)
   }
 
 

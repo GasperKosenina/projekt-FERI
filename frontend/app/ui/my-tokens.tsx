@@ -62,7 +62,7 @@ export default async function MyTokens() {
                       <Link
                         href={`/dashboard/datasets/purchased/${dataset.id}`}
                       >
-                        <p className="truncate text-sm font-semibold md:text-base">{dataset.name}</p>
+                        <p className="truncate text-sm font-semibold md:text-base hover:text-gray-500">{dataset.name}</p>
                       </Link>
                       <p className="hidden text-sm text-gray-500 sm:block">
                         <span>{await getDataProvider(dataset.userID)}</span>

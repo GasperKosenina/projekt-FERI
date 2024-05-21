@@ -117,7 +117,6 @@ export default async function Page({
           </div>
         </div>
         
-        {/* Vključitev prve modalne komponente */}
         <Modal1 description={dataset.description} />
 
 

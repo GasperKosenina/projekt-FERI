@@ -39,6 +39,7 @@ func (p *Payment) Create(c echo.Context) error {
 		Amount:         body.Amount,
 		AccessToken:    false,
 		Payment_Status: false,
+		TokenCreatedAt: time.Now(),
 	}
 
 	createdPayment, err := p.Repository.Insert(c.Request().Context(), payment)
@@ -86,6 +87,28 @@ func (p *Payment) UpdatePaymentStatus(c echo.Context) error {
 	}
 
 	err := p.Repository.UpdatePaymentStatus(c.Request().Context(), id, body.PaymentStatus)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
+	}
+
+	return c.JSON(http.StatusOK, "OK")
+}
+
+func (p *Payment) UpdateTokenCreatedAt(c echo.Context) error {
+	var body struct {
+		TokenCreatedAt time.Time `json:"tokenCreatedAt"`
+	}
+
+	if err := c.Bind(&body); err != nil {
+		return c.JSON(http.StatusBadRequest, "Bad Request")
+	}
+
+	id := c.Param("id")
+	if id == "" {
+		return c.JSON(http.StatusBadRequest, "Bad Request")
+	}
+
+	err := p.Repository.UpdateTokenCreatedAt(c.Request().Context(), id, body.TokenCreatedAt)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
 	}
