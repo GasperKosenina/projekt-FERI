@@ -14,4 +14,5 @@ type Payment struct {
 	Payment_Status bool               `json:"paymentStatus" bson:"paymentStatus"`
 	Amount         float64            `json:"amount" bson:"amount"`
 	CreatedAt      time.Time          `json:"createdAt" bson:"createdAt"`
+	TokenCreatedAt time.Time          `json:"tokenCreatedAt" bson:"tokenCreatedAt"`
 }

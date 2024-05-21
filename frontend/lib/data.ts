@@ -393,7 +393,7 @@ export async function getDatasetsByUser(userID: string) {
   noStore();
 
   try {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/dataset/user/${userID}`,
@@ -480,6 +480,28 @@ export async function updateStatus(id: string) {
     console.error("Error setting payment status:", error);
   }
 }
+
+export async function updateTokenCreatedAt(id: string) {
+  const tokenCreatedAt = new Date().toISOString();
+  console.log(tokenCreatedAt)
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/payment/tokenCreatedAt/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          tokenCreatedAt: tokenCreatedAt,
+        }),
+      }
+    );
+  } catch (error) {
+    console.error("Error setting tokenCreatedAt status:", error);
+  }
+}
+
 export async function getPaymentById(id: string) {
   noStore();
 
@@ -509,7 +531,7 @@ export async function getPurchasedDatasets(userID: string) {
   noStore();
 
   try {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/payment/purchased/${userID}`,

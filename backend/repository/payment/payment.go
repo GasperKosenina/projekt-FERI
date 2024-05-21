@@ -2,6 +2,7 @@ package payment
 
 import (
 	"context"
+	"time"
 
 	"github.com/GasperKosenina/projekt-FERI/model"
 	"go.mongodb.org/mongo-driver/bson"
@@ -54,6 +55,20 @@ func (p *MongoRepository) UpdatePaymentStatus(ctx context.Context, id string, pa
 	}
 
 	_, err = collection.UpdateOne(ctx, bson.M{"_id": objectID}, bson.M{"$set": bson.M{"paymentStatus": paymentStatus}})
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p *MongoRepository) UpdateTokenCreatedAt(ctx context.Context, id string, tokenCreatedAt time.Time) error {
+	collection := p.Client.Database("projekt").Collection("payment")
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	_, err = collection.UpdateOne(ctx, bson.M{"_id": objectID}, bson.M{"$set": bson.M{"tokenCreatedAt": tokenCreatedAt}})
 	if err != nil {
 		return err
 	}

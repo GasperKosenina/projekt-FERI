@@ -20,4 +20,5 @@ export type Payment = {
   paymentStatus: boolean;
   amount: number;
   createdAt?: Date;
+  tokenCreatedAt?: Date;
 };
