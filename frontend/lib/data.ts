@@ -153,6 +153,29 @@ export async function findById(id: string) {
     return [];
   }
 }
+export async function getDatasetNameById(id: string) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/dataset/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const dataset: Dataset = await response.json();
+    return dataset.name;
+  } catch (error) {
+    console.error("Error fetching datasets:", error);
+    return [];
+  }
+}
 
 export async function generate(token: string) {
   try {
@@ -335,8 +358,7 @@ export async function updateUserWithEmail(formData: FormData) {
 
   redirect(`/dashboard`);
 }
-
-export async function createPayment(datasetId: string) {
+export async function createPayment(datasetId: string, amount: number) {
   const { userId } = auth();
   if (!userId) {
     console.error("No user ID found");
@@ -352,6 +374,7 @@ export async function createPayment(datasetId: string) {
       body: JSON.stringify({
         datasetId: datasetId,
         userId: userId,
+        amount: amount,
       }),
     });
 
@@ -366,7 +389,6 @@ export async function createPayment(datasetId: string) {
     console.error("Error creating payment:", error);
   }
 }
-
 export async function getDatasetsByUser(userID: string) {
   noStore();
 
@@ -394,7 +416,6 @@ export async function getDatasetsByUser(userID: string) {
     return [];
   }
 }
-
 export async function getDatasetsLengthByUser(userID: string) {
   noStore();
 
@@ -423,7 +444,6 @@ export async function getDatasetsLengthByUser(userID: string) {
     return [];
   }
 }
-
 export async function updateToken(id: string) {
   try {
     const response = await fetch(
@@ -442,7 +462,6 @@ export async function updateToken(id: string) {
     console.error("Error setting token status:", error);
   }
 }
-
 export async function updateStatus(id: string) {
   try {
     const response = await fetch(
@@ -461,7 +480,6 @@ export async function updateStatus(id: string) {
     console.error("Error setting payment status:", error);
   }
 }
-
 export async function getPaymentById(id: string) {
   noStore();
 
@@ -487,7 +505,6 @@ export async function getPaymentById(id: string) {
     return [];
   }
 }
-
 export async function getPurchasedDatasets(userID: string) {
   noStore();
 
@@ -515,7 +532,6 @@ export async function getPurchasedDatasets(userID: string) {
     return [];
   }
 }
-
 export async function getPaymentsByUser(userID: string) {
   noStore();
 
@@ -541,7 +557,6 @@ export async function getPaymentsByUser(userID: string) {
     return [];
   }
 }
-
 export async function getDataProviderName(userId: string) {
   try {
     const user = await clerkClient.users.getUser(userId);

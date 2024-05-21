@@ -18,5 +18,6 @@ export type Payment = {
   userId: string;
   accessToken: boolean;
   paymentStatus: boolean;
+  amount: number;
   createdAt?: Date;
 };

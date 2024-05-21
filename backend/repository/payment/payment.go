@@ -108,6 +108,7 @@ func (p *MongoRepository) FindByDatasetID(ctx context.Context, datasetID string)
 	if err := cursor.All(ctx, &payments); err != nil {
 		return nil, err
 	}
+
 	return payments, nil
 }
 

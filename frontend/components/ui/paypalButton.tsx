@@ -12,8 +12,6 @@ export default function PaymentButton({
   payee,
   amount,
 }: PaymentButtonProps) {
-
-
   const handlePay = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!datasetId) {
@@ -22,9 +20,7 @@ export default function PaymentButton({
     if (!payee || !amount) {
       return;
     }
-    const payment = await createPayment(datasetId);
-    console.log(payment.id);
-    console.log(payment)
+    const payment = await createPayment(datasetId, parseFloat(amount));
     const approvalUrl = await paypal(datasetId, payee, amount, payment.id);
     if (approvalUrl) {
       window.location.href = approvalUrl;

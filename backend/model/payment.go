@@ -12,5 +12,6 @@ type Payment struct {
 	DatasetID      string             `json:"datasetId" bson:"datasetId"`
 	AccessToken    bool               `json:"accessToken" bson:"accessToken"`
 	Payment_Status bool               `json:"paymentStatus" bson:"paymentStatus"`
+	Amount         float64            `json:"amount" bson:"amount"`
 	CreatedAt      time.Time          `json:"createdAt" bson:"createdAt"`
 }
