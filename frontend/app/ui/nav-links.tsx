@@ -1,14 +1,10 @@
 "use client";
 
-import {
-  UserGroupIcon,
-  HomeIcon,
-  DocumentDuplicateIcon,
-  BellAlertIcon,
-} from "@heroicons/react/24/outline";
+import { HomeIcon, DocumentDuplicateIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
+import { HistoryIcon } from "lucide-react";
 
 const links = [
   { name: "Home", href: "/dashboard", icon: HomeIcon },
@@ -18,9 +14,9 @@ const links = [
     icon: DocumentDuplicateIcon,
   },
   {
-    name: "Notifications",
-    href: "/dashboard/notifications",
-    icon: BellAlertIcon,
+    name: "History",
+    href: "/dashboard/history",
+    icon: HistoryIcon,
   },
 ];
 

@@ -19,8 +19,9 @@ type Payment struct {
 func (p *Payment) Create(c echo.Context) error {
 
 	var body struct {
-		UserID    string `json:"userId"`
-		DatasetID string `json:"datasetId"`
+		UserID    string  `json:"userId"`
+		DatasetID string  `json:"datasetId"`
+		Amount    float64 `json:"amount"`
 	}
 
 	if err := c.Bind(&body); err != nil {
@@ -35,6 +36,7 @@ func (p *Payment) Create(c echo.Context) error {
 		UserID:         body.UserID,
 		DatasetID:      body.DatasetID,
 		CreatedAt:      time.Now(),
+		Amount:         body.Amount,
 		AccessToken:    false,
 		Payment_Status: false,
 	}
