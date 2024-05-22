@@ -14,12 +14,15 @@ export default function Modal1({ description }: ModalProps) {
     setIsModalOpen(!isModalOpen);
   };
 
-  const descriptionJson = typeof description === "object" ? JSON.stringify(description, null, 2) : description;
+  const descriptionJson =
+    typeof description === "object"
+      ? JSON.stringify(description, null, 2)
+      : description;
 
   return (
     <div>
       <ButtonComponent
-        className="bg-gray-100 hover:bg-gray-200 active:bg-white text-gray-400 text-sm rounded mr-10 "
+        className="bg-gray-300 hover:bg-gray-200 active:bg-white text-gray-400 text-sm rounded mr-10 "
         onClick={toggleModal}
       >
         Show JSON schema
@@ -36,9 +39,7 @@ export default function Modal1({ description }: ModalProps) {
             </button>
             <h2 className="text-xl font-bold mb-4">Dataset Description</h2>
             <div className="bg-gray-200 p-4 rounded overflow-y-auto max-h-96">
-              <pre className="text-sm">
-                {descriptionJson}
-              </pre>
+              <pre className="text-sm">{descriptionJson}</pre>
             </div>
           </div>
         </div>

@@ -160,7 +160,9 @@ export default async function Table({ query }: { query: string }) {
                             {priceItem.purpose}
                           </td>
                           <td className="whitespace-nowrap px-3 py-10">
-                            {priceItem.price} €
+                            {priceItem.price === 0
+                              ? "Free"
+                              : priceItem.price + " $"}
                           </td>
                           <td className="whitespace-nowrap px-3 py-10">
                             {formatDate(dataset.createdAt)}

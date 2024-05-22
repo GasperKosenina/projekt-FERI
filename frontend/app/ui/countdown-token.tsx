@@ -15,8 +15,8 @@ function Countdown({ expiresAt }: CountdownProps) {
             const difference = expiresAt.getTime() - now.getTime();
 
             if (difference <= 0) {
-                setCountdown("Your token has already expired");
-                clearInterval(interval); 
+                setCountdown("expired");
+                clearInterval(interval);
             } else {
                 const days = Math.floor(difference / (1000 * 60 * 60 * 24));
                 const hours = Math.floor((difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
@@ -30,7 +30,7 @@ function Countdown({ expiresAt }: CountdownProps) {
         return () => clearInterval(interval);
     }, []);
 
-    return <span>Your token expires in: {countdown}</span>;
+    return <span>Your token expires in: <strong>{countdown}</strong></span>;
 }
 
 export default Countdown;

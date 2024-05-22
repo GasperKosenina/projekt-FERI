@@ -1,5 +1,6 @@
 import { getDatasetsLengthByUser } from '@/lib/data';
-import { Dataset } from '@/lib/definitions';
+import { Dataset, Payment } from '@/lib/definitions';
+import { getPaymentsByUser, getPurchasedDatasets } from '@/lib/data';
 import { auth } from '@clerk/nextjs/server';
 import {
   BanknotesIcon,
@@ -16,10 +17,8 @@ const iconMap = {
 };
 
 export default async function CardWrapper() {
-  const numberOfInvoices = 5;
   const numberOfCustomers = 10;
-  const totalPaidInvoices ="70.99€";
-  const totalPendingInvoices = 67;
+
 
 
   const { userId } = auth();
@@ -37,16 +36,43 @@ export default async function CardWrapper() {
 
   let dolzina = datasets.length;
 
+  const payments: Payment[] = await getPaymentsByUser(userId);
+
+
+
+
+  let vsota = 0;
+  const unikatniKupci = new Set<string>();
+
+  if (payments) {
+    for (const i of payments) {
+      vsota = vsota + i.amount;
+      unikatniKupci.add(i.userId)
+    }
+  }
+
+  const zasluzek = vsota + "$";
+
+  let purchasedDatasets: Dataset[] = [];
+  const data2 = await getPurchasedDatasets(userId);
+  if (data2) {
+    purchasedDatasets = data2;
+  }
+
+
+  const purchasedDatasetsLength = purchasedDatasets.length;
+
+
 
 
   return (
     <>
       <Card title="Total Datasets" value={dolzina} type="invoices" />
-      <Card title="Collected" value={totalPaidInvoices} type="collected" />
-      <Card title="Total Invoices" value={totalPendingInvoices} type="pending" />
+      <Card title="Earned" value={zasluzek} type="collected" />
+      <Card title="You have access to" value={purchasedDatasetsLength} type="invoices" />
       <Card
-        title="Total Customers"
-        value={numberOfCustomers}
+        title="Unique customers"
+        value={unikatniKupci.size}
         type="customers"
       />
     </>

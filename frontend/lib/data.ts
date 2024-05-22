@@ -420,7 +420,7 @@ export async function getDatasetsLengthByUser(userID: string) {
   noStore();
 
   try {
-    await new Promise((resolve) => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/dataset/user/${userID}`,
