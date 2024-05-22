@@ -8,6 +8,7 @@ import {
 } from "@/lib/data";
 import { Dataset } from "@/lib/definitions";
 import PaymentSuccess from "@/app/ui/showToken";
+import Link from "next/link";
 
 export default async function Page({
   searchParams,
@@ -39,15 +40,33 @@ export default async function Page({
   }
 
   if (access_token == null) {
-    return <p>You have already generated your access token!</p>;
+    return (
+      <div>
+        <h1 className="text-left font-normal text-gray-500 mb-4" style={{ fontSize: '1.375rem' }}>Token Generation Issue</h1>
+        <div className="rounded-lg p-6 bg-[#f9fafb]">
+          <div className="mt-6 animate-bounce">
+            <p className="text-center mt-10 text-xl text-grey-500">
+              Uh-oh! ☹ You came across a problem. It looks like you've already generated an access token. If you need a new one, just click the button below to proceed. 
+            </p>
+          </div>
+          <div className="flex justify-center mt-10 mb-8">
+            <Link href={`/dashboard/datasets/purchased/${datasetId}`}>
+              <div className="inline-block px-4 py-2 bg-blue-500 text-white rounded cursor-pointer hover:bg-[#60a5fa]">
+                Request New Access Token
+              </div>
+            </Link>
+          </div>
+        </div>
+      </div>
+    );
   }
 
-  //novo kompone
-
   return (
-    <PaymentSuccess
-      access_token={access_token.access_token}
-      dataset={dataset}
-    />
+    <div>
+      <PaymentSuccess
+        access_token={access_token.access_token}
+        dataset={dataset}
+      />
+    </div>
   );
 }
