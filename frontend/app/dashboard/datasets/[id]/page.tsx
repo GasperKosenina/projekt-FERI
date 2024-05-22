@@ -122,7 +122,7 @@ export default async function Page({
             </dl>
           </div>
         </div>
-        <RequestAccess dataset={dataset} datasetId={id} amount={price} mongoUser={mongoUser} userId={userId} />
+        <RequestAccess dataset={dataset} datasetId={id} amount={price} mongoUser={mongoUser} userId={userId} purpose={purpose}/>
       </div>
     </main>
   );

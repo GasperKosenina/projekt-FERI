@@ -11,9 +11,10 @@ interface ModalProps {
     amount: string | undefined;
     mongoUser: any;
     userId: any;
+    purpose: string | undefined;
 }
 
-export default function RequestAccess({ dataset, datasetId, amount, mongoUser, userId }: ModalProps) {
+export default function RequestAccess({ dataset, datasetId, amount, mongoUser, userId, purpose }: ModalProps) {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const toggleModal = () => {
@@ -28,13 +29,15 @@ export default function RequestAccess({ dataset, datasetId, amount, mongoUser, u
 
     return (
         <div>
-            <ButtonComponent
-                className="bg-blue-500 hover:bg-blue-400 active:bg-gray-500 text-white font-bold py-2 px-4 rounded mt-5"
-                onClick={toggleModal}
-            >
-                Request access
-            </ButtonComponent>
+            {mongoUser.id !== userId && (
+                <ButtonComponent
+                    className="mt-5"
+                    onClick={toggleModal}
+                >
+                    Request access
+                </ButtonComponent>
 
+            )}
             {isModalOpen && (
                 <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75">
                     <div className="relative bg-white p-6 rounded shadow-lg w-3/4 max-w-2xl">
@@ -44,8 +47,11 @@ export default function RequestAccess({ dataset, datasetId, amount, mongoUser, u
                         >
                             &times;
                         </button>
-                        <h2 className="text-xl font-bold mb-4">Request Access Information</h2>
-                        <div>{dataset.id}</div>
+                        <h2 className="font-bold mb-5">Are you absolutely sure?</h2>
+
+                        <p className="text-sm text-gray-500">The dataset may only be used for: <strong>{purpose}</strong></p>
+                        <p className="text-sm text-gray-500 mb-3">After successfull payment you will have access to data for: <strong>{dataset.duration} hours</strong></p>
+                        <p className="text-sm text-gray-500">By clicking the button below you will be redirected to Paypal where you will make the payment in the amount of <strong>{amount}$</strong>.</p>
                         <div className="mt-10">
                             {mongoUser.id !== userId && (
                                 <PaymentButton

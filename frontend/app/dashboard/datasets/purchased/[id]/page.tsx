@@ -71,7 +71,7 @@ export default async function Page({
                     {dataset.name}
                 </h1>
                 <h1 className="text-lg mb-5">
-                    <strong>{expiresAt && <Countdown expiresAt={expiresAt} />}</strong>
+                    {expiresAt && <Countdown expiresAt={expiresAt} />}
                 </h1>
                 <div className="mt-20 border-t border-gray-100">
                     <dl className="divide-y divide-gray-100">
