@@ -34,8 +34,10 @@ export default async function Page({
 
 
   if (access_token == null) {
-    return <p>You have already received your access token!</p>;
+    return <p>You have already generated your access token!</p>;
   }
+
+  //novo kompone
 
   return (
     <PaymentSuccess access_token={access_token.access_token} dataset={dataset} />
