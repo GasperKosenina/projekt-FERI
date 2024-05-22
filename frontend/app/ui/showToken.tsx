@@ -87,7 +87,7 @@ const PaymentSuccess = ({ access_token, dataset }: PaymentSuccessProps) => {
         </div>
       )}
       <h1 className="text-2xl font-bold text-blue-600 mb-8">
-        Payment successful!
+        Well done! You have successfully generated an access token.
       </h1>
       <div className="mb-4">
         <div className="flex flex-row gap-2 mb-4">

@@ -5,6 +5,7 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import Modal1 from "@/app/ui/modal_jsonschema";
 import PaymentButton from "@/components/ui/paypalButton";
 import RequestAccess from "@/app/ui/request-access";
+import RequestFreeAccess from "@/app/ui/request-free-access";
 
 async function getDataProvider(userId: string) {
   try {
@@ -108,7 +109,7 @@ export default async function Page({
               <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt className="text-sm font-medium text-gray-500">Price</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {price} $
+                  {price === "0" ? "Free" : price + " USD"}
                 </dd>
               </div>
               <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -128,7 +129,25 @@ export default async function Page({
             </dl>
           </div>
         </div>
-        <RequestAccess dataset={dataset} datasetId={id} amount={price} mongoUser={mongoUser} userId={userId} purpose={purpose}/>
+        {price === "0" ? (
+          <RequestFreeAccess
+            dataset={dataset}
+            datasetId={id}
+            amount={price}
+            mongoUser={mongoUser}
+            userId={userId}
+            purpose={purpose}
+          />
+        ) : (
+          <RequestAccess
+            dataset={dataset}
+            datasetId={id}
+            amount={price}
+            mongoUser={mongoUser}
+            userId={userId}
+            purpose={purpose}
+          />
+        )}
       </div>
     </main>
   );
