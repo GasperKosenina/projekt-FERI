@@ -6,7 +6,6 @@ import Modal1 from "@/app/ui/modal_jsonschema";
 import PaymentButton from "@/components/ui/paypalButton";
 import RequestAccess from "@/app/ui/request-access";
 
-
 async function getDataProvider(userId: string) {
   try {
     const user = await clerkClient.users.getUser(userId);
@@ -72,13 +71,18 @@ export default async function Page({
               <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt className="text-sm font-medium text-gray-500">URL</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  <a href={dataset.url} className="text-blue-500 hover:underline">
+                  <a
+                    href={dataset.url}
+                    className="text-blue-500 hover:underline"
+                  >
                     {dataset.url}
                   </a>
                 </dd>
               </div>
               <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Data Provider</dt>
+                <dt className="text-sm font-medium text-gray-500">
+                  Data Provider
+                </dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                   {await getDataProvider(dataset.userID)}
                 </dd>
@@ -92,7 +96,7 @@ export default async function Page({
               <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt className="text-sm font-medium text-gray-500">Duration</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {dataset.duration} seconds
+                  {dataset.duration} hours
                 </dd>
               </div>
               <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -104,7 +108,7 @@ export default async function Page({
               <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
                 <dt className="text-sm font-medium text-gray-500">Price</dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {price}
+                  {price} $
                 </dd>
               </div>
               <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -114,7 +118,9 @@ export default async function Page({
                 </dd>
               </div>
               <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-                <dt className="text-sm font-medium text-gray-500">Dataset description</dt>
+                <dt className="text-sm font-medium text-gray-500">
+                  Dataset description
+                </dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                   <Modal1 description={dataset.description} />
                 </dd>
