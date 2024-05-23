@@ -2,11 +2,11 @@ import {
   findById,
   getDataProviderName,
   getDatasetNameById,
-  getPaymentsByUser,
+  getPaymentsByUser2,
 } from "@/lib/data";
 import { Payment } from "@/lib/definitions";
 import { auth } from "@clerk/nextjs/server";
-import { CheckCircleIcon } from "lucide-react";
+import { CheckCircleIcon, CircleX, RedoIcon } from "lucide-react";
 
 export default async function Page() {
   function formatDate(dateString: any) {
@@ -27,7 +27,7 @@ export default async function Page() {
     return;
   }
 
-  const payments: Payment[] = await getPaymentsByUser(userId);
+  const payments: Payment[] = await getPaymentsByUser2(userId);
 
   if (!payments) {
     console.error("No payments found");
@@ -78,7 +78,7 @@ export default async function Page() {
                     {payment.paymentStatus ? (
                       <CheckCircleIcon className="text-green-500 inline-block" />
                     ) : (
-                      <span className="text-red-500">Failed</span>
+                      <CircleX className="text-red-600 inline-block" />
                     )}
                   </td>
                 </tr>

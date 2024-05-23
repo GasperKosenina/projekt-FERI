@@ -159,6 +159,35 @@ func (p *Payment) ListAllByDatasetUserID(c echo.Context) error {
 	return c.JSON(http.StatusOK, allPayments)
 }
 
+func (p *Payment) ListAllByDatasetUserID2(c echo.Context) error {
+	userID := c.Param("userID")
+	if userID == "" {
+		return c.JSON(http.StatusBadRequest, "Bad Request")
+	}
+
+	datasets, err := p.DatasetRepository.ListByUserID(c.Request().Context(), userID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
+	}
+
+	var datasetIDs []primitive.ObjectID
+	for _, dataset := range datasets {
+		datasetIDs = append(datasetIDs, dataset.ID)
+	}
+
+	var allPayments []*model.Payment
+	for _, datasetID := range datasetIDs {
+		payments, err := p.Repository.FindByDatasetID2(c.Request().Context(), datasetID.Hex())
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, "Internal Server Error")
+		}
+
+		allPayments = append(allPayments, payments...)
+	}
+
+	return c.JSON(http.StatusOK, allPayments)
+}
+
 func (p *Payment) ListPurchasedDatasetsByUserID(c echo.Context) error {
 	userID := c.Param("userID")
 	if userID == "" {

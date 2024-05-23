@@ -110,7 +110,6 @@ export async function postDataset(prevState: State, formData: FormData) {
 
 export async function listAll() {
   noStore();
-  await new Promise((resolve) => setTimeout(resolve, 2000));
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dataset`, {
       method: "GET",
@@ -586,6 +585,32 @@ export async function getPaymentsByUser(userID: string) {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/payment/dataset/${userID}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const payments = await response.json();
+    return payments;
+  } catch (error) {
+    console.error("Error fetching payment:", error);
+    return [];
+  }
+}
+
+export async function getPaymentsByUser2(userID: string) {
+  noStore();
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/payment/dataset2/${userID}`,
       {
         method: "GET",
         headers: {

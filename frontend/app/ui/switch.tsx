@@ -5,11 +5,11 @@ interface PublicPrivateSwitchProps {
     onChange: (isPublic: boolean) => void;
     datasetId: string;
     updateShowStatus: (id: string, show: boolean) => void;
-    initialShowState?: boolean; 
+    initialShowState?: boolean;
 }
 
 const PublicPrivateSwitch: React.FC<PublicPrivateSwitchProps> = ({ onChange, datasetId, updateShowStatus, initialShowState }) => {
-    const [isPublic, setIsPublic] = useState(initialShowState); 
+    const [isPublic, setIsPublic] = useState(initialShowState);
 
     useEffect(() => {
         setIsPublic(initialShowState);
@@ -24,6 +24,7 @@ const PublicPrivateSwitch: React.FC<PublicPrivateSwitchProps> = ({ onChange, dat
 
     return (
         <div className="flex items-center">
+            <p className="mr-14 text-sm text-gray-400">Set visibilty of your dataset</p>
             <label htmlFor="public-private-switch" className="mr-2 text-sm font-medium text-gray-700">
                 {isPublic ? "Show" : "Hide"}
             </label>

@@ -71,6 +71,7 @@ func (a *App) paymentRoute(g *echo.Group) {
 	g.GET("/:id", paymentHandler.GetByID)
 	g.GET("/purchased/:userID", paymentHandler.ListPurchasedDatasetsByUserID)
 	g.GET("/dataset/:userID", paymentHandler.ListAllByDatasetUserID)
+	g.GET("/dataset2/:userID", paymentHandler.ListAllByDatasetUserID2)
 	g.GET("/purchased-dataset/:datasetID", paymentHandler.GetByDatasetID)
 	g.PUT("/tokenCreatedAt/:id", paymentHandler.UpdateTokenCreatedAt)
 }
