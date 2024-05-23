@@ -110,6 +110,7 @@ export async function postDataset(prevState: State, formData: FormData) {
 
 export async function listAll() {
   noStore();
+  await new Promise((resolve) => setTimeout(resolve, 2000));
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/dataset`, {
       method: "GET",
