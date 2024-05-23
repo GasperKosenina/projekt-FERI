@@ -177,16 +177,18 @@ export async function getDatasetNameById(id: string) {
   }
 }
 
-export async function generate(token: string) {
+export async function generate(token: string, experation: number) {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ token: token }),
+      body: JSON.stringify({
+        token: token,
+        experation: experation,
+      }),
     });
-
     if (!response.ok) {
       return null;
     }
@@ -483,7 +485,7 @@ export async function updateStatus(id: string) {
 
 export async function updateTokenCreatedAt(id: string) {
   const tokenCreatedAt = new Date().toISOString();
-  console.log(tokenCreatedAt)
+  console.log(tokenCreatedAt);
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/payment/tokenCreatedAt/${id}`,

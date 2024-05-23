@@ -34,7 +34,7 @@ export default async function Page({
   let access_token;
 
   if (!payment.accessToken) {
-    access_token = await generate(dataset.accessToken);
+    access_token = await generate(dataset.accessToken, dataset.duration);
     await updateToken(payment_id);
     await updateTokenCreatedAt(payment_id);
   }

@@ -1,4 +1,4 @@
-import { getDatasetsLengthByUser } from '@/lib/data';
+import { getDatasetsLengthByUser, getPaymentByDataset } from '@/lib/data';
 import { Dataset, Payment } from '@/lib/definitions';
 import { getPaymentsByUser, getPurchasedDatasets } from '@/lib/data';
 import { auth } from '@clerk/nextjs/server';
@@ -60,7 +60,26 @@ export default async function CardWrapper() {
   }
 
 
-  const purchasedDatasetsLength = purchasedDatasets.length;
+  const payments2: Payment[] = await Promise.all(
+    purchasedDatasets.map(async (dataset) => {
+      return await getPaymentByDataset(dataset.id || '');
+    })
+  );
+
+
+  let validPurchasedDatasets: Dataset[] = [];
+
+  validPurchasedDatasets = purchasedDatasets.filter(dataset => {
+    const payment = payments2.find(p => p.datasetId === dataset.id);
+    if (!payment || !payment.tokenCreatedAt) return false;
+
+    const tokenExpirationTime = new Date(payment.tokenCreatedAt).getTime() + dataset.duration * 60 * 60 * 1000;
+    const currentTime = Date.now();
+
+    return currentTime < tokenExpirationTime;
+  });
+
+  const purchasedDatasetsLength = validPurchasedDatasets.length;
 
 
 

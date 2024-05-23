@@ -25,18 +25,17 @@ var jsonData = []map[string]interface{}{
 func Login(c echo.Context) error {
 	var tokenRequest struct {
 		Token string `json:"token"`
+		Exp   int64  `json:"experation"`
 	}
-
 	if err := c.Bind(&tokenRequest); err != nil {
 		return c.JSON(http.StatusBadRequest, echo.Map{"message": "Missing or invalid JSON in request"})
 	}
 
-	// Assuming the tokenRequest.Token is the secret for JWT
 	jwtSecret = []byte(tokenRequest.Token)
-	fmt.Print(jwtSecret)
 
+	expirationTime := time.Now().Add(time.Duration(tokenRequest.Exp) * time.Hour).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"exp": time.Now().Add(time.Minute * 30).Unix(),
+		"exp": expirationTime,
 	})
 
 	tokenString, err := token.SignedString(jwtSecret)
