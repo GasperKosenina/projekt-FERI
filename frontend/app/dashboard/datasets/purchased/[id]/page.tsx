@@ -67,7 +67,7 @@ export default async function Page({
 
     return (
         <main className="p-8">
-            <h1 className="text-3xl font-bold mb-6" style={{ color: '#3b82f6' }}>{dataset.name}</h1>
+            <h1 className="text-2xl font-bold mb-6" style={{ color: '#3b82f6' }}>{dataset.name}</h1>
             <p className="text-lg mb-8">
                 <Countdown expiresAt={expiresAt} />
             </p>

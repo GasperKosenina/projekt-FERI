@@ -1,7 +1,7 @@
 import { ArrowPathIcon } from '@heroicons/react/24/outline';
 import clsx from 'clsx';
-import { getPurchasedDatasets } from '@/lib/data';
-import { Dataset } from '@/lib/definitions';
+import { getPurchasedDatasets, getPaymentByDataset } from '@/lib/data';
+import { Dataset, Payment } from '@/lib/definitions';
 import { auth, clerkClient } from '@clerk/nextjs/server';
 import Link from 'next/link';
 
@@ -33,7 +33,29 @@ export default async function MyTokens() {
   }
 
 
-  const datasetsLength = purchasedDatasets.length;
+
+
+
+  const payments: Payment[] = await Promise.all(
+    purchasedDatasets.map(async (dataset) => {
+      return await getPaymentByDataset(dataset.id || '');
+    })
+  );
+
+
+  let validPurchasedDatasets: Dataset[] = [];
+
+  validPurchasedDatasets = purchasedDatasets.filter(dataset => {
+    const payment = payments.find(p => p.datasetId === dataset.id);
+    if (!payment || !payment.tokenCreatedAt) return false;
+
+    const tokenExpirationTime = new Date(payment.tokenCreatedAt).getTime() + dataset.duration * 60 * 60 * 1000;
+    const currentTime = Date.now();
+
+    return currentTime < tokenExpirationTime;
+  });
+
+  const datasetsLength = validPurchasedDatasets.length;
 
 
 
@@ -45,11 +67,11 @@ export default async function MyTokens() {
       <div className="flex grow flex-col justify-between rounded-xl bg-gray-50 p-4">
         {datasetsLength === 0 ? (
           <p className="truncate text-sm font-semibold md:text-base">
-            You have not bought any datasets!
+            You do not have access to any datasets!
           </p>
         ) : (
           <div className="bg-white px-6">
-            {purchasedDatasets.map(async (dataset, i) => {
+            {validPurchasedDatasets.map(async (dataset, i) => {
               return (
                 <div
                   key={dataset.id}

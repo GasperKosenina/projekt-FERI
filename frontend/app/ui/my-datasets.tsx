@@ -48,9 +48,11 @@ export default async function MyDatasets() {
               >
                 <div className="flex items-center">
                   <div className="min-w-0">
-                    <p className="truncate text-sm font-semibold md:text-base">
-                      {dataset.name}
-                    </p>
+                    <Link
+                      href={`/dashboard/datasets/published/${dataset.id}`}
+                    >
+                      <p className="truncate text-sm font-semibold md:text-base hover:text-gray-500">{dataset.name}</p>
+                    </Link>
                     <p className="hidden text-sm text-gray-500 sm:block">
                       {formatDate(dataset.createdAt)}
                     </p>
