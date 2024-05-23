@@ -25,6 +25,7 @@ import { useState, ChangeEvent, FormEvent } from "react";
 import { postDataset } from "@/lib/data";
 import { useFormState } from "react-dom";
 import { ChevronRight } from "lucide-react";
+import { EyeIcon, EyeOffIcon } from "lucide-react";
 
 interface Checkbox {
   id: number;
@@ -144,6 +145,12 @@ export default function Form() {
     dispatch(formData);
   };
 
+  const [showToken, setShowToken] = useState(false);
+
+  const toggleShowToken = () => {
+    setShowToken(!showToken);
+  };
+
   return (
     <>
       <form action={dispatch} onSubmit={handleSubmit}>
@@ -239,14 +246,16 @@ export default function Form() {
             </div>
           </div>
           <div className="mb-8">
+            <div className="flex mb-2 gap-1">
+              <label className="block text-sm font-medium">Categories</label>
+              <ChevronRight className="h-5 w-5 text-gray-500" />
+              <p className="text-sm text-gray-500">Choose a category for the dataset</p>
+            </div>
             <div className="flex-1">
-              <label className="mb-2 block text-sm font-medium invisible">
-                Choose Category
-              </label>
-              <div className="flex items-center gap-3">
+              <div className="flex mt-4 items-center gap-3">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button className="w-50">Choose category</Button>
+                    <Button className="w-50">Categories</Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56">
                     <DropdownMenuSeparator />
@@ -318,12 +327,19 @@ export default function Form() {
                 <input
                   id="accessToken"
                   name="accessToken"
-                  type="password"
+                  type={showToken ? "text" : "password"}
                   placeholder="Enter secret token"
                   className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
                   aria-describedby="accessToken-error"
                 />
                 <KeyIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+                <button
+                  type="button"
+                  onClick={toggleShowToken}
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500"
+                >
+                  {showToken ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
+                </button>
               </div>
 
               <div id="accessToken-error" aria-live="polite" aria-atomic="true">

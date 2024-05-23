@@ -1,13 +1,12 @@
-import Table from "@/app/ui/table"
-import Search from "@/app/ui/search"
-import Link from "next/link"
-import { Suspense } from "react"
-import { PlusIcon } from "@heroicons/react/24/outline"
-
+import Table from "@/app/ui/table";
+import Search from "@/app/ui/search";
+import Link from "next/link";
+import { Suspense } from "react";
+import { PlusIcon } from "@heroicons/react/24/outline";
+import { TableSkeleton } from "@/app/ui/skeletons";
 
 export default async function Page({ searchParams }: { searchParams?: { query?: string }; }) {
     const query = searchParams?.query || '';
-
 
     return (
         <div className="w-full">
@@ -24,9 +23,9 @@ export default async function Page({ searchParams }: { searchParams?: { query?: 
                     <PlusIcon className="h-5 md:ml-4" />
                 </Link>
             </div>
-            <Suspense key={query} >
+            <Suspense fallback={<TableSkeleton />} key={query}>
                 <Table query={query} />
             </Suspense>
         </div>
-    )
+    );
 }
