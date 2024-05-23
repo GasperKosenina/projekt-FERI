@@ -12,6 +12,7 @@ interface ModalProps {
   userId: any;
   purpose: string | undefined;
 }
+
 export default function RequestFreeAccess({
   dataset,
   datasetId,
@@ -21,12 +22,15 @@ export default function RequestFreeAccess({
   purpose,
 }: ModalProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
 
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
 
-  const payee = mongoUser.email;
+  const handleCheckboxChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setIsCheckboxChecked(event.target.checked);
+  };
 
   return (
     <div>
@@ -45,7 +49,6 @@ export default function RequestFreeAccess({
               &times;
             </button>
             <h2 className="font-bold mb-5">Are you absolutely sure?</h2>
-
             <p className="text-sm text-gray-500">
               The dataset may only be used for: <strong>{purpose}</strong>
             </p>
@@ -54,15 +57,36 @@ export default function RequestFreeAccess({
               data for: <strong>{dataset.duration} hours</strong>
             </p>
             <p className="text-sm text-gray-500">
-              By clicking the button below you will be generated perosnal access
+              By clicking the button below you will be generated personal access
               token
             </p>
-            <div className="mt-10">
+            <div className="mt-5">
+              <input
+                type="checkbox"
+                id="gdprCheckbox"
+                checked={isCheckboxChecked}
+                onChange={handleCheckboxChange}
+                className="mr-2"
+              />
+              <label htmlFor="gdprCheckbox" className="text-sm text-gray-500">
+                I agree to the{" "}
+                <a
+                  href="/gdpr"
+                  target="_blank"
+                  className="text-blue-600 underline"
+                >
+                  GDPR terms and conditions
+                </a>
+                .
+              </label>
+            </div>
+            <div className="mt-5">
               {mongoUser.id !== userId && (
                 <FreeAccessButton
                   datasetId={datasetId}
                   payee={mongoUser.email}
                   amount={amount}
+                  isCheckboxChecked={isCheckboxChecked} // Pass checkbox state as prop
                 />
               )}
             </div>
