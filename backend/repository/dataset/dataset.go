@@ -71,3 +71,17 @@ func (m *MongoRepository) ListByUserID(ctx context.Context, userID string) ([]*m
 	}
 	return datasets, nil
 }
+
+func (m *MongoRepository) UpdateShowStatus(ctx context.Context, id string, show bool) error {
+	collection := m.Client.Database("projekt").Collection("dataset")
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	_, err = collection.UpdateOne(ctx, bson.M{"_id": objectID}, bson.M{"$set": bson.M{"show": show}})
+	if err != nil {
+		return err
+	}
+	return nil
+}

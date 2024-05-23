@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import Modal1 from "@/app/ui/modal_jsonschema";
 import { Dataset } from "@/lib/definitions";
 import PublicPrivateSwitch from './switch';
+import { updateShowStatus } from '@/lib/data';
 
 function formatDate(dateString: any) {
     const date = new Date(dateString);
@@ -26,11 +27,19 @@ const DatasetPage: React.FC<DatasetPageProps> = ({ dataset }) => {
         console.log("Dataset is now", newState ? "Public" : "Private");
     };
 
+    console.log(dataset)
+
+
     return (
         <>
             <div className="flex items-center justify-between mb-6">
                 <h1 className="text-2xl font-bold" style={{ color: '#3b82f6' }}>{dataset.name}</h1>
-                <PublicPrivateSwitch initialState={isPublic} onChange={handleSwitchChange} />
+                <PublicPrivateSwitch
+                    initialShowState={dataset.show} 
+                    onChange={handleSwitchChange}
+                    datasetId={dataset.id || ''}
+                    updateShowStatus={updateShowStatus}
+                />
             </div>
             <div className="mt-8 mx-auto w-full max-w-full bg-white overflow-hidden sm:rounded-lg outline outline-1 outline-gray-200">
                 <div className="outline outline-1 border-gray-200">

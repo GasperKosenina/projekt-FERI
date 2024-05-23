@@ -37,9 +37,8 @@ export default async function Table({ query }: { query: string }) {
     datasets = data;
   }
 
-  const filteredDatasets = datasets.filter((dataset) =>
-    dataset.name.toLowerCase().includes(query.toLowerCase())
-  );
+  const filteredDatasets = datasets.filter((dataset) => dataset.show === true && dataset.name.toLowerCase().includes(query.toLowerCase()));
+
 
   if (filteredDatasets.length === 0) {
     return <p className="mt-10">No datasets found</p>;
@@ -112,14 +111,14 @@ export default async function Table({ query }: { query: string }) {
                         (priceItem.purpose ===
                           "Education (using dataset for pedagogical purposes)" ||
                           priceItem.purpose ===
-                            "Comparative analysis (benchmarking)" ||
+                          "Comparative analysis (benchmarking)" ||
                           priceItem.purpose === "Machine learning")) ||
                       (tipUserja === "company" &&
                         priceItem.purpose ===
-                          "Business analytics (commercial)") ||
+                        "Business analytics (commercial)") ||
                       (tipUserja === "research-institution" &&
                         priceItem.purpose ===
-                          "Research (using dataset for scientific research)") ||
+                        "Research (using dataset for scientific research)") ||
                       ((tipUserja === "public-administration" ||
                         tipUserja === "state-administration") &&
                         priceItem.purpose === "Public administration processes")

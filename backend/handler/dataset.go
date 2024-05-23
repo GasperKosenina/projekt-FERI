@@ -26,6 +26,7 @@ func (d *Dataset) Create(c echo.Context) error {
 		Duration    int                  `json:"duration"`
 		UserID      string               `json:"userID"`
 		Price       []model.PricePurpose `json:"price"`
+		Show        bool                 `json:"show"`
 	}
 
 	if err := c.Bind(&body); err != nil {
@@ -48,6 +49,7 @@ func (d *Dataset) Create(c echo.Context) error {
 		CreatedAt:   time.Now(),
 		UserID:      body.UserID,
 		Price:       body.Price,
+		Show:        true,
 	}
 
 	err := d.Repository.Insert(c.Request().Context(), dataset)
@@ -93,4 +95,26 @@ func (d *Dataset) ListByUserID(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, datasets)
+}
+
+func (d *Dataset) UpdateShowStatus(c echo.Context) error {
+	var body struct {
+		Show bool `json:"show"`
+	}
+
+	if err := c.Bind(&body); err != nil {
+		return c.JSON(http.StatusBadRequest, "Bad Request")
+	}
+
+	id := c.Param("id")
+	if id == "" {
+		return c.JSON(http.StatusBadRequest, "Bad Request")
+	}
+
+	err := d.Repository.UpdateShowStatus(c.Request().Context(), id, body.Show)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
+	}
+
+	return c.JSON(http.StatusOK, "OK")
 }

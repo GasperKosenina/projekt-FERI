@@ -10,6 +10,7 @@ export type Dataset = {
   createdAt?: Date;
   updatedAt?: Date;
   userID: string;
+  show?: boolean;
 };
 
 export type Payment = {

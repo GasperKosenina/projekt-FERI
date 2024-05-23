@@ -39,6 +39,7 @@ func (a *App) datasetRoute(g *echo.Group) {
 	g.GET("", datasetHandler.ListAll)
 	g.GET("/:id", datasetHandler.FindById)
 	g.GET("/user/:userID", datasetHandler.ListByUserID)
+	g.PUT("/show-status/:id", datasetHandler.UpdateShowStatus)
 
 }
 

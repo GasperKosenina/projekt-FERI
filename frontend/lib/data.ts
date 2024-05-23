@@ -131,6 +131,7 @@ export async function listAll() {
 }
 
 export async function findById(id: string) {
+  noStore();
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/dataset/${id}`,
@@ -154,6 +155,7 @@ export async function findById(id: string) {
   }
 }
 export async function getDatasetNameById(id: string) {
+  noStore();
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/dataset/${id}`,
@@ -503,6 +505,27 @@ export async function updateTokenCreatedAt(id: string) {
     console.error("Error setting tokenCreatedAt status:", error);
   }
 }
+
+
+export async function updateShowStatus(id: string, show:boolean) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/dataset/show-status/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          show: show
+        }),
+      }
+    );
+  } catch (error) {
+    console.error("Error setting payment status:", error);
+  }
+}
+
 
 export async function getPaymentById(id: string) {
   noStore();
