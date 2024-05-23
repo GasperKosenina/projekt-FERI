@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/dgrijalva/jwt-go"
 	"github.com/labstack/echo/v4"
@@ -32,8 +33,9 @@ func Login(c echo.Context) error {
 
 	jwtSecret = []byte(tokenRequest.Token)
 
+	expirationTime := time.Now().Add(time.Duration(tokenRequest.Exp) * time.Hour).Unix()
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"exp": tokenRequest.Exp,
+		"exp": expirationTime,
 	})
 
 	tokenString, err := token.SignedString(jwtSecret)
