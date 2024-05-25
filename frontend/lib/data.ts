@@ -1,5 +1,5 @@
 "use server";
-import { Dataset, Payment } from "./definitions";
+import { Dataset, Payment, TokenRequest } from "./definitions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
@@ -506,8 +506,7 @@ export async function updateTokenCreatedAt(id: string) {
   }
 }
 
-
-export async function updateShowStatus(id: string, show:boolean) {
+export async function updateShowStatus(id: string, show: boolean) {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/dataset/show-status/${id}`,
@@ -517,7 +516,7 @@ export async function updateShowStatus(id: string, show:boolean) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          show: show
+          show: show,
         }),
       }
     );
@@ -525,7 +524,6 @@ export async function updateShowStatus(id: string, show:boolean) {
     console.error("Error setting payment status:", error);
   }
 }
-
 
 export async function getPaymentById(id: string) {
   noStore();
@@ -676,5 +674,38 @@ export async function getPaymentByDataset(datasetID: string) {
   } catch (error) {
     console.error("Error fetching payment:", error);
     return [];
+  }
+}
+
+export async function postTokenRequest(
+  userId: string,
+  datasetId: string,
+  providerId: string
+) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/tokenrequest`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          reqUserID: userId,
+          providerID: providerId,
+          datasetID: datasetId,
+          status: "pending",
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to create token request");
+    }
+
+    const Tokenrequest: TokenRequest = await response.json();
+    return Tokenrequest;
+  } catch (error) {
+    console.error("Error creating token request:", error);
   }
 }
