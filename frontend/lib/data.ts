@@ -678,8 +678,8 @@ export async function getPaymentByDataset(datasetID: string) {
 }
 
 export async function postTokenRequest(
-  userId: string,
   datasetId: string,
+  userId: string,
   providerId: string
 ) {
   try {
@@ -707,5 +707,57 @@ export async function postTokenRequest(
     return Tokenrequest;
   } catch (error) {
     console.error("Error creating token request:", error);
+  }
+}
+
+export async function getAllPendingByUserId(userId: string) {
+  noStore();
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/tokenrequest/pending/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const requests = await response.json();
+    return requests;
+  } catch (error) {
+    console.error("Error fetching token requests:", error);
+    return [];
+  }
+}
+
+export async function updateTokenRequestStatus(id: string, status: string) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/tokenrequest/status/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          status: status,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      console.error("Error setting token request status:", response.statusText);
+      return;
+    }
+
+    revalidatePath("/dashboard/notifications");
+  } catch (error) {
+    console.error("Error setting token request status:", error);
   }
 }

@@ -26,9 +26,9 @@ export type Payment = {
 
 export type TokenRequest = {
   id?: string;
-  regUserId: string;
-  providerId: string;
-  datasetId: string;
+  reqUserID: string;
+  providerID: string;
+  datasetID: string;
   createdAt?: Date;
   url?: string;
 };

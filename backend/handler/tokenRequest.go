@@ -43,5 +43,40 @@ func (t *TokenRequest) Create(c echo.Context) error {
 	}
 
 	return c.JSON(201, tokenRequest)
+}
 
+func (t *TokenRequest) ListAllPendingByUserID(c echo.Context) error {
+	userID := c.Param("userID")
+	if userID == "" {
+		return c.JSON(400, "Bad Request")
+	}
+
+	tokenRequests, err := t.Repository.GetAllPendingByUserID(c.Request().Context(), userID)
+	if err != nil {
+		return c.JSON(500, "Internal Server Error")
+	}
+
+	return c.JSON(200, tokenRequests)
+}
+
+func (t *TokenRequest) UpdateStatus(c echo.Context) error {
+	var body struct {
+		Status string `json:"status"`
+	}
+
+	if err := c.Bind(&body); err != nil {
+		return c.JSON(400, "Bad Request")
+	}
+
+	id := c.Param("id")
+	if id == "" || body.Status == "" {
+		return c.JSON(400, "Bad Request")
+	}
+
+	err := t.Repository.UpdateStatus(c.Request().Context(), id, body.Status)
+	if err != nil {
+		return c.JSON(500, "Internal Server Error")
+	}
+
+	return c.JSON(200, "OK")
 }
