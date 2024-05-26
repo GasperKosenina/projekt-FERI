@@ -30,5 +30,6 @@ export type TokenRequest = {
   providerID: string;
   datasetID: string;
   createdAt?: Date;
+  paymentID: string;
   url?: string;
 };

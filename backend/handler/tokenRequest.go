@@ -17,6 +17,7 @@ func (t *TokenRequest) Create(c echo.Context) error {
 		ReqUserID  string `json:"reqUserID"`
 		ProviderID string `json:"providerID"`
 		DatasetID  string `json:"datasetID"`
+		PaymentID  string `json:"paymentID"`
 		Status     string `json:"status"`
 	}
 
@@ -33,6 +34,7 @@ func (t *TokenRequest) Create(c echo.Context) error {
 		ProviderID: body.ProviderID,
 		CreatedAt:  time.Now(),
 		DatasetID:  body.DatasetID,
+		PaymentID:  body.PaymentID,
 		Status:     body.Status,
 		Url:        "",
 	}
@@ -59,9 +61,39 @@ func (t *TokenRequest) ListAllPendingByUserID(c echo.Context) error {
 	return c.JSON(200, tokenRequests)
 }
 
+func (t *TokenRequest) ListAllDeclinedByUserID(c echo.Context) error {
+	userID := c.Param("userID")
+	if userID == "" {
+		return c.JSON(400, "Bad Request")
+	}
+
+	tokenRequests, err := t.Repository.GetAllDeclinedByUserID(c.Request().Context(), userID)
+	if err != nil {
+		return c.JSON(500, "Internal Server Error")
+	}
+
+	return c.JSON(200, tokenRequests)
+}
+
+func (t *TokenRequest) ListAllAcceptedByUserID(c echo.Context) error {
+	userID := c.Param("userID")
+	if userID == "" {
+		return c.JSON(400, "Bad Request")
+	}
+
+	tokenRequests, err := t.Repository.GetAllAcceptedByUserID(c.Request().Context(), userID)
+	if err != nil {
+		return c.JSON(500, "Internal Server Error")
+	}
+
+	return c.JSON(200, tokenRequests)
+}
+
 func (t *TokenRequest) UpdateStatus(c echo.Context) error {
 	var body struct {
-		Status string `json:"status"`
+		PaymentID string `json:"paymentID"`
+		DatasetID string `json:"datasetID"`
+		Status    string `json:"status"`
 	}
 
 	if err := c.Bind(&body); err != nil {
@@ -72,8 +104,9 @@ func (t *TokenRequest) UpdateStatus(c echo.Context) error {
 	if id == "" || body.Status == "" {
 		return c.JSON(400, "Bad Request")
 	}
-
-	err := t.Repository.UpdateStatus(c.Request().Context(), id, body.Status)
+	//http://localhost:3000/dashboard/paypal/success?datasetId=664f3c1b4beb7ebb6c096cc2&payment_id=6652fd647466c714d8cad039
+	url := "http://localhost:3000/dashboard/paypal/success?datasetId=" + body.DatasetID + "&payment_id=" + body.PaymentID
+	err := t.Repository.UpdateStatus(c.Request().Context(), id, body.Status, url)
 	if err != nil {
 		return c.JSON(500, "Internal Server Error")
 	}

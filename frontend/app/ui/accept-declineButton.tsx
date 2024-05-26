@@ -5,6 +5,8 @@ import toast from "react-hot-toast";
 
 interface AcceptDeclineButtonProps {
   id: string | undefined;
+  paymentId: string | undefined;
+  datasetId: string | undefined;
 }
 
 export default function AcceptDeclineButton(props: AcceptDeclineButtonProps) {
@@ -17,13 +19,33 @@ export default function AcceptDeclineButton(props: AcceptDeclineButtonProps) {
       return;
     }
 
+    if (props.datasetId === undefined) {
+      console.error("No dataset ID found");
+      return;
+    }
+
+    if (props.paymentId === undefined) {
+      console.error("No payment ID found");
+      return;
+    }
+
     if (buttonType === "accept") {
-      updateTokenRequestStatus(props.id, "accepted");
+      updateTokenRequestStatus(
+        props.id,
+        props.datasetId,
+        props.paymentId,
+        "accepted"
+      );
       toast.success("Token request accepted");
     }
 
     if (buttonType === "decline") {
-      updateTokenRequestStatus(props.id, "declined");
+      updateTokenRequestStatus(
+        props.id,
+        props.datasetId,
+        props.paymentId,
+        "declined"
+      );
       toast.success("Token request declined");
     }
   }

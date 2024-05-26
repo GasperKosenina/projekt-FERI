@@ -11,6 +11,7 @@ type TokenRequest struct {
 	ReqUserID  string             `bson:"reqUserID" json:"reqUserID"`
 	ProviderID string             `bson:"providerID" json:"providerID"`
 	DatasetID  string             `bson:"datasetID" json:"datasetID"`
+	PaymentID  string             `bson:"paymentID" json:"paymentID"`
 	CreatedAt  time.Time          `bson:"createdAt" json:"createdAt"`
 	Status     string             `bson:"status" json:"status"`
 	Url        string             `bson:"url" json:"url"`

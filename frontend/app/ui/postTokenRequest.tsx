@@ -8,19 +8,22 @@ interface PostTokenFormProps {
   datasetId: string;
   userId: string;
   providerId: string;
+  paymentId: string;
 }
 
 export default function PostTokenForm({
   datasetId,
   userId,
   providerId,
+  paymentId,
 }: PostTokenFormProps) {
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const tokenrequest: TokenRequest | undefined = await postTokenRequest(
       datasetId,
       userId,
-      providerId
+      providerId,
+      paymentId
     );
 
     if (tokenrequest) {

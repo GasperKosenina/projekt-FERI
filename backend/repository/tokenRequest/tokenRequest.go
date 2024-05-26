@@ -40,14 +40,50 @@ func (t *TokenRequest) GetAllPendingByUserID(ctx context.Context, userID string)
 	return tokenRequests, nil
 }
 
-func (t *TokenRequest) UpdateStatus(ctx context.Context, id string, status string) error {
+func (t *TokenRequest) GetAllDeclinedByUserID(ctx context.Context, userID string) ([]model.TokenRequest, error) {
+	collection := t.Client.Database("projekt").Collection("tokenRequest")
+	cursor, err := collection.Find(ctx, map[string]string{"reqUserID": userID, "status": "declined"})
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var tokenRequests []model.TokenRequest
+	for cursor.Next(ctx) {
+		var tokenRequest model.TokenRequest
+		cursor.Decode(&tokenRequest)
+		tokenRequests = append(tokenRequests, tokenRequest)
+	}
+
+	return tokenRequests, nil
+}
+
+func (t *TokenRequest) GetAllAcceptedByUserID(ctx context.Context, userID string) ([]model.TokenRequest, error) {
+	collection := t.Client.Database("projekt").Collection("tokenRequest")
+	cursor, err := collection.Find(ctx, map[string]string{"reqUserID": userID, "status": "accepted"})
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var tokenRequests []model.TokenRequest
+	for cursor.Next(ctx) {
+		var tokenRequest model.TokenRequest
+		cursor.Decode(&tokenRequest)
+		tokenRequests = append(tokenRequests, tokenRequest)
+	}
+
+	return tokenRequests, nil
+}
+
+func (t *TokenRequest) UpdateStatus(ctx context.Context, id string, status string, url string) error {
 	collection := t.Client.Database("projekt").Collection("tokenRequest")
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return err
 	}
 
-	_, err = collection.UpdateOne(ctx, bson.M{"_id": objectID}, bson.M{"$set": bson.M{"status": status}})
+	_, err = collection.UpdateOne(ctx, bson.M{"_id": objectID}, bson.M{"$set": bson.M{"status": status, "url": url}})
 	if err != nil {
 		return err
 	}

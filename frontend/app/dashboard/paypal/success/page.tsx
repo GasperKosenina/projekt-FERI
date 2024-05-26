@@ -35,18 +35,25 @@ export default async function Page({
 
   if (!payment.accessToken) {
     access_token = await generate(dataset.accessToken, dataset.duration);
-    await updateToken(payment_id);
+    await updateToken(payment_id, true);
     await updateTokenCreatedAt(payment_id);
   }
 
   if (access_token == null) {
     return (
       <div>
-        <h1 className="text-left font-normal text-gray-500 mb-4" style={{ fontSize: '1.375rem' }}>Token Generation Issue</h1>
+        <h1
+          className="text-left font-normal text-gray-500 mb-4"
+          style={{ fontSize: "1.375rem" }}
+        >
+          Token Generation Issue
+        </h1>
         <div className="rounded-lg p-6 bg-[#f9fafb]">
           <div className="mt-6 animate-bounce">
             <p className="text-center mt-10 text-xl text-grey-500">
-              Uh-oh! ☹ You came across a problem. It looks like you've already generated an access token. If you need a new one, just click the button below to proceed. 
+              Uh-oh! ☹ You came across a problem. It looks like you have already
+              generated an access token. If you need a new one, just click the
+              button below to proceed.
             </p>
           </div>
           <div className="flex justify-center mt-10 mb-8">
