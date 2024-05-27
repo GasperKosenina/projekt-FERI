@@ -41,7 +41,6 @@ export default function PaymentButton({
     }
   };
 
-  console.log(isButtonDisabled)
 
   return (
     <form onSubmit={handlePay}>

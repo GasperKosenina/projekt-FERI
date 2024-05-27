@@ -1,6 +1,7 @@
 "use client";
 import { paypal, createPayment } from "@/lib/data";
 import { Payment } from "@/lib/definitions";
+import { useState } from "react";
 
 interface FreeAccessButtonProps {
   datasetId: string | undefined;
@@ -15,6 +16,11 @@ export default function FreeAccessButton({
   amount,
   isCheckboxChecked, // Use this prop
 }: FreeAccessButtonProps) {
+
+
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
+
+
   const handlePay = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     if (!isCheckboxChecked) {
@@ -27,6 +33,9 @@ export default function FreeAccessButton({
     if (!payee || !amount) {
       return;
     }
+
+    setIsButtonDisabled(true);
+
     const payment: Payment = await createPayment(datasetId, parseFloat(amount));
     window.location.href = `http://localhost:3000/dashboard/paypal/success?datasetId=${datasetId}&payment_id=${payment.id}`;
   };
@@ -35,10 +44,10 @@ export default function FreeAccessButton({
     <form onSubmit={handlePay}>
       <button
         type="submit"
-        className={`bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-lg inline-flex items-center ${!isCheckboxChecked ? 'opacity-50 cursor-not-allowed' : ''}`}
-        disabled={!isCheckboxChecked} // Disable button if checkbox is not checked
+        className={`bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-lg inline-flex items-center ${(!isCheckboxChecked || isButtonDisabled) ? 'opacity-50 cursor-not-allowed' : ''}`}
+        disabled={!isCheckboxChecked || isButtonDisabled} // Disable button if checkbox is not checked
       >
-        Get Access
+        {isButtonDisabled ? "Loading..." : "Get Access"}
       </button>
     </form>
   );
