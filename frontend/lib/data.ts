@@ -651,12 +651,12 @@ export async function getDataProviderPicture(userId: string) {
   }
 }
 
-export async function getPaymentByDataset(datasetID: string) {
+export async function getPaymentByDataset(datasetID: string, userID: string) {
   noStore();
 
   try {
     const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/payment/purchased-dataset/${datasetID}`,
+      `${process.env.NEXT_PUBLIC_API_URL}/payment/purchased-dataset/${datasetID}/${userID}`,
       {
         method: "GET",
         headers: {

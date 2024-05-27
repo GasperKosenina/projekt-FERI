@@ -38,7 +38,7 @@ export default async function MyTokens() {
 
   const payments: Payment[] = await Promise.all(
     purchasedDatasets.map(async (dataset) => {
-      return await getPaymentByDataset(dataset.id || '');
+      return await getPaymentByDataset(dataset.id || '', userId);
     })
   );
 

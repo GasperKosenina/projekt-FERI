@@ -50,7 +50,7 @@ export default async function Page({ params }: { params: { id: string } }) {
 
   const datasetID: string = dataset.id || "";
 
-  const payment: Payment | null = await getPaymentByDataset(datasetID);
+  const payment: Payment | null = await getPaymentByDataset(datasetID, userId);
 
   if (!payment || !payment.tokenCreatedAt || !payment.id) {
     console.error("Payment or created at date not found");

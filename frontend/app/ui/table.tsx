@@ -108,11 +108,7 @@ export default async function Table({ query }: { query: string }) {
                   {dataset.price.map(async (priceItem, index) => {
                     if (
                       (tipUserja === "individual" &&
-                        (priceItem.purpose ===
-                          "Education (using dataset for pedagogical purposes)" ||
-                          priceItem.purpose ===
-                          "Comparative analysis (benchmarking)" ||
-                          priceItem.purpose === "Machine learning")) ||
+                        (priceItem.purpose === "Machine learning")) ||
                       (tipUserja === "company" &&
                         priceItem.purpose ===
                         "Business analytics (commercial)") ||

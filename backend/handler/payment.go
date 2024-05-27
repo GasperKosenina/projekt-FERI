@@ -218,11 +218,12 @@ func (p *Payment) ListPurchasedDatasetsByUserID(c echo.Context) error {
 
 func (p *Payment) GetByDatasetID(c echo.Context) error {
 	datasetID := c.Param("datasetID")
+	userId := c.Param("userID")
 	if datasetID == "" {
 		return c.JSON(http.StatusBadRequest, "Bad Request")
 	}
 
-	payment, err := p.Repository.FindOneByDatasetID(c.Request().Context(), datasetID)
+	payment, err := p.Repository.FindOneByDatasetID(c.Request().Context(), datasetID, userId)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
 	}
