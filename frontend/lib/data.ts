@@ -1,5 +1,5 @@
 "use server";
-import { Dataset, Payment } from "./definitions";
+import { Dataset, Payment, TokenRequest } from "./definitions";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
@@ -448,7 +448,7 @@ export async function getDatasetsLengthByUser(userID: string) {
     return [];
   }
 }
-export async function updateToken(id: string) {
+export async function updateToken(id: string, token: boolean) {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/payment/${id}`,
@@ -458,7 +458,7 @@ export async function updateToken(id: string) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          accessToken: true,
+          accessToken: token,
         }),
       }
     );
@@ -506,8 +506,7 @@ export async function updateTokenCreatedAt(id: string) {
   }
 }
 
-
-export async function updateShowStatus(id: string, show:boolean) {
+export async function updateShowStatus(id: string, show: boolean) {
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/dataset/show-status/${id}`,
@@ -517,7 +516,7 @@ export async function updateShowStatus(id: string, show:boolean) {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          show: show
+          show: show,
         }),
       }
     );
@@ -525,7 +524,6 @@ export async function updateShowStatus(id: string, show:boolean) {
     console.error("Error setting payment status:", error);
   }
 }
-
 
 export async function getPaymentById(id: string) {
   noStore();
@@ -703,5 +701,154 @@ export async function getAllPaymentsByDataset(datasetID: string) {
   } catch (error) {
     console.error("Error fetching payment:", error);
     return [];
+  }
+}
+
+
+export async function postTokenRequest(
+  datasetId: string,
+  userId: string,
+  providerId: string,
+  paymentId: string
+) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/tokenrequest`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          reqUserID: userId,
+          providerID: providerId,
+          datasetID: datasetId,
+          paymentID: paymentId,
+          status: "pending",
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to create token request");
+    }
+
+    const Tokenrequest: TokenRequest = await response.json();
+    return Tokenrequest;
+  } catch (error) {
+    console.error("Error creating token request:", error);
+  }
+}
+
+export async function getAllPendingByUserId(userId: string) {
+  noStore();
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/tokenrequest/pending/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const requests = await response.json();
+    return requests;
+  } catch (error) {
+    console.error("Error fetching token requests:", error);
+    return [];
+  }
+}
+
+export async function getAllDeclinedByUserId(userId: string) {
+  noStore();
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/tokenrequest/declined/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const requests = await response.json();
+    return requests;
+  } catch (error) {
+    console.error("Error fetching token requests:", error);
+    return [];
+  }
+}
+
+export async function getAllAcceptedByUserId(userId: string) {
+  noStore();
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/tokenrequest/accepted/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const requests = await response.json();
+    return requests;
+  } catch (error) {
+    console.error("Error fetching token requests:", error);
+    return [];
+  }
+}
+
+export async function updateTokenRequestStatus(
+  id: string,
+  datasetId: string,
+  paymentId: string,
+  status: string
+) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/tokenrequest/status/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          datasetID: datasetId,
+          paymentID: paymentId,
+          status: status,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      console.error("Error setting token request status:", response.statusText);
+      return;
+    }
+
+    updateToken(paymentId, false);
+
+    revalidatePath("/dashboard/notifications");
+  } catch (error) {
+    console.error("Error setting token request status:", error);
   }
 }

@@ -4,6 +4,7 @@ import (
 	"github.com/GasperKosenina/projekt-FERI/handler"
 	"github.com/GasperKosenina/projekt-FERI/repository/dataset"
 	"github.com/GasperKosenina/projekt-FERI/repository/payment"
+	"github.com/GasperKosenina/projekt-FERI/repository/tokenRequest"
 	"github.com/GasperKosenina/projekt-FERI/repository/user"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
@@ -22,6 +23,9 @@ func (a *App) routes() {
 
 	paymentGroup := e.Group("/payment")
 	a.paymentRoute(paymentGroup)
+
+	tokenRequestGroup := e.Group("/tokenrequest")
+	a.tokenRequestRoute(tokenRequestGroup)
 
 	e.POST("login", handler.Login)
 	e.GET("protected", handler.Protected, handler.JWTAuthMiddleware)
@@ -75,4 +79,18 @@ func (a *App) paymentRoute(g *echo.Group) {
 	g.GET("/purchased-dataset/:datasetID", paymentHandler.GetByDatasetID)
 	g.GET("/purchased-dataset-all/:datasetID", paymentHandler.GetAllByDatasetID)
 	g.PUT("/tokenCreatedAt/:id", paymentHandler.UpdateTokenCreatedAt)
+}
+
+func (a *App) tokenRequestRoute(g *echo.Group) {
+	tokenRequestHandler := &handler.TokenRequest{
+		Repository: &tokenRequest.TokenRequest{
+			Client: a.db,
+		},
+	}
+
+	g.POST("", tokenRequestHandler.Create)
+	g.GET("/pending/:userID", tokenRequestHandler.ListAllPendingByUserID)
+	g.GET("/declined/:userID", tokenRequestHandler.ListAllDeclinedByUserID)
+	g.GET("/accepted/:userID", tokenRequestHandler.ListAllAcceptedByUserID)
+	g.PUT("/status/:id", tokenRequestHandler.UpdateStatus)
 }

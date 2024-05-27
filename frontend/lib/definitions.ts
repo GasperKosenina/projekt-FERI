@@ -23,3 +23,13 @@ export type Payment = {
   createdAt?: Date;
   tokenCreatedAt?: Date;
 };
+
+export type TokenRequest = {
+  id?: string;
+  reqUserID: string;
+  providerID: string;
+  datasetID: string;
+  createdAt?: Date;
+  paymentID: string;
+  url?: string;
+};
