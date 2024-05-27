@@ -10,6 +10,7 @@ import { getUser } from "@/lib/data";
 import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
 
+
 function formatDate(dateString: any) {
   const date = new Date(dateString);
   return date.toLocaleDateString("en-US", {
@@ -19,7 +20,7 @@ function formatDate(dateString: any) {
   });
 }
 
-export default async function Table({ query }: { query: string }) {
+export default async function Table({ query, category}: { query: string, category: string}) {
   const { userId } = auth();
 
   if (!userId) {
@@ -37,7 +38,9 @@ export default async function Table({ query }: { query: string }) {
     datasets = data;
   }
 
-  const filteredDatasets = datasets.filter((dataset) => dataset.show === true && dataset.name.toLowerCase().includes(query.toLowerCase()));
+
+
+  const filteredDatasets = datasets.filter((dataset) => dataset.show === true && dataset.name.toLowerCase().includes(query.toLowerCase()) && (category ? dataset.category === category : true));
 
 
   if (filteredDatasets.length === 0) {
