@@ -677,7 +677,6 @@ export async function getPaymentByDataset(datasetID: string, userID: string) {
   }
 }
 
-
 export async function getAllPaymentsByDataset(datasetID: string) {
   noStore();
 
@@ -704,12 +703,12 @@ export async function getAllPaymentsByDataset(datasetID: string) {
   }
 }
 
-
 export async function postTokenRequest(
   datasetId: string,
   userId: string,
   providerId: string,
-  paymentId: string
+  paymentId: string,
+  reason: string
 ) {
   try {
     const response = await fetch(
@@ -725,6 +724,7 @@ export async function postTokenRequest(
           datasetID: datasetId,
           paymentID: paymentId,
           status: "pending",
+          reason: reason,
         }),
       }
     );
@@ -850,5 +850,32 @@ export async function updateTokenRequestStatus(
     revalidatePath("/dashboard/notifications");
   } catch (error) {
     console.error("Error setting token request status:", error);
+  }
+}
+
+export async function updateTokenRequestSeen(id: string) {
+  console.log(id);
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/tokenrequest/seen/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          seen: true,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      console.error("Error setting token request seen:", response.statusText);
+      return;
+    }
+
+    revalidatePath("/dashboard/notifications");
+  } catch (error) {
+    console.error("Error setting token request seen:", error);
   }
 }

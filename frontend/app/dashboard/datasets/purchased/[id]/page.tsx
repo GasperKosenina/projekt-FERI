@@ -63,8 +63,6 @@ export default async function Page({ params }: { params: { id: string } }) {
   const expiresAt = calculateExpirationDate(createdAt, expiration);
   const formattedExpiresAt = formatDate(expiresAt);
 
-  const mongoUser = await getUser(dataset.userID);
-
   return (
     <main className="p-8">
       <h1 className="text-2xl font-bold mb-6" style={{ color: "#3b82f6" }}>

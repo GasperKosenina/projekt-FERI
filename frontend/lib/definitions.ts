@@ -31,5 +31,7 @@ export type TokenRequest = {
   datasetID: string;
   createdAt?: Date;
   paymentID: string;
+  reason: string;
+  seen: boolean;
   url?: string;
 };

@@ -19,6 +19,7 @@ func (t *TokenRequest) Create(c echo.Context) error {
 		DatasetID  string `json:"datasetID"`
 		PaymentID  string `json:"paymentID"`
 		Status     string `json:"status"`
+		Reason     string `json:"reason"`
 	}
 
 	if err := c.Bind(&body); err != nil {
@@ -36,6 +37,8 @@ func (t *TokenRequest) Create(c echo.Context) error {
 		DatasetID:  body.DatasetID,
 		PaymentID:  body.PaymentID,
 		Status:     body.Status,
+		Seen:       false,
+		Reason:     body.Reason,
 		Url:        "",
 	}
 
@@ -107,6 +110,27 @@ func (t *TokenRequest) UpdateStatus(c echo.Context) error {
 	//http://localhost:3000/dashboard/paypal/success?datasetId=664f3c1b4beb7ebb6c096cc2&payment_id=6652fd647466c714d8cad039
 	url := "http://localhost:3000/dashboard/paypal/success?datasetId=" + body.DatasetID + "&payment_id=" + body.PaymentID
 	err := t.Repository.UpdateStatus(c.Request().Context(), id, body.Status, url)
+	if err != nil {
+		return c.JSON(500, "Internal Server Error")
+	}
+
+	return c.JSON(200, "OK")
+}
+
+func (t *TokenRequest) UpdateSeen(c echo.Context) error {
+	var body struct {
+		Seen bool `json:"seen"`
+	}
+	id := c.Param("id")
+	if id == "" {
+		return c.JSON(400, "Bad Request")
+	}
+
+	if err := c.Bind(&body); err != nil {
+		return c.JSON(400, "Bad Request")
+	}
+
+	err := t.Repository.UpdateSeen(c.Request().Context(), id, body.Seen)
 	if err != nil {
 		return c.JSON(500, "Internal Server Error")
 	}

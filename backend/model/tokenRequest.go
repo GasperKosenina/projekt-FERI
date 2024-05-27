@@ -15,4 +15,6 @@ type TokenRequest struct {
 	CreatedAt  time.Time          `bson:"createdAt" json:"createdAt"`
 	Status     string             `bson:"status" json:"status"`
 	Url        string             `bson:"url" json:"url"`
+	Seen       bool               `bson:"seen" json:"seen"`
+	Reason     string             `bson:"reason" json:"reason"`
 }

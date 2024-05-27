@@ -90,3 +90,18 @@ func (t *TokenRequest) UpdateStatus(ctx context.Context, id string, status strin
 
 	return nil
 }
+
+func (t *TokenRequest) UpdateSeen(ctx context.Context, id string, seen bool) error {
+	collection := t.Client.Database("projekt").Collection("tokenRequest")
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	_, err = collection.UpdateOne(ctx, bson.M{"_id": objectID}, bson.M{"$set": bson.M{"seen": seen}})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
