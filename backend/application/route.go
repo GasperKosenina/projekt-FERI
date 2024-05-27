@@ -93,4 +93,5 @@ func (a *App) tokenRequestRoute(g *echo.Group) {
 	g.GET("/declined/:userID", tokenRequestHandler.ListAllDeclinedByUserID)
 	g.GET("/accepted/:userID", tokenRequestHandler.ListAllAcceptedByUserID)
 	g.PUT("/status/:id", tokenRequestHandler.UpdateStatus)
+	g.PUT(("/seen/:id"), tokenRequestHandler.UpdateSeen)
 }

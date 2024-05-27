@@ -17,7 +17,6 @@ export default async function Page({
 }) {
   const datasetId = searchParams?.datasetId;
   const payment_id = searchParams?.payment_id;
-  console.log(payment_id);
 
   if (datasetId == null) {
     return <p>Dataset not found</p>;

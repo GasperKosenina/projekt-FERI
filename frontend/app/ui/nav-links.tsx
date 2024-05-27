@@ -25,7 +25,11 @@ const links = [
   },
 ];
 
-export default function NavLinks() {
+interface NavLinksProps {
+  unseenCount: number;
+}
+
+export default function NavLinks({ unseenCount }: NavLinksProps) {
   const pathname = usePathname();
 
   return (
@@ -43,6 +47,11 @@ export default function NavLinks() {
           >
             <LinkIcon className="w-6" />
             <p className="hidden md:block">{link.name}</p>
+            {link.name === "Notifications" && unseenCount > 0 && (
+              <span className="ml-2 inline-flex items-center justify-center rounded-full bg-red-500 px-2 py-1 text-xs font-bold leading-none text-white">
+                {unseenCount}
+              </span>
+            )}
           </Link>
         );
       })}

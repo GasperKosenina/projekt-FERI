@@ -5,6 +5,7 @@ import {
   getAllPendingByUserId,
   getDataProviderName,
   getDatasetNameById,
+  updateTokenRequestSeen,
 } from "@/lib/data";
 import { TokenRequest } from "@/lib/definitions";
 import { auth } from "@clerk/nextjs/server";
@@ -24,6 +25,7 @@ export default async function Page() {
       second: "2-digit",
     });
   }
+
   const { userId } = auth();
   if (!userId) {
     console.error("No user ID found");
@@ -56,157 +58,185 @@ export default async function Page() {
       return dateB - dateA;
     });
   }
-  console.log(acceptedRequests);
 
   return (
-    <>
-      <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-8">
-          <SquarePenIcon className="w-8 h-8 inline-block mr-2" />
-          Token requests for your datasets
-        </h1>
-        <div className="bg-white outline outline-1 outline-gray-200 rounded-lg overflow-hidden">
+    <div className="container mx-auto p-4">
+      <h1 className="text-3xl font-bold mb-8 text-center">
+        Token Requests for Your Datasets
+      </h1>
+
+      {/* Pending Requests Section */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-semibold mb-4 flex items-center">
+          <SquarePenIcon className="w-8 h-8 mr-2" />
+          Pending Requests
+        </h2>
+        <div className="bg-white shadow rounded-lg overflow-hidden">
           <table className="min-w-full bg-white">
-            <thead>
+            <thead className="bg-gray-100">
               <tr>
-                <th className="py-2 px-4 bg-gray-200 text-left">
-                  Requested By
-                </th>
-                <th className="py-2 px-4 bg-gray-200 text-left">
-                  Requested At
-                </th>
-                <th className="py-2 px-4 bg-gray-200 text-left">Dataset</th>
-                <th className="py-2 px-4 bg-gray-200 text-center">
-                  Accept/Decline
-                </th>
+                <th className="py-2 px-4 text-left">Requested By</th>
+                <th className="py-2 px-4 text-left">Requested At</th>
+                <th className="py-2 px-4 text-left">Dataset</th>
+                <th className="py-2 px-4 text-center">Reason</th>
+                <th className="py-2 px-4 text-center">Accept/Decline</th>
               </tr>
             </thead>
             <tbody>
-              {!pendingRequests ? (
+              {!pendingRequests || pendingRequests.length === 0 ? (
                 <tr>
-                  <td colSpan={4} className="py-2 px-4 text-center">
+                  <td
+                    colSpan={5}
+                    className="py-4 px-4 text-center text-gray-500"
+                  >
                     No pending requests found
                   </td>
                 </tr>
               ) : (
-                pendingRequests.map(async (request) => (
-                  <tr key={request.id} className="border-t">
-                    <td className="py-3 px-4">
-                      {await getDataProviderName(request.reqUserID)}
-                    </td>
-                    <td className="py-3 px-4">
-                      {formatDate(request.createdAt)}
-                    </td>
-                    <td className="py-3 px-4">
-                      {await getDatasetNameById(request.datasetID)}
-                    </td>
-                    <td className="py-3 px-4 text-center">
-                      <AcceptDeclineButton
-                        id={request.id}
-                        paymentId={request.paymentID}
-                        datasetId={request.datasetID}
-                      />
-                    </td>
-                  </tr>
-                ))
+                pendingRequests.map((request) => {
+                  if (request.seen === false) {
+                    updateTokenRequestSeen(request.id as string);
+                  }
+                  return (
+                    <tr key={request.id} className="border-t">
+                      <td className="py-3 px-4">
+                        {getDataProviderName(request.reqUserID)}
+                      </td>
+                      <td className="py-3 px-4">
+                        {formatDate(request.createdAt)}
+                      </td>
+                      <td className="py-3 px-4">
+                        {getDatasetNameById(request.datasetID)}
+                      </td>
+                      <td className="py-3 px-4 text-center">
+                        {request.reason}
+                      </td>
+                      <td className="py-3 px-4 text-center">
+                        <AcceptDeclineButton
+                          id={request.id}
+                          paymentId={request.paymentID}
+                          datasetId={request.datasetID}
+                        />
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
         </div>
       </div>
 
-      <div className="container mx-auto p-4 mt-8">
-        <h1 className="text-2xl font-bold mb-8">
-          <CheckBadgeIcon className="w-8 h-8 inline-block mr-2" />
-          Accepted requests
-        </h1>
-        <div className="bg-white outline outline-1 outline-gray-200 rounded-lg overflow-hidden">
+      {/* Accepted Requests Section */}
+      <div className="mb-8">
+        <h2 className="text-2xl font-semibold mb-4 flex items-center">
+          <CheckBadgeIcon className="w-8 h-8 mr-2" />
+          Accepted Requests
+        </h2>
+        <div className="bg-white shadow rounded-lg overflow-hidden">
           <table className="min-w-full bg-white">
-            <thead>
+            <thead className="bg-gray-100">
               <tr>
-                <th className="py-2 px-4 bg-gray-200 text-left">Accepted By</th>
-                <th className="py-2 px-4 bg-gray-200 text-left">Accepted At</th>
-                <th className="py-2 px-4 bg-gray-200 text-left">Dataset</th>
-                <th className="py-2 px-4 bg-gray-200 text-left">Token URL</th>
+                <th className="py-2 px-4 text-left">Accepted By</th>
+                <th className="py-2 px-4 text-left">Accepted At</th>
+                <th className="py-2 px-4 text-left">Dataset</th>
+                <th className="py-2 px-4 text-left">Token URL</th>
               </tr>
             </thead>
             <tbody>
-              {!acceptedRequests ? (
+              {!acceptedRequests || acceptedRequests.length === 0 ? (
                 <tr>
-                  <td colSpan={3} className="py-2 px-4 text-center">
+                  <td
+                    colSpan={4}
+                    className="py-4 px-4 text-center text-gray-500"
+                  >
                     No accepted requests found
                   </td>
                 </tr>
               ) : (
-                acceptedRequests.map(async (request) => (
-                  <tr key={request.id} className="border-t">
-                    <td className="py-3 px-4">
-                      {await getDataProviderName(request.providerID)}
-                    </td>
-                    <td className="py-3 px-4">
-                      {formatDate(request.createdAt)}
-                    </td>
-                    <td className="py-3 px-4">
-                      {await getDatasetNameById(request.datasetID)}
-                    </td>
-                    <td className="py-3 px-4">
-                      <Link
-                        href={request.url || "#"}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="text-blue-500"
-                      >
-                        Click here
-                      </Link>
-                    </td>
-                  </tr>
-                ))
+                acceptedRequests.map((request) => {
+                  if (request.seen === false) {
+                    updateTokenRequestSeen(request.id as string);
+                  }
+                  return (
+                    <tr key={request.id} className="border-t">
+                      <td className="py-3 px-4">
+                        {getDataProviderName(request.providerID)}
+                      </td>
+                      <td className="py-3 px-4">
+                        {formatDate(request.createdAt)}
+                      </td>
+                      <td className="py-3 px-4">
+                        {getDatasetNameById(request.datasetID)}
+                      </td>
+                      <td className="py-3 px-4">
+                        <Link
+                          href={request.url || "#"}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="text-blue-500"
+                        >
+                          Click here
+                        </Link>
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
         </div>
       </div>
 
-      <div className="container mx-auto p-4 mt-8">
-        <h1 className="text-2xl font-bold mb-8">
-          <OctagonXIcon className="w-8 h-8 inline-block mr-2" />
-          Declined requests
-        </h1>
-        <div className="bg-white outline outline-1 outline-gray-200 rounded-lg overflow-hidden">
+      {/* Declined Requests Section */}
+      <div>
+        <h2 className="text-2xl font-semibold mb-4 flex items-center">
+          <OctagonXIcon className="w-8 h-8 mr-2" />
+          Declined Requests
+        </h2>
+        <div className="bg-white shadow rounded-lg overflow-hidden">
           <table className="min-w-full bg-white">
-            <thead>
+            <thead className="bg-gray-100">
               <tr>
-                <th className="py-2 px-4 bg-gray-200 text-left">Declined By</th>
-                <th className="py-2 px-4 bg-gray-200 text-left">Declined At</th>
-                <th className="py-2 px-4 bg-gray-200 text-left">Dataset</th>
+                <th className="py-2 px-4 text-left">Declined By</th>
+                <th className="py-2 px-4 text-left">Declined At</th>
+                <th className="py-2 px-4 text-left">Dataset</th>
               </tr>
             </thead>
             <tbody>
-              {!declinedRequests ? (
+              {!declinedRequests || declinedRequests.length === 0 ? (
                 <tr>
-                  <td colSpan={3} className="py-2 px-4 text-center">
+                  <td
+                    colSpan={3}
+                    className="py-4 px-4 text-center text-gray-500"
+                  >
                     No declined requests found
                   </td>
                 </tr>
               ) : (
-                declinedRequests.map(async (request) => (
-                  <tr key={request.id} className="border-t">
-                    <td className="py-3 px-4">
-                      {await getDataProviderName(request.providerID)}
-                    </td>
-                    <td className="py-3 px-4">
-                      {formatDate(request.createdAt)}
-                    </td>
-                    <td className="py-3 px-4">
-                      {await getDatasetNameById(request.datasetID)}
-                    </td>
-                  </tr>
-                ))
+                declinedRequests.map((request) => {
+                  if (request.seen === false) {
+                    updateTokenRequestSeen(request.id as string);
+                  }
+                  return (
+                    <tr key={request.id} className="border-t">
+                      <td className="py-3 px-4">
+                        {getDataProviderName(request.providerID)}
+                      </td>
+                      <td className="py-3 px-4">
+                        {formatDate(request.createdAt)}
+                      </td>
+                      <td className="py-3 px-4">
+                        {getDatasetNameById(request.datasetID)}
+                      </td>
+                    </tr>
+                  );
+                })
               )}
             </tbody>
           </table>
         </div>
       </div>
-    </>
+    </div>
   );
 }
