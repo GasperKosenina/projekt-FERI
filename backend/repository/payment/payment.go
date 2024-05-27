@@ -162,3 +162,30 @@ func (p *MongoRepository) FindOneByDatasetID(ctx context.Context, datasetID stri
 
 	return &payment, nil
 }
+
+func (p *MongoRepository) FindAllByDatasetID(ctx context.Context, datasetID string) ([]*model.Payment, error) {
+	collection := p.Client.Database("projekt").Collection("payment")
+
+	filter := bson.M{"datasetId": datasetID, "paymentStatus": true}
+
+	var payments []*model.Payment
+	cursor, err := collection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	for cursor.Next(ctx) {
+		var payment model.Payment
+		if err := cursor.Decode(&payment); err != nil {
+			return nil, err
+		}
+		payments = append(payments, &payment)
+	}
+
+	if err := cursor.Err(); err != nil {
+		return nil, err
+	}
+
+	return payments, nil
+}

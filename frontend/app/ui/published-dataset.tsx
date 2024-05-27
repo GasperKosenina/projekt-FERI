@@ -17,18 +17,16 @@ function formatDate(dateString: any) {
 
 interface DatasetPageProps {
     dataset: Dataset;
+    validCunsomers: number;
 }
 
-const DatasetPage: React.FC<DatasetPageProps> = ({ dataset }) => {
+const DatasetPage: React.FC<DatasetPageProps> = ({ dataset, validCunsomers }) => {
     const [isPublic, setIsPublic] = useState(true);
 
     const handleSwitchChange = (newState: boolean) => {
         setIsPublic(newState);
         console.log("Dataset is now", newState ? "Public" : "Private");
     };
-
-    console.log(dataset)
-
 
     return (
         <>
@@ -39,6 +37,7 @@ const DatasetPage: React.FC<DatasetPageProps> = ({ dataset }) => {
                     onChange={handleSwitchChange}
                     datasetId={dataset.id || ''}
                     updateShowStatus={updateShowStatus}
+                    validCunsomers={validCunsomers}
                 />
             </div>
             <div className="mt-8 mx-auto w-full max-w-full bg-white overflow-hidden sm:rounded-lg outline outline-1 outline-gray-200">
@@ -89,6 +88,12 @@ const DatasetPage: React.FC<DatasetPageProps> = ({ dataset }) => {
                             </dt>
                             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
                                 <Modal1 description={dataset.description} />
+                            </dd>
+                        </div>
+                        <div className="px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                            <dt className="text-sm font-medium text-gray-500">Current Data Consumsers</dt>
+                            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                                {validCunsomers}
                             </dd>
                         </div>
                     </dl>

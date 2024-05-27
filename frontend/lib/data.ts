@@ -678,3 +678,30 @@ export async function getPaymentByDataset(datasetID: string) {
     return [];
   }
 }
+
+
+export async function getAllPaymentsByDataset(datasetID: string) {
+  noStore();
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/payment/purchased-dataset-all/${datasetID}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const payment = await response.json();
+    return payment;
+  } catch (error) {
+    console.error("Error fetching payment:", error);
+    return [];
+  }
+}
