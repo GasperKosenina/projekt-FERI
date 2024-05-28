@@ -105,3 +105,20 @@ func (t *TokenRequest) UpdateSeen(ctx context.Context, id string, seen bool) err
 
 	return nil
 }
+
+func (t *TokenRequest) ListAll(ctx context.Context) ([]*model.TokenRequest, error) {
+	collection := t.Client.Database("projekt").Collection("tokenRequest")
+	//findOptions := options.Find()
+	//findOptions.SetSort(bson.D{{"createdAt", -1}})
+	cursor, err := collection.Find(ctx, bson.D{{}})
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var token_request []*model.TokenRequest
+	if err = cursor.All(ctx, &token_request); err != nil {
+		return nil, err
+	}
+	return token_request, nil
+}

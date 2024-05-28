@@ -1,6 +1,7 @@
-import { getAllPayments, getDataProviderName, getDatasetNameById, getDatasetProviderById, getUser } from "@/lib/data";
-import { Payment } from "@/lib/definitions";
+import { getAllPayments, getAllTokenRequests, getDataProviderName, getDatasetNameById, getDatasetProviderById, getUser } from "@/lib/data";
+import { Payment, TokenRequest } from "@/lib/definitions";
 import { auth } from "@clerk/nextjs/server";
+
 import { CheckCircleIcon, CircleX, RedoIcon } from "lucide-react";
 import { redirect } from "next/navigation";
 
@@ -33,6 +34,11 @@ export default async function Page() {
     }
 
     const payments: Payment[] = await getAllPayments();
+    
+    const token_requests: TokenRequest[] = await getAllTokenRequests();
+
+    console.log(token_requests);
+
 
     if (payments) {
         payments.sort((a, b) => {
@@ -105,21 +111,10 @@ export default async function Page() {
                             </tr>
                         </thead>
                         <tbody>
-                            {payments.map(async payment => (
-                                <tr key={payment.id} className="border-t">
-                                    <td className="py-2 px-4 text-base text-gray-600">{await getDataProviderName(payment.userId)}</td>
-                                    <td className="py-2 px-4 text-base text-gray-600">{formatDate(payment.createdAt)}</td>
-                                    <td className="py-2 px-4 text-base text-gray-600">{await getDataProviderName(payment.userId)}</td>
-                                    <td className="py-2 px-4 text-base text-gray-600">{formatDate(payment.tokenCreatedAt)}</td>
-                                    <td className="py-2 px-4 text-base text-gray-600">{await getDatasetNameById(payment.datasetId)}</td>
-                                    <td className="py-2 px-4 text-base text-gray-600">{payment.amount}$</td>
-                                    <td className="py-2 px-4 text-center text-base text-gray-600">
-                                        {payment.paymentStatus ? (
-                                            <CheckCircleIcon className="text-green-500 inline-block" />
-                                        ) : (
-                                            <CircleX className="text-red-600 inline-block" />
-                                        )}
-                                    </td>
+                            {token_requests.map(async token_request => (
+                                <tr key={token_request.id} className="border-t">
+                                     <td className="py-2 px-4 text-base text-gray-600">{token_request.id}</td>
+                       
                                 </tr>
                             ))}
                         </tbody>

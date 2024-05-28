@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"net/http"
 	"time"
 
 	"github.com/GasperKosenina/projekt-FERI/model"
@@ -136,4 +137,13 @@ func (t *TokenRequest) UpdateSeen(c echo.Context) error {
 	}
 
 	return c.JSON(200, "OK")
+}
+
+func (t *TokenRequest) ListAll(c echo.Context) error {
+	token_request, err := t.Repository.ListAll(c.Request().Context())
+	if err != nil {
+
+		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
+	}
+	return c.JSON(http.StatusOK, token_request)
 }
