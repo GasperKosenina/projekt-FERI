@@ -879,3 +879,34 @@ export async function updateTokenRequestSeen(id: string) {
     console.error("Error setting token request seen:", error);
   }
 }
+
+
+
+export async function getAllPayments() {
+  //console.log(id);
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/payment`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const payments = await response.json();
+
+    return payments;
+
+    if (!response.ok) {
+      console.error("Error setting all payments:", response.statusText);
+      return [];
+    }
+
+  } catch (error) {
+    console.error("Error fetching all payments:", error);
+    return [];
+  }
+}
+
