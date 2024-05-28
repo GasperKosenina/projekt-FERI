@@ -37,8 +37,6 @@ export default async function Page() {
     });
   }
 
-  console.log(payments)
-
 
   return (
     <>

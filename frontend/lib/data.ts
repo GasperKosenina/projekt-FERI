@@ -921,14 +921,16 @@ export async function getAllPayments() {
       }
     );
 
-    const payments = await response.json();
-
-    return payments;
-
+    
     if (!response.ok) {
       console.error("Error setting all payments:", response.statusText);
       return [];
     }
+
+    const payments = await response.json();
+
+    return payments;
+
 
   } catch (error) {
     console.error("Error fetching all payments:", error);
@@ -936,3 +938,36 @@ export async function getAllPayments() {
   }
 }
 
+
+
+
+
+export async function getAllTokenRequests() {
+  //console.log(id);
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/tokenrequest`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      console.error("Error setting all payments:", response.statusText);
+      return [];
+    }
+
+
+    const token_requests = await response.json();
+
+    return token_requests;
+
+
+  } catch (error) {
+    console.error("Error fetching all payments:", error);
+    return [];
+  }
+}
