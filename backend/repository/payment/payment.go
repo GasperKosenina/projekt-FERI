@@ -189,3 +189,20 @@ func (p *MongoRepository) FindAllByDatasetID(ctx context.Context, datasetID stri
 
 	return payments, nil
 }
+
+func (p *MongoRepository) ListAll(ctx context.Context) ([]*model.Payment, error) {
+	collection := p.Client.Database("projekt").Collection("payment")
+	//findOptions := options.Find()
+	//findOptions.SetSort(bson.D{{"createdAt", -1}})
+	cursor, err := collection.Find(ctx, bson.D{{}})
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var payments []*model.Payment
+	if err = cursor.All(ctx, &payments); err != nil {
+		return nil, err
+	}
+	return payments, nil
+}

@@ -68,7 +68,7 @@ func (a *App) paymentRoute(g *echo.Group) {
 			Client: a.db,
 		},
 	}
-
+	g.GET("", paymentHandler.ListAll)
 	g.POST("", paymentHandler.Create)
 	g.PUT("/:id", paymentHandler.UpdateAccessToken)
 	g.PUT("/status/:id", paymentHandler.UpdatePaymentStatus)
@@ -79,6 +79,7 @@ func (a *App) paymentRoute(g *echo.Group) {
 	g.GET("/purchased-dataset/:datasetID/:userID", paymentHandler.GetByDatasetID)
 	g.GET("/purchased-dataset-all/:datasetID", paymentHandler.GetAllByDatasetID)
 	g.PUT("/tokenCreatedAt/:id", paymentHandler.UpdateTokenCreatedAt)
+
 }
 
 func (a *App) tokenRequestRoute(g *echo.Group) {

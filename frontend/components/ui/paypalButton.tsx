@@ -2,6 +2,7 @@
 
 import { paypal, createPayment } from "@/lib/data";
 import { useState } from "react";
+import "@/app/styles/spinner.css";
 
 interface PaymentButtonProps {
   datasetId: string | undefined;
@@ -18,7 +19,6 @@ export default function PaymentButton({
 }: PaymentButtonProps) {
 
   const [isButtonDisabled, setIsButtonDisabled] = useState(false);
-
 
   const handlePay = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -41,7 +41,6 @@ export default function PaymentButton({
     }
   };
 
-
   return (
     <form onSubmit={handlePay}>
       <button
@@ -50,7 +49,10 @@ export default function PaymentButton({
         disabled={!isCheckboxChecked || isButtonDisabled}
       >
         {isButtonDisabled ? (
-          "Loading..."
+          <>
+            Loading...
+            <div className="spinner"></div>
+          </>
         ) : (
           <>
             Buy now with
