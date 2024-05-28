@@ -14,8 +14,9 @@ type User struct {
 
 func (u *User) Create(c echo.Context) error {
 	var body struct {
-		ID   string `json:"id"`
-		Type string `json:"userType"`
+		ID    string `json:"id"`
+		Type  string `json:"userType"`
+		Admin bool   `json:"admin"`
 	}
 
 	if err := c.Bind(&body); err != nil {
@@ -27,8 +28,9 @@ func (u *User) Create(c echo.Context) error {
 	}
 
 	user := &model.User{
-		ID:   body.ID,
-		Type: body.Type,
+		ID:    body.ID,
+		Type:  body.Type,
+		Admin: body.Admin,
 	}
 
 	err := u.Reposeitory.Insert(c.Request().Context(), user)

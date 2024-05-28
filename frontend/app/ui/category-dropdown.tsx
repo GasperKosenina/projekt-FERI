@@ -20,7 +20,7 @@ const categories: Category[] = [
     { value: 'education', label: 'Education' },
     { value: 'environment', label: 'Environment' },
     { value: 'agriculture', label: 'Agriculture' },
-    { value: 'other', label: 'Other' }
+    { value: 'Other', label: 'Other' }
 ];
 
 const CategoryDropdown: React.FC = () => {

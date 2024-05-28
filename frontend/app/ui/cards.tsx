@@ -17,7 +17,6 @@ const iconMap = {
 };
 
 export default async function CardWrapper() {
-  const numberOfCustomers = 10;
 
 
 

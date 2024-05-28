@@ -179,6 +179,31 @@ export async function getDatasetNameById(id: string) {
   }
 }
 
+export async function getDatasetProviderById(id: string) {
+  noStore();
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/dataset/${id}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const dataset: Dataset = await response.json();
+    return getDataProviderName(dataset.userID);
+  } catch (error) {
+    console.error("Error fetching datasets:", error);
+    return [];
+  }
+}
+
 export async function generate(token: string, experation: number) {
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/login`, {
@@ -236,6 +261,7 @@ export async function postUser(formData: FormData) {
       body: JSON.stringify({
         id: userId,
         userType: userType,
+        admin: false
       }),
     });
 
