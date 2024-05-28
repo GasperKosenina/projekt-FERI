@@ -109,7 +109,7 @@ export default async function Page({ params }: { params: { id: string } }) {
       </div>
       <div className="mt-8">
         <p className="text-md mb-8 text-gray-700">
-          If you have lost or forgotten your access token, you can request a new
+          If you have forgotten your access token or you would like to renew your access, you can request a new
           one by clicking the button below.
         </p>
         <PostTokenForm
