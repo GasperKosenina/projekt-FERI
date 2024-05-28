@@ -7,6 +7,7 @@ import {
   getAllAcceptedByUserId,
   getAllDeclinedByUserId,
   getAllPendingByUserId,
+  getUser,
 } from "@/lib/data";
 export default async function SideNav() {
   const { userId } = auth();
@@ -20,6 +21,9 @@ export default async function SideNav() {
   } catch (error) {
     return "Check Your Internet Connection!";
   }
+
+  const mongoUser = await getUser(userId);
+  const admin = mongoUser.admin;
 
   const pendingRequests: TokenRequest[] =
     (await getAllPendingByUserId(userId)) || [];
@@ -49,7 +53,7 @@ export default async function SideNav() {
       </div>
 
       <div className="flex grow flex-row justify-between space-x-2 md:flex-col md:space-x-0 md:space-y-2">
-        <NavLinks unseenCount={unseenCount} />
+        <NavLinks unseenCount={unseenCount} admin={admin} />
         <div className="hidden h-auto w-full grow rounded-md bg-gray-50 md:block"></div>
         <div className="flex items-center gap-2 rounded-md bg-gray-50 p-3 md:p-2 md:px-3 md:py-4">
           <UserButton afterSignOutUrl="/" />
