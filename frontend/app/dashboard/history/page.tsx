@@ -41,9 +41,7 @@ export default async function Page() {
   return (
     <>
       <div className="container mx-auto p-4">
-        <h1 className="text-2xl font-bold mb-8">
-          Purchase History Of Your Datasets
-        </h1>
+        <h1 className="text-2xl mb-8 text-gray-800">Transactions History</h1>
         <div className="bg-white outline outline-1 outline-gray-200 rounded-lg overflow-hidden">
           <table className="min-w-full bg-white">
             <thead>

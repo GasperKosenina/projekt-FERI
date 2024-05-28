@@ -10,7 +10,6 @@ import { getUser } from "@/lib/data";
 import { auth } from "@clerk/nextjs/server";
 import Image from "next/image";
 
-
 function formatDate(dateString: any) {
   const date = new Date(dateString);
   return date.toLocaleDateString("en-US", {
@@ -20,7 +19,13 @@ function formatDate(dateString: any) {
   });
 }
 
-export default async function Table({ query, category}: { query: string, category: string}) {
+export default async function Table({
+  query,
+  category,
+}: {
+  query: string;
+  category: string;
+}) {
   const { userId } = auth();
 
   if (!userId) {
@@ -38,13 +43,19 @@ export default async function Table({ query, category}: { query: string, categor
     datasets = data;
   }
 
-
-
-  const filteredDatasets = datasets.filter((dataset) => dataset.show === true && dataset.name.toLowerCase().includes(query.toLowerCase()) && (category ? dataset.category === category : true));
-
+  const filteredDatasets = datasets.filter(
+    (dataset) =>
+      dataset.show === true &&
+      dataset.name.toLowerCase().includes(query.toLowerCase()) &&
+      (category ? dataset.category === category : true)
+  );
 
   if (filteredDatasets.length === 0) {
-    return <p className="mt-10">No datasets found</p>;
+    return (
+      <div className="flex justify-center mt-10">
+        <p className="text-2xl">No datasets found</p>
+      </div>
+    );
   }
 
   return (
@@ -111,13 +122,13 @@ export default async function Table({ query, category}: { query: string, categor
                   {dataset.price.map(async (priceItem, index) => {
                     if (
                       (tipUserja === "individual" &&
-                        (priceItem.purpose === "Machine learning")) ||
+                        priceItem.purpose === "Machine learning") ||
                       (tipUserja === "company" &&
                         priceItem.purpose ===
-                        "Business analytics (commercial)") ||
+                          "Business analytics (commercial)") ||
                       (tipUserja === "research-institution" &&
                         priceItem.purpose ===
-                        "Research (using dataset for scientific research)") ||
+                          "Research (using dataset for scientific research)") ||
                       ((tipUserja === "public-administration" ||
                         tipUserja === "state-administration") &&
                         priceItem.purpose === "Public administration processes")
