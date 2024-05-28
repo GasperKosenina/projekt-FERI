@@ -1,11 +1,12 @@
 import Breadcrumbs from "@/app/ui/breadcrumbs";
-import { findById, generate, getUser } from "@/lib/data";
-import { Dataset } from "@/lib/definitions";
+import { findById, generate, getPaymentByDataset, getUser } from "@/lib/data";
+import { Dataset, Payment } from "@/lib/definitions";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import Modal1 from "@/app/ui/modal_jsonschema";
 import PaymentButton from "@/components/ui/paypalButton";
 import RequestAccess from "@/app/ui/request-access";
 import RequestFreeAccess from "@/app/ui/request-free-access";
+import Link from "next/link";
 
 async function getDataProvider(userId: string) {
   try {
@@ -45,6 +46,11 @@ export default async function Page({
   const dataset: Dataset = await findById(id);
 
   const mongoUser = await getUser(dataset.userID);
+
+  const payment: Payment = await getPaymentByDataset(
+    dataset.id as string,
+    userId
+  );
 
   return (
     <main>
@@ -129,7 +135,16 @@ export default async function Page({
             </dl>
           </div>
         </div>
-        {price === "0" ? (
+        {payment.id ? (
+          <div className="flex flex-col mt-8">
+            <span>You have already purchased this dataset. </span>
+            <Link href={`/dashboard/datasets/purchased/${dataset.id}`}>
+              <span className="text-blue-500 hover:underline">
+                If you want to request access again, click here
+              </span>
+            </Link>
+          </div>
+        ) : price === "0" ? (
           <RequestFreeAccess
             dataset={dataset}
             datasetId={id}
