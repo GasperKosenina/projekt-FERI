@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -248,5 +249,15 @@ func (p *Payment) GetAllByDatasetID(c echo.Context) error {
 		return c.JSON(http.StatusNotFound, "No payments found for the given datasetID")
 	}
 
+	return c.JSON(http.StatusOK, payments)
+}
+
+func (p *Payment) ListAll(c echo.Context) error {
+	payments, err := p.Repository.ListAll(c.Request().Context())
+	fmt.Println(payments)
+	if err != nil {
+
+		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
+	}
 	return c.JSON(http.StatusOK, payments)
 }
