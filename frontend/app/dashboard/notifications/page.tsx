@@ -5,10 +5,11 @@ import {
   getAllPendingByUserId,
   getDataProviderName,
   getDatasetNameById,
+  getUser,
   updateTokenRequestSeen,
 } from "@/lib/data";
 import { TokenRequest } from "@/lib/definitions";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { CheckBadgeIcon } from "@heroicons/react/24/outline";
 import { OctagonXIcon, SquarePenIcon } from "lucide-react";
 import Link from "next/link";
@@ -88,7 +89,7 @@ export default async function Page() {
                   </td>
                 </tr>
               ) : (
-                pendingRequests.map((request) => {
+                pendingRequests.map(async (request) => {
                   if (request.seen === false) {
                     updateTokenRequestSeen(request.id as string);
                   }
@@ -111,6 +112,7 @@ export default async function Page() {
                           id={request.id}
                           paymentId={request.paymentID}
                           datasetId={request.datasetID}
+                          reqUser={(await clerkClient.users.getUser(request.reqUserID)).username}
                         />
                       </td>
                     </tr>

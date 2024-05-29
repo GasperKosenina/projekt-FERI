@@ -2,14 +2,19 @@
 
 import { updateTokenRequestStatus } from "@/lib/data";
 import toast from "react-hot-toast";
+import { useState } from "react";
+import Modal2 from "./modal_unsucces";
 
 interface AcceptDeclineButtonProps {
   id: string | undefined;
   paymentId: string | undefined;
   datasetId: string | undefined;
+  reqUser: string | null;
 }
 
 export default function AcceptDeclineButton(props: AcceptDeclineButtonProps) {
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   function handleSubmit(event: any) {
     event.preventDefault();
     const buttonType = event.nativeEvent.submitter.value;
@@ -30,13 +35,7 @@ export default function AcceptDeclineButton(props: AcceptDeclineButtonProps) {
     }
 
     if (buttonType === "accept") {
-      updateTokenRequestStatus(
-        props.id,
-        props.datasetId,
-        props.paymentId,
-        "accepted"
-      );
-      toast.success("Token request accepted");
+      setIsModalOpen(true); // Prikaži modal ob sprejemu
     }
 
     if (buttonType === "decline") {
@@ -49,6 +48,11 @@ export default function AcceptDeclineButton(props: AcceptDeclineButtonProps) {
       toast.success("Token request declined");
     }
   }
+
+  const toggleModal = () => {
+    setIsModalOpen(!isModalOpen);
+  };
+
   return (
     <div>
       <form onSubmit={handleSubmit}>
@@ -69,6 +73,7 @@ export default function AcceptDeclineButton(props: AcceptDeclineButtonProps) {
           Decline
         </button>
       </form>
+      <Modal2 isOpen={isModalOpen} toggleModal={toggleModal} reqUser={props.reqUser} />
     </div>
   );
 }
