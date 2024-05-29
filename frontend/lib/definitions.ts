@@ -34,6 +34,7 @@ export type TokenRequest = {
   reason: string;
   seen: boolean;
   status: string;
+  payed: boolean;
   amount: number;
   url?: string;
 };

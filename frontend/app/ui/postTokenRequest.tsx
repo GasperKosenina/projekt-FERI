@@ -49,7 +49,7 @@ export default function PostTokenForm({
       await new Promise((resolve) => {
         setTimeout(resolve, 2000);
       });
-      window.location.href = "/dashboard/notifications";
+      window.location.href = "/dashboard";
     } else {
       setIsSubmitting(false);
     }
@@ -84,9 +84,6 @@ export default function PostTokenForm({
               <div className="flex justify-end space-x-4">
                 <ButtonComponent type="submit" disabled={isSubmitting}>
                   Submit
-                </ButtonComponent>
-                <ButtonComponent onClick={toggleModal} disabled={isSubmitting}>
-                  Cancel
                 </ButtonComponent>
               </div>
             </form>

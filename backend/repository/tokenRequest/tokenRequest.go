@@ -143,3 +143,18 @@ func (t *TokenRequest) FindByDatasetID(ctx context.Context, datasetID string) ([
 
 	return tokenRequests, nil
 }
+
+func (t *TokenRequest) UpdatePayed(ctx context.Context, id string, payed bool) error {
+	collection := t.Client.Database("projekt").Collection("tokenRequest")
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	_, err = collection.UpdateOne(ctx, bson.M{"_id": objectID}, bson.M{"$set": bson.M{"payed": payed}})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

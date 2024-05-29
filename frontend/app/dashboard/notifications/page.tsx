@@ -11,7 +11,7 @@ import {
   updateTokenRequestSeen,
 } from "@/lib/data";
 import { TokenRequest } from "@/lib/definitions";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { CheckBadgeIcon } from "@heroicons/react/24/outline";
 import { OctagonXIcon, SquarePenIcon } from "lucide-react";
 import Link from "next/link";
@@ -92,7 +92,7 @@ export default async function Page() {
                   </td>
                 </tr>
               ) : (
-                pendingRequests.map((request) => {
+                pendingRequests.map(async (request) => {
                   if (request.seen === false) {
                     updateTokenRequestSeen(request.id as string);
                   }
@@ -115,6 +115,9 @@ export default async function Page() {
                           id={request.id}
                           paymentId={request.paymentID}
                           datasetId={request.datasetID}
+                          reqUser={
+                            (await getDataProviderName(request.reqUserID)) || ""
+                          }
                         />
                       </td>
                     </tr>
@@ -169,7 +172,7 @@ export default async function Page() {
                         <td className="py-3 px-4">
                           {request.amount === 0 ? (
                             <Link href={request.url || ""}>Click here</Link>
-                          ) : (
+                          ) : request.payed === false ? (
                             <PaypalButton
                               datasetId={request.datasetID}
                               payee={
@@ -177,7 +180,10 @@ export default async function Page() {
                               }
                               amount={request.amount}
                               paymentId={request.paymentID}
+                              id={request.id}
                             />
+                          ) : (
+                            <p>Payed</p>
                           )}
                         </td>
                       </tr>

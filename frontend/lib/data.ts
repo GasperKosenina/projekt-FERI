@@ -873,7 +873,8 @@ export async function updateTokenRequestStatus(
   id: string,
   datasetId: string,
   paymentId: string,
-  status: string
+  status: string,
+  amount: number
 ) {
   try {
     const response = await fetch(
@@ -887,7 +888,7 @@ export async function updateTokenRequestStatus(
           datasetID: datasetId,
           paymentID: paymentId,
           status: status,
-          amount: 40,
+          amount: amount,
         }),
       }
     );
@@ -928,6 +929,32 @@ export async function updateTokenRequestSeen(id: string) {
     revalidatePath("/dashboard/notifications");
   } catch (error) {
     console.error("Error setting token request seen:", error);
+  }
+}
+
+export async function updateTokenRequestPayed(id: string) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/tokenrequest/payed/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          payed: true,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      console.error("Error setting token request payed:", response.statusText);
+      return;
+    }
+
+    revalidatePath("/dashboard/notifications");
+  } catch (error) {
+    console.error("Error setting token request payed:", error);
   }
 }
 
