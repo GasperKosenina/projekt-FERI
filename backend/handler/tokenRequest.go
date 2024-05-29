@@ -6,12 +6,15 @@ import (
 	"time"
 
 	"github.com/GasperKosenina/projekt-FERI/model"
+	"github.com/GasperKosenina/projekt-FERI/repository/dataset"
 	"github.com/GasperKosenina/projekt-FERI/repository/tokenRequest"
 	"github.com/labstack/echo/v4"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type TokenRequest struct {
-	Repository *tokenRequest.TokenRequest
+	Repository        *tokenRequest.TokenRequest
+	DatasetRepository *dataset.MongoRepository
 }
 
 func (t *TokenRequest) Create(c echo.Context) error {
@@ -158,4 +161,33 @@ func (t *TokenRequest) ListAll(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
 	}
 	return c.JSON(http.StatusOK, token_request)
+}
+
+func (t *TokenRequest) ListAllByDatasetUserID(c echo.Context) error {
+	userID := c.Param("providerID")
+	if userID == "" {
+		return c.JSON(http.StatusBadRequest, "Bad Request")
+	}
+
+	datasets, err := t.DatasetRepository.ListByUserID(c.Request().Context(), userID)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
+	}
+
+	var datasetIDs []primitive.ObjectID
+	for _, dataset := range datasets {
+		datasetIDs = append(datasetIDs, dataset.ID)
+	}
+
+	var allPayments []*model.TokenRequest
+	for _, datasetID := range datasetIDs {
+		payments, err := t.Repository.FindByDatasetID(c.Request().Context(), datasetID.Hex())
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, "Internal Server Error")
+		}
+
+		allPayments = append(allPayments, payments...)
+	}
+
+	return c.JSON(http.StatusOK, allPayments)
 }

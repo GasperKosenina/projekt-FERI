@@ -981,3 +981,31 @@ export async function getAllTokenRequests() {
     return [];
   }
 }
+
+
+export async function getTokenRequestsByUser(userID: string) {
+  noStore();
+
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/tokenrequest/dataset/${userID}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return [];
+    }
+
+    const token_requests = await response.json();
+    return token_requests;
+  } catch (error) {
+    console.error("Error fetching payment:", error);
+    return [];
+  }
+}
+

@@ -86,6 +86,8 @@ func (a *App) tokenRequestRoute(g *echo.Group) {
 	tokenRequestHandler := &handler.TokenRequest{
 		Repository: &tokenRequest.TokenRequest{
 			Client: a.db,
+		}, DatasetRepository: &dataset.MongoRepository{
+			Client: a.db,
 		},
 	}
 
@@ -96,4 +98,5 @@ func (a *App) tokenRequestRoute(g *echo.Group) {
 	g.PUT("/status/:id", tokenRequestHandler.UpdateStatus)
 	g.PUT(("/seen/:id"), tokenRequestHandler.UpdateSeen)
 	g.GET("", tokenRequestHandler.ListAll)
+	g.GET("/dataset/:providerID", tokenRequestHandler.ListAllByDatasetUserID)
 }

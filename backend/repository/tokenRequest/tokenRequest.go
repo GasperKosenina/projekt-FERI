@@ -2,6 +2,7 @@ package tokenRequest
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/GasperKosenina/projekt-FERI/model"
 	"go.mongodb.org/mongo-driver/bson"
@@ -121,4 +122,24 @@ func (t *TokenRequest) ListAll(ctx context.Context) ([]*model.TokenRequest, erro
 		return nil, err
 	}
 	return token_request, nil
+}
+
+func (t *TokenRequest) FindByDatasetID(ctx context.Context, datasetID string) ([]*model.TokenRequest, error) {
+	fmt.Println(datasetID)
+	collection := t.Client.Database("projekt").Collection("tokenRequest")
+
+	filter := bson.M{"datasetID": datasetID, "status": "accepted"}
+
+	cursor, err := collection.Find(ctx, filter)
+	if err != nil {
+		return nil, err
+	}
+	defer cursor.Close(ctx)
+
+	var tokenRequests []*model.TokenRequest
+	if err := cursor.All(ctx, &tokenRequests); err != nil {
+		return nil, err
+	}
+
+	return tokenRequests, nil
 }
