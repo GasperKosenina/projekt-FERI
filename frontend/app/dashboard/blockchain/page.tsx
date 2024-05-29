@@ -1,8 +1,25 @@
-import { getAllPayments, getAllTokenRequests, getDataProviderName, getDatasetNameById, getDatasetProviderById } from "@/lib/data";
+import { getAllPayments, getAllTokenRequests, getDataProviderName, getDatasetNameById, getDatasetProviderById, getUser } from "@/lib/data";
 import { Payment, TokenRequest } from "@/lib/definitions";
+import { auth } from "@clerk/nextjs/server";
 import { CheckCircleIcon, CircleX, ClockIcon, RedoIcon, CreditCardIcon, GlobeIcon } from "lucide-react";
+import { redirect } from "next/navigation";
 
 export default async function Page() {
+    const { userId } = auth();
+    if (!userId) {
+        console.error("No user ID found");
+        return null;
+    }
+
+    const mongoUser = await getUser(userId);
+    const admin = mongoUser.admin;
+
+    if (!admin) {
+        return (
+            redirect("/dashboard")
+        )
+    }
+    
     function formatDate(dateString: any) {
         const date = new Date(dateString);
         return date.toLocaleString("en-US", {
@@ -46,13 +63,13 @@ export default async function Page() {
                     <table className="min-w-full bg-white border border-[#f3f4f6]">
                         <thead>
                             <tr>
-                                <th className="py-2 px-4 bg-[#f3f4f6] text-left text-base text-gray-900 border-b border-[#f3f4f6]">Data consumer</th>
-                                <th className="py-2 px-4 bg-[#f3f4f6] text-left text-base text-gray-900 border-b border-[#f3f4f6]">Requested At</th>
-                                <th className="py-2 px-4 bg-[#f3f4f6] text-left text-base text-gray-900 border-b border-[#f3f4f6]">Data provider</th>
-                                <th className="py-2 px-4 bg-[#f3f4f6] text-left text-base text-gray-900 border-b border-[#f3f4f6]">Token Generated At</th>
-                                <th className="py-2 px-4 bg-[#f3f4f6] text-left text-base text-gray-900 border-b border-[#f3f4f6]">Dataset</th>
-                                <th className="py-2 px-4 bg-[#f3f4f6] text-left text-base text-gray-900 border-b border-[#f3f4f6]">Amount</th>
-                                <th className="py-2 px-4 bg-[#f3f4f6] text-center text-base text-gray-900 border-b border-[#f3f4f6]">Paid Success</th>
+                                <th className="py-2 px-4 bg-[#f9fafb] text-left text-base text-gray-900">Data Consumer</th>
+                                <th className="py-2 px-4 bg-[#f9fafb] text-left text-base text-gray-900">Requested At</th>
+                                <th className="py-2 px-4 bg-[#f9fafb] text-left text-base text-gray-900">Data Provider</th>
+                                <th className="py-2 px-4 bg-[#f9fafb] text-left text-base text-gray-900">Token Generated At</th>
+                                <th className="py-2 px-4 bg-[#f9fafb] text-left text-base text-gray-900">Dataset</th>
+                                <th className="py-2 px-4 bg-[#f9fafb] text-left text-base text-gray-900">Amount</th>
+                                <th className="py-2 px-4 bg-[#f9fafb] text-center text-base text-gray-900">Paid Success</th>
                             </tr>
                         </thead>
                         <tbody>

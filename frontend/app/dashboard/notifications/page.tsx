@@ -61,16 +61,11 @@ export default async function Page() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl font-bold mb-8 text-center">
-        Token Requests for Your Datasets
-      </h1>
+      <h1 className="text-3xl mb-8 text-gray-800">Token Requests</h1>
 
       {/* Pending Requests Section */}
       <div className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4 flex items-center">
-          <SquarePenIcon className="w-8 h-8 mr-2" />
-          Pending Requests
-        </h2>
+        <h1 className="text-xl mb-8 text-gray-800">Pending Requests</h1>
         <div className="bg-white shadow rounded-lg overflow-hidden">
           <table className="min-w-full bg-white text-sm">
             <thead className="bg-[#f9fafb]">
@@ -127,13 +122,10 @@ export default async function Page() {
         </div>
       </div>
 
-      <div className="flex flex-wrap -mx-2 mt-40">
+      <div className="mt-40">
         {/* Accepted Requests Section */}
-        <div className="w-full md:w-1/2 px-2 mb-4">
-          <h2 className="text-2xl font-semibold mb-4 flex items-center">
-            <CheckBadgeIcon className="w-8 h-8 mr-2" />
-            Accepted Requests
-          </h2>
+        <div className="w-full px-2 mb-8">
+          <h1 className="text-xl mb-8 text-gray-800">Accepted Requests</h1>
           <div className="bg-white shadow rounded-lg overflow-hidden">
             <table className="min-w-full bg-white text-sm">
               <thead className="bg-[#f9fafb]">
@@ -190,11 +182,8 @@ export default async function Page() {
         </div>
 
         {/* Declined Requests Section */}
-        <div className="w-full md:w-1/2 px-2 mb-4">
-          <h2 className="text-2xl font-semibold mb-4 flex items-center">
-            <OctagonXIcon className="w-8 h-8 mr-2" />
-            Declined Requests
-          </h2>
+        <div className="w-full px-2 mb-8">
+          <h1 className="text-xl mb-8 text-gray-800">Declined Requests</h1>
           <div className="bg-white shadow rounded-lg overflow-hidden">
             <table className="min-w-full bg-white text-sm">
               <thead className="bg-[#f9fafb]">
