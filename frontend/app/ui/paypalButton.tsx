@@ -1,6 +1,9 @@
 "use client";
 
 import { paypal, updateTokenRequestPayed } from "@/lib/data";
+import { useState } from "react";
+import "@/app/styles/spinner.css";
+
 
 interface PaypalButtonProps {
   datasetId: string | undefined;
@@ -8,9 +11,14 @@ interface PaypalButtonProps {
   amount: number | undefined;
   paymentId: string | undefined;
   id: string | undefined;
+  isCheckboxChecked: boolean;
 }
 
 export default function PaypalButton(props: PaypalButtonProps) {
+
+
+
+  const [isButtonDisabled, setIsButtonDisabled] = useState(false);
   const handlePay = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -27,6 +35,8 @@ export default function PaypalButton(props: PaypalButtonProps) {
 
     const amount = String(props.amount);
 
+    setIsButtonDisabled(true);
+
     const approvalUrl = await paypal(
       props.datasetId,
       props.payee,
@@ -36,7 +46,6 @@ export default function PaypalButton(props: PaypalButtonProps) {
     if (approvalUrl) {
       window.location.href = approvalUrl;
     }
-    await new Promise((resolve) => setTimeout(resolve, 2000));
     updateTokenRequestPayed(props.id as string);
   };
   return (
@@ -44,21 +53,18 @@ export default function PaypalButton(props: PaypalButtonProps) {
       <form onSubmit={handlePay}>
         <button
           type="submit"
-          className={`bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-lg inline-flex items-center`}
+          className={`bg-yellow-400 hover:bg-yellow-500 text-black font-bold py-2 px-4 rounded-lg inline-flex items-center ${(!props.isCheckboxChecked || isButtonDisabled) ? 'opacity-50 cursor-not-allowed' : ''}`}
+          disabled={!props.isCheckboxChecked || isButtonDisabled}
         >
-          Buy now with
-          <span
-            className="ml-2 text-blue-700 font-bold italic"
-            style={{ fontFamily: "Arial" }}
-          >
-            Pay
-          </span>
-          <span
-            className="text-blue-400 font-bold italic"
-            style={{ fontFamily: "Arial" }}
-          >
-            Pal
-          </span>
+          {isButtonDisabled ? (
+          <>
+            Loading...
+            <div className="spinner"></div>
+          </>
+        ) : (
+          "Buy now with PayPal"
+        )}
+          
         </button>
       </form>
     </div>
