@@ -115,7 +115,9 @@ export default async function Page() {
                           id={request.id}
                           paymentId={request.paymentID}
                           datasetId={request.datasetID}
-                          reqUser={(await clerkClient.users.getUser(request.reqUserID)).username}
+                          reqUser={
+                            (await getDataProviderName(request.reqUserID)) || ""
+                          }
                         />
                       </td>
                     </tr>
@@ -170,7 +172,7 @@ export default async function Page() {
                         <td className="py-3 px-4">
                           {request.amount === 0 ? (
                             <Link href={request.url || ""}>Click here</Link>
-                          ) : (
+                          ) : request.payed === false ? (
                             <PaypalButton
                               datasetId={request.datasetID}
                               payee={
@@ -178,7 +180,10 @@ export default async function Page() {
                               }
                               amount={request.amount}
                               paymentId={request.paymentID}
+                              id={request.id}
                             />
+                          ) : (
+                            <p>Payed</p>
                           )}
                         </td>
                       </tr>

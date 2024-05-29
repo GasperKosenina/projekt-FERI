@@ -122,3 +122,18 @@ func (t *TokenRequest) ListAll(ctx context.Context) ([]*model.TokenRequest, erro
 	}
 	return token_request, nil
 }
+
+func (t *TokenRequest) UpdatePayed(ctx context.Context, id string, payed bool) error {
+	collection := t.Client.Database("projekt").Collection("tokenRequest")
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	_, err = collection.UpdateOne(ctx, bson.M{"_id": objectID}, bson.M{"$set": bson.M{"payed": payed}})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}

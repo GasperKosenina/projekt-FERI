@@ -43,6 +43,7 @@ func (t *TokenRequest) Create(c echo.Context) error {
 		Reason:     body.Reason,
 		Url:        "",
 		Amount:     0,
+		Payed:      false,
 	}
 
 	err := t.Repository.Insert(c.Request().Context(), tokenRequest)
@@ -112,7 +113,6 @@ func (t *TokenRequest) UpdateStatus(c echo.Context) error {
 		return c.JSON(400, "Bad Request")
 	}
 
-	fmt.Println(body.Amount)
 	var url string
 	if body.Amount == 0 {
 		fmt.Println("Amount is 0")
@@ -158,4 +158,25 @@ func (t *TokenRequest) ListAll(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, "Internal Server Error")
 	}
 	return c.JSON(http.StatusOK, token_request)
+}
+
+func (t *TokenRequest) UpdatePayed(c echo.Context) error {
+	var body struct {
+		Payed bool `json:"payed"`
+	}
+	id := c.Param("id")
+	if id == "" {
+		return c.JSON(400, "Bad Request")
+	}
+
+	if err := c.Bind(&body); err != nil {
+		return c.JSON(400, "Bad Request")
+	}
+
+	err := t.Repository.UpdatePayed(c.Request().Context(), id, body.Payed)
+	if err != nil {
+		return c.JSON(500, "Internal Server Error")
+	}
+
+	return c.JSON(200, "OK")
 }

@@ -43,7 +43,8 @@ export default function AcceptDeclineButton(props: AcceptDeclineButtonProps) {
         props.id,
         props.datasetId,
         props.paymentId,
-        "declined"
+        "declined",
+        0
       );
       toast.success("Token request declined");
     }
@@ -73,7 +74,14 @@ export default function AcceptDeclineButton(props: AcceptDeclineButtonProps) {
           Decline
         </button>
       </form>
-      <Modal2 isOpen={isModalOpen} toggleModal={toggleModal} reqUser={props.reqUser} />
+      <Modal2
+        isOpen={isModalOpen}
+        toggleModal={toggleModal}
+        tokenReqId={props.id as string}
+        datasetId={props.datasetId as string}
+        paymentId={props.paymentId as string}
+        reqUser={props.reqUser}
+      />
     </div>
   );
 }
