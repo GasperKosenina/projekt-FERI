@@ -172,9 +172,9 @@ export default async function Page() {
                         </td>
                         <td className="py-3 px-4">
                           {request.amount === 0 ? (
-                            <Link href={request.url || ""} target="">
-                              Click here to generate a new token
-                              </Link>
+                            <Link target="_blank" href={request.url || ""}>
+                              Click here
+                            </Link>
                           ) : request.payed === false ? (
                             <RequestAccess2
                             datasetId={request.datasetID}
