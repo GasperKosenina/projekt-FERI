@@ -33,12 +33,12 @@ export default async function Page() {
   const tokenRequests: TokenRequest[] = await getTokenRequestsByUser(userId);
   const tokenRequestsByDataset = tokenRequests
     ? tokenRequests.reduce((acc, request) => {
-        if (!acc[request.datasetID]) {
-          acc[request.datasetID] = [];
-        }
-        acc[request.datasetID].push(request);
-        return acc;
-      }, {} as Record<string, TokenRequest[]>)
+      if (!acc[request.datasetID]) {
+        acc[request.datasetID] = [];
+      }
+      acc[request.datasetID].push(request);
+      return acc;
+    }, {} as Record<string, TokenRequest[]>)
     : {};
 
   return (
@@ -72,11 +72,11 @@ export default async function Page() {
                 </tr>
               ) : (
                 payments.map(async (payment) => {
-                  const matchingTokenRequests = tokenRequests.filter(
+                  const matchingTokenRequests = tokenRequests ? tokenRequests.filter(
                     (request) =>
                       request.datasetID === payment.datasetId &&
                       request.reqUserID === payment.userId
-                  );
+                  ) : [];
                   return (
                     <tr key={payment.id} className="border-t">
                       <td className="py-2 px-4">
