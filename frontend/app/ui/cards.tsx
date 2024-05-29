@@ -1,5 +1,5 @@
-import { getDatasetsLengthByUser, getPaymentByDataset } from '@/lib/data';
-import { Dataset, Payment } from '@/lib/definitions';
+import { getDatasetsLengthByUser, getPaymentByDataset, getTokenRequestsByUser } from '@/lib/data';
+import { Dataset, Payment, TokenRequest } from '@/lib/definitions';
 import { getPaymentsByUser, getPurchasedDatasets } from '@/lib/data';
 import { auth } from '@clerk/nextjs/server';
 import {
@@ -36,7 +36,9 @@ export default async function CardWrapper() {
   let dolzina = datasets.length;
 
   const payments: Payment[] = await getPaymentsByUser(userId);
+  const tokenRequests: TokenRequest[] = await getTokenRequestsByUser(userId)
 
+  let tokenRequestsPayed = tokenRequests.filter(request =>request.payed);
 
 
 
@@ -50,7 +52,17 @@ export default async function CardWrapper() {
     }
   }
 
-  const zasluzek = vsota + "$";
+
+  let vsota2 = 0;
+  if (tokenRequestsPayed) {
+    for (const i of tokenRequestsPayed) {
+      vsota2 = vsota2 + i.amount;
+    }
+  }
+
+  const skupnaVsota = vsota + vsota2;
+
+  const zasluzek = skupnaVsota + "$";
 
   let purchasedDatasets: Dataset[] = [];
   const data2 = await getPurchasedDatasets(userId);

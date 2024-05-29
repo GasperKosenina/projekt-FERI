@@ -36,7 +36,6 @@ export default function PaypalButton(props: PaypalButtonProps) {
     if (approvalUrl) {
       window.location.href = approvalUrl;
     }
-    await new Promise((resolve) => setTimeout(resolve, 2000));
     updateTokenRequestPayed(props.id as string);
   };
   return (
