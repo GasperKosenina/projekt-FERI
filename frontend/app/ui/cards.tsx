@@ -36,9 +36,16 @@ export default async function CardWrapper() {
   let dolzina = datasets.length;
 
   const payments: Payment[] = await getPaymentsByUser(userId);
+
+
+
   const tokenRequests: TokenRequest[] = await getTokenRequestsByUser(userId)
 
-  let tokenRequestsPayed = tokenRequests.filter(request =>request.payed);
+  let tokenRequestsPayed: TokenRequest[] = [];
+  if (tokenRequests) {
+    tokenRequestsPayed = tokenRequests.filter(request => request.payed);
+  } 
+
 
 
 
