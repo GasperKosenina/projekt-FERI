@@ -171,7 +171,9 @@ export default async function Page() {
                         </td>
                         <td className="py-3 px-4">
                           {request.amount === 0 ? (
-                            <Link href={request.url || ""}>Click here</Link>
+                            <Link target="_blank" href={request.url || ""}>
+                              Click here
+                            </Link>
                           ) : request.payed === false ? (
                             <PaypalButton
                               datasetId={request.datasetID}
