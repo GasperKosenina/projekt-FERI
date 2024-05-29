@@ -8,6 +8,7 @@ import {
 import { Payment, TokenRequest } from "@/lib/definitions";
 import { auth } from "@clerk/nextjs/server";
 import { CheckCircleIcon, CircleX, RedoIcon } from "lucide-react";
+import React from "react";
 
 export default async function Page() {
   function formatDate(dateString: any) {
@@ -30,6 +31,15 @@ export default async function Page() {
 
   const payments: Payment[] = await getPaymentsByUser2(userId);
   const tokenRequests: TokenRequest[] = await getTokenRequestsByUser(userId);
+  const tokenRequestsByDataset = tokenRequests
+    ? tokenRequests.reduce((acc, request) => {
+        if (!acc[request.datasetID]) {
+          acc[request.datasetID] = [];
+        }
+        acc[request.datasetID].push(request);
+        return acc;
+      }, {} as Record<string, TokenRequest[]>)
+    : {};
 
   return (
     <>

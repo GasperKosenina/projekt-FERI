@@ -1,5 +1,6 @@
 import AcceptDeclineButton from "@/app/ui/accept-declineButton";
 import PaypalButton from "@/app/ui/paypalButton";
+import RequestAccess2 from "@/app/ui/paypal_modal2";
 import {
   getAllAcceptedByUserId,
   getAllDeclinedByUserId,
@@ -171,19 +172,21 @@ export default async function Page() {
                         </td>
                         <td className="py-3 px-4">
                           {request.amount === 0 ? (
-                            <Link href={request.url || ""}>Click here</Link>
+                            <Link target="_blank" href={request.url || ""}>
+                              Click here
+                            </Link>
                           ) : request.payed === false ? (
-                            <PaypalButton
-                              datasetId={request.datasetID}
+                            <RequestAccess2
+                            datasetId={request.datasetID}
                               payee={
                                 (await getUserEmail(request.providerID)) || ""
                               }
-                              amount={request.amount}
                               paymentId={request.paymentID}
-                              id={request.id}
+                              id={request.id as string}
+                              amount={request.amount}
                             />
                           ) : (
-                            <p>Payed</p>
+                            <p>Successfully paid</p>
                           )}
                         </td>
                       </tr>
