@@ -33,5 +33,6 @@ export type TokenRequest = {
   paymentID: string;
   reason: string;
   seen: boolean;
+  status: string;
   url?: string;
 };
