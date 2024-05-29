@@ -5,6 +5,7 @@ import { redirect } from "next/navigation";
 import { unstable_noStore as noStore } from "next/cache";
 import { any, z } from "zod";
 import { auth, clerkClient } from "@clerk/nextjs/server";
+import { request } from "http";
 
 const PriceItemSchema = z.object({
   purpose: z.string(),
@@ -261,7 +262,7 @@ export async function postUser(formData: FormData) {
       body: JSON.stringify({
         id: userId,
         userType: userType,
-        admin: false
+        admin: false,
       }),
     });
 
@@ -295,6 +296,30 @@ export async function getUser(userId: string) {
 
     const user = await response.json();
     return user;
+  } catch (error) {
+    console.error("Error fetching user:", error);
+    return null;
+  }
+}
+export async function getUserEmail(userId: string) {
+  noStore();
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/user/${userId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const user = await response.json();
+    return user.email as string;
   } catch (error) {
     console.error("Error fetching user:", error);
     return null;
@@ -862,6 +887,7 @@ export async function updateTokenRequestStatus(
           datasetID: datasetId,
           paymentID: paymentId,
           status: status,
+          amount: 40,
         }),
       }
     );
@@ -880,7 +906,6 @@ export async function updateTokenRequestStatus(
 }
 
 export async function updateTokenRequestSeen(id: string) {
-  console.log(id);
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/tokenrequest/seen/${id}`,
@@ -906,22 +931,16 @@ export async function updateTokenRequestSeen(id: string) {
   }
 }
 
-
-
 export async function getAllPayments() {
   //console.log(id);
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_API_URL}/payment`,
-      {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
 
-    
     if (!response.ok) {
       console.error("Error setting all payments:", response.statusText);
       return [];
@@ -930,17 +949,11 @@ export async function getAllPayments() {
     const payments = await response.json();
 
     return payments;
-
-
   } catch (error) {
     console.error("Error fetching all payments:", error);
     return [];
   }
 }
-
-
-
-
 
 export async function getAllTokenRequests() {
   //console.log(id);
@@ -960,12 +973,9 @@ export async function getAllTokenRequests() {
       return [];
     }
 
-
     const token_requests = await response.json();
 
     return token_requests;
-
-
   } catch (error) {
     console.error("Error fetching all payments:", error);
     return [];
