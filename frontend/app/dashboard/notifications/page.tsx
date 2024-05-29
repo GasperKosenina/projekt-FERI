@@ -1,10 +1,13 @@
 import AcceptDeclineButton from "@/app/ui/accept-declineButton";
+import PaypalButton from "@/app/ui/paypalButton";
 import {
   getAllAcceptedByUserId,
   getAllDeclinedByUserId,
   getAllPendingByUserId,
   getDataProviderName,
   getDatasetNameById,
+  getUser,
+  getUserEmail,
   updateTokenRequestSeen,
 } from "@/lib/data";
 import { TokenRequest } from "@/lib/definitions";
@@ -59,6 +62,7 @@ export default async function Page() {
     });
   }
 
+  const mongoUser = await getUser;
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl mb-8 text-gray-800">Token Requests</h1>
@@ -147,7 +151,7 @@ export default async function Page() {
                     </td>
                   </tr>
                 ) : (
-                  acceptedRequests.map((request) => {
+                  acceptedRequests.map(async (request) => {
                     if (request.seen === false) {
                       updateTokenRequestSeen(request.id as string);
                     }
@@ -163,14 +167,18 @@ export default async function Page() {
                           {getDatasetNameById(request.datasetID)}
                         </td>
                         <td className="py-3 px-4">
-                          <Link
-                            href={request.url || "#"}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="text-blue-500"
-                          >
-                            Click here
-                          </Link>
+                          {request.amount === 0 ? (
+                            <Link href={request.url || ""}>Click here</Link>
+                          ) : (
+                            <PaypalButton
+                              datasetId={request.datasetID}
+                              payee={
+                                (await getUserEmail(request.providerID)) || ""
+                              }
+                              amount={request.amount}
+                              paymentId={request.paymentID}
+                            />
+                          )}
                         </td>
                       </tr>
                     );

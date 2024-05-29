@@ -14,6 +14,7 @@ type TokenRequest struct {
 	PaymentID  string             `bson:"paymentID" json:"paymentID"`
 	CreatedAt  time.Time          `bson:"createdAt" json:"createdAt"`
 	Status     string             `bson:"status" json:"status"`
+	Amount     float64            `bson:"amount" json:"amount"`
 	Url        string             `bson:"url" json:"url"`
 	Seen       bool               `bson:"seen" json:"seen"`
 	Reason     string             `bson:"reason" json:"reason"`

@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"fmt"
 	"net/http"
 	"time"
 
@@ -41,6 +42,7 @@ func (t *TokenRequest) Create(c echo.Context) error {
 		Seen:       false,
 		Reason:     body.Reason,
 		Url:        "",
+		Amount:     0,
 	}
 
 	err := t.Repository.Insert(c.Request().Context(), tokenRequest)
@@ -95,9 +97,10 @@ func (t *TokenRequest) ListAllAcceptedByUserID(c echo.Context) error {
 
 func (t *TokenRequest) UpdateStatus(c echo.Context) error {
 	var body struct {
-		PaymentID string `json:"paymentID"`
-		DatasetID string `json:"datasetID"`
-		Status    string `json:"status"`
+		PaymentID string  `json:"paymentID"`
+		DatasetID string  `json:"datasetID"`
+		Status    string  `json:"status"`
+		Amount    float64 `json:"amount"`
 	}
 
 	if err := c.Bind(&body); err != nil {
@@ -108,9 +111,18 @@ func (t *TokenRequest) UpdateStatus(c echo.Context) error {
 	if id == "" || body.Status == "" {
 		return c.JSON(400, "Bad Request")
 	}
-	//http://localhost:3000/dashboard/paypal/success?datasetId=664f3c1b4beb7ebb6c096cc2&payment_id=6652fd647466c714d8cad039
-	url := "http://localhost:3000/dashboard/paypal/success?datasetId=" + body.DatasetID + "&payment_id=" + body.PaymentID
-	err := t.Repository.UpdateStatus(c.Request().Context(), id, body.Status, url)
+
+	fmt.Println(body.Amount)
+	var url string
+	if body.Amount == 0 {
+		fmt.Println("Amount is 0")
+		//http://localhost:3000/dashboard/paypal/success?datasetId=664f3c1b4beb7ebb6c096cc2&payment_id=6652fd647466c714d8cad039
+		url = "http://localhost:3000/dashboard/paypal/success?datasetId=" + body.DatasetID + "&payment_id=" + body.PaymentID
+	} else {
+		url = ""
+	}
+
+	err := t.Repository.UpdateStatus(c.Request().Context(), id, body.Status, url, body.Amount)
 	if err != nil {
 		return c.JSON(500, "Internal Server Error")
 	}

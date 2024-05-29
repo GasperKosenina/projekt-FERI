@@ -76,14 +76,14 @@ func (t *TokenRequest) GetAllAcceptedByUserID(ctx context.Context, userID string
 	return tokenRequests, nil
 }
 
-func (t *TokenRequest) UpdateStatus(ctx context.Context, id string, status string, url string) error {
+func (t *TokenRequest) UpdateStatus(ctx context.Context, id string, status string, url string, amount float64) error {
 	collection := t.Client.Database("projekt").Collection("tokenRequest")
 	objectID, err := primitive.ObjectIDFromHex(id)
 	if err != nil {
 		return err
 	}
 
-	_, err = collection.UpdateOne(ctx, bson.M{"_id": objectID}, bson.M{"$set": bson.M{"status": status, "url": url}})
+	_, err = collection.UpdateOne(ctx, bson.M{"_id": objectID}, bson.M{"$set": bson.M{"status": status, "url": url, "amount": amount}})
 	if err != nil {
 		return err
 	}
