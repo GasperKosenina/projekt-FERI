@@ -61,7 +61,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   const createdAt: Date = new Date(payment.tokenCreatedAt);
 
   const expiresAt = calculateExpirationDate(createdAt, expiration);
-  const formattedExpiresAt = formatDate(expiresAt);
+  const formattedExpiresAt = expiration === -1 ? "unlimited" : formatDate(expiresAt);
 
   return (
     <main className="p-8">
@@ -69,7 +69,11 @@ export default async function Page({ params }: { params: { id: string } }) {
         {dataset.name}
       </h1>
       <p className="text-lg mb-8">
-        <Countdown expiresAt={expiresAt} />
+        {expiration === -1 ? (
+          "You have unlimited access!"
+        ) : (
+          <Countdown expiresAt={expiresAt} />
+        )}
       </p>
       <div className="mx-auto w-full max-w-full bg-white overflow-hidden sm:rounded-lg outline outline-1 outline-gray-200">
         <div className="outline outline-1 border-gray-200">
@@ -96,14 +100,18 @@ export default async function Page({ params }: { params: { id: string } }) {
                 {await getDataProvider(dataset.userID)}
               </dd>
             </div>
-            <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">
-                Your Token Expires On
-              </dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {formattedExpiresAt}
-              </dd>
-            </div>
+
+            {expiration !== -1 && (
+              <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
+                <dt className="text-sm font-medium text-gray-500">
+                  Your Token Expires On
+                </dt>
+                <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+                  {formattedExpiresAt}
+                </dd>
+              </div>
+            )}
+
           </dl>
         </div>
       </div>

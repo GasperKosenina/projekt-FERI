@@ -88,6 +88,10 @@ export default async function CardWrapper() {
   let validPurchasedDatasets: Dataset[] = [];
 
   validPurchasedDatasets = purchasedDatasets.filter(dataset => {
+    if (dataset.duration === -1) {
+      return { ...dataset, status: 'active' };
+    }
+
     const payment = payments2.find(p => p.datasetId === dataset.id);
     if (!payment || !payment.tokenCreatedAt) return false;
 

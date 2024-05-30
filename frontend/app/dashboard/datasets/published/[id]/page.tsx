@@ -11,14 +11,23 @@ export default async function Page({ params }: { params: { id: string } }) {
 
     const durationInMilliseconds = dataset.duration * 60 * 60 * 1000;
 
-    const validCustomers = payments.filter(payment => {
-        if (!payment.tokenCreatedAt) {
-            return false;
-        }
-        const tokenCreatedAt = new Date(payment.tokenCreatedAt).getTime();
-        const currentTime = new Date().getTime();
-        return (currentTime - tokenCreatedAt) < durationInMilliseconds;
-    });
+    let validCustomers;
+
+    if (dataset.duration === -1) {
+        validCustomers = payments;
+    } else {
+        // Convert duration from hours to milliseconds
+        const durationInMilliseconds = dataset.duration * 60 * 60 * 1000;
+
+        validCustomers = payments.filter(payment => {
+            if (!payment.tokenCreatedAt) {
+                return false;
+            }
+            const tokenCreatedAt = new Date(payment.tokenCreatedAt).getTime();
+            const currentTime = new Date().getTime();
+            return (currentTime - tokenCreatedAt) < durationInMilliseconds;
+        });
+    }
 
     const validCustomersLength = validCustomers.length;
 
@@ -40,7 +49,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 <div className="rounded-lg p-6 bg-[#f9fafb]">
                     <div className="mt-6 animate-bounce">
                         <p className="text-center mt-10 text-xl text-grey-500">
-                        Uh-oh! ☹ You do not have access to this page. Please try again later.
+                            Uh-oh! ☹ You do not have access to this page. Please try again later.
                         </p>
                     </div>
                     <div className="flex justify-center mt-10 mb-8">
@@ -54,6 +63,10 @@ export default async function Page({ params }: { params: { id: string } }) {
             </div>
         );
     }
+
+    console.log(dataset)
+    console.log(validCustomers)
+
 
     return <DatasetPage dataset={dataset} validCunsomers={validCustomersLength} />;
 }

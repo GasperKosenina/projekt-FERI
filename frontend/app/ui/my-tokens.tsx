@@ -34,6 +34,10 @@ export default async function MyTokens() {
   );
 
   const datasetsWithExpirationStatus = purchasedDatasets.map((dataset) => {
+    if (dataset.duration === -1) {
+      return { ...dataset, status: 'active' };
+    }
+
     const payment = payments.find((p) => p.datasetId === dataset.id);
     if (!payment || !payment.tokenCreatedAt) {
       return { ...dataset, status: 'expired' };
