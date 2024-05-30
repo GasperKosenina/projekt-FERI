@@ -31,12 +31,19 @@ func Login(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, echo.Map{"message": "Missing or invalid JSON in request"})
 	}
 
-	jwtSecret = []byte(tokenRequest.Token)
+	jwtSecret := []byte(tokenRequest.Token)
 
-	expirationTime := time.Now().Add(time.Duration(tokenRequest.Exp) * time.Hour).Unix()
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"exp": expirationTime,
-	})
+	claims := jwt.MapClaims{}
+
+	if tokenRequest.Exp != -1 {
+		expirationTime := time.Now().Add(time.Duration(tokenRequest.Exp) * time.Hour).Unix()
+		claims["exp"] = expirationTime
+		fmt.Println("Expiration time set to:", expirationTime)
+	} else {
+		fmt.Println("No expiration time set")
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 
 	tokenString, err := token.SignedString(jwtSecret)
 	if err != nil {

@@ -61,9 +61,6 @@ export default async function SideNav() {
             {user.fullName ? user.fullName : user.username}
           </p>
         </div>
-        {/*         <div className="flex items-center gap-2 rounded-md bg-gray-50 p-3 md:p-2 md:px-3 md:py-4">
-          <SignOutButton redirectUrl="/" />
-        </div> */}
       </div>
     </div>
   );
