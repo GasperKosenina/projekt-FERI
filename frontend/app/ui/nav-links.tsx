@@ -1,6 +1,6 @@
 "use client";
 
-import { HomeIcon, DocumentDuplicateIcon } from "@heroicons/react/24/outline";
+import { HomeIcon, DocumentDuplicateIcon, BuildingOfficeIcon } from "@heroicons/react/24/outline";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import clsx from "clsx";
@@ -11,7 +11,7 @@ const links = [
   { name: "Datasets", href: "/dashboard/datasets", icon: DocumentDuplicateIcon },
   { name: "History", href: "/dashboard/history", icon: HistoryIcon },
   { name: "Notifications", href: "/dashboard/notifications", icon: BellIcon },
-  { name: "Blockchain", href: "/dashboard/blockchain", icon: LinkIcon },
+  { name: "Clearing house", href: "/dashboard/blockchain", icon: BuildingOfficeIcon },
 ];
 
 interface NavLinksProps {
@@ -21,11 +21,12 @@ interface NavLinksProps {
 
 export default function NavLinks({ unseenCount, admin }: NavLinksProps) {
   const pathname = usePathname();
+  
 
   return (
     <>
       {links
-        .filter((link) => admin || link.name !== "Blockchain")
+        .filter((link) => admin || link.name !== "Clearing house")
         .map((link) => {
           const LinkIcon = link.icon;
           return (
