@@ -3,9 +3,10 @@
 import { useState } from "react";
 import { ButtonComponent } from "./button";
 import FreeAccessButton from "./freeAccessButton";
+import { Dataset } from "@/lib/definitions";
 
 interface ModalProps {
-  dataset: any;
+  dataset: Dataset;
   datasetId: string;
   amount: string | undefined;
   mongoUser: any;
@@ -54,7 +55,12 @@ export default function RequestFreeAccess({
             </p>
             <p className="text-sm text-gray-500 mb-3">
               After successfully generated access token you will have access to
-              data for: <strong>{dataset.duration} hours</strong>
+              data for:{" "}
+              <strong>
+                {dataset.duration == -1
+                  ? " unlimited time"
+                  : dataset.duration + " hours"}
+              </strong>
             </p>
             <p className="text-sm text-gray-500">
               By clicking the button below you will be generated personal access
