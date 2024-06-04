@@ -42,9 +42,14 @@ export default async function Page() {
     : {};
 
 
-  const sortedPayments = payments.sort(
-    (a, b) => new Date(b.createdAt ||'').getTime() - new Date(a.createdAt || '').getTime()
-  );
+  let sortedPayments: Payment[] = [];
+
+  if (payments) {
+    sortedPayments = payments.sort(
+      (a, b) => new Date(b.createdAt || '').getTime() - new Date(a.createdAt || '').getTime()
+    );
+  }
+
 
   return (
     <>
