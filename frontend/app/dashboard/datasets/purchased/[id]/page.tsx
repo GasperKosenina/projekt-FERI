@@ -42,7 +42,7 @@ export default async function Page({ params }: { params: { id: string } }) {
   }
   const id = params.id;
 
-  const dataset: Dataset | null = await findById(id);
+  const dataset: Dataset | undefined = await findById(id);
   if (!dataset) {
     console.error("Dataset not found");
     return <div>Dataset not found</div>;
@@ -61,7 +61,8 @@ export default async function Page({ params }: { params: { id: string } }) {
   const createdAt: Date = new Date(payment.tokenCreatedAt);
 
   const expiresAt = calculateExpirationDate(createdAt, expiration);
-  const formattedExpiresAt = expiration === -1 ? "unlimited" : formatDate(expiresAt);
+  const formattedExpiresAt =
+    expiration === -1 ? "unlimited" : formatDate(expiresAt);
 
   return (
     <main className="p-8">
@@ -111,14 +112,13 @@ export default async function Page({ params }: { params: { id: string } }) {
                 </dd>
               </div>
             )}
-
           </dl>
         </div>
       </div>
       <div className="mt-8">
         <p className="text-md mb-8 text-gray-700">
-          If you have forgotten your access token or you would like to renew your access, you can request a new
-          one by clicking the button below.
+          If you have forgotten your access token or you would like to renew
+          your access, you can request a new one by clicking the button below.
         </p>
         <PostTokenForm
           datasetId={datasetID}

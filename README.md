@@ -1,3 +1,4 @@
-# projekt-FERI
+## DataChain
+Za več informacij o projektu in njegovi uporabi obiščite našo [dokumentacijo](https://data-chain.gitbook.io/data-chain).
 
-Gasper, Luka, Jan
+Maribor, junij 2024

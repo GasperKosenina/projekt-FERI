@@ -2,6 +2,7 @@ import AcceptDeclineButton from "@/app/ui/accept-declineButton";
 import PaypalButton from "@/app/ui/paypalButton";
 import RequestAccess2 from "@/app/ui/paypal_modal2";
 import {
+  findById,
   getAllAcceptedByUserId,
   getAllDeclinedByUserId,
   getAllPendingByUserId,
@@ -11,7 +12,7 @@ import {
   getUserEmail,
   updateTokenRequestSeen,
 } from "@/lib/data";
-import { TokenRequest } from "@/lib/definitions";
+import { Dataset, TokenRequest } from "@/lib/definitions";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { CheckBadgeIcon } from "@heroicons/react/24/outline";
 import { OctagonXIcon, SquarePenIcon } from "lucide-react";
@@ -63,7 +64,6 @@ export default async function Page() {
     });
   }
 
-  const mongoUser = await getUser;
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-3xl mb-8 text-gray-800">Token Requests</h1>
@@ -116,6 +116,7 @@ export default async function Page() {
                           id={request.id}
                           paymentId={request.paymentID}
                           datasetId={request.datasetID}
+                          dataset={await findById(request.datasetID)}
                           reqUser={
                             (await getDataProviderName(request.reqUserID)) || ""
                           }
@@ -177,7 +178,7 @@ export default async function Page() {
                             </Link>
                           ) : request.payed === false ? (
                             <RequestAccess2
-                            datasetId={request.datasetID}
+                              datasetId={request.datasetID}
                               payee={
                                 (await getUserEmail(request.providerID)) || ""
                               }
