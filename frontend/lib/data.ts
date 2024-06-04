@@ -143,15 +143,15 @@ export async function findById(id: string) {
       }
     );
 
-    if (!response.ok) {
-      return [];
-    }
+    // if (!response.ok) {
+    //   return [];
+    // }
 
-    const dataset = await response.json();
+    const dataset: Dataset = await response.json();
     return dataset;
   } catch (error) {
     console.error("Error fetching datasets:", error);
-    return [];
+    // return [];
   }
 }
 export async function getDatasetNameById(id: string) {

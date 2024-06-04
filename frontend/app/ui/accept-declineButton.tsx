@@ -4,11 +4,13 @@ import { updateTokenRequestStatus } from "@/lib/data";
 import toast from "react-hot-toast";
 import { useState } from "react";
 import Modal2 from "./modal_unsucces";
+import { Dataset } from "@/lib/definitions";
 
 interface AcceptDeclineButtonProps {
   id: string | undefined;
   paymentId: string | undefined;
   datasetId: string | undefined;
+  dataset: Dataset | undefined;
   reqUser: string | null;
 }
 
@@ -35,7 +37,7 @@ export default function AcceptDeclineButton(props: AcceptDeclineButtonProps) {
     }
 
     if (buttonType === "accept") {
-      setIsModalOpen(true); // Prikaži modal ob sprejemu
+      setIsModalOpen(true);
     }
 
     if (buttonType === "decline") {
@@ -53,6 +55,11 @@ export default function AcceptDeclineButton(props: AcceptDeclineButtonProps) {
   const toggleModal = () => {
     setIsModalOpen(!isModalOpen);
   };
+
+  if (props.dataset === undefined) {
+    console.error("No dataset found");
+    return null;
+  }
 
   return (
     <div>
@@ -81,6 +88,7 @@ export default function AcceptDeclineButton(props: AcceptDeclineButtonProps) {
         datasetId={props.datasetId as string}
         paymentId={props.paymentId as string}
         reqUser={props.reqUser}
+        duration={props.dataset.duration}
       />
     </div>
   );

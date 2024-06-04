@@ -25,7 +25,11 @@ export default async function Page({
     return <p>Payment not found</p>;
   }
 
-  const dataset: Dataset = await findById(datasetId);
+  const dataset: Dataset | undefined = await findById(datasetId);
+  if (dataset == undefined) {
+    return <p>Dataset not found</p>;
+  }
+
   const payment = await getPaymentById(payment_id);
 
   await updateStatus(payment_id);

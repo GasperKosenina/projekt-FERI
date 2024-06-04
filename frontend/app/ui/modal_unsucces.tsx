@@ -1,8 +1,10 @@
+"use client";
 import { useState } from "react";
 import CheckmarkSuccess from "./checkmark-logo"; // Uvoz CheckmarkSuccess
 import { ButtonComponent } from "./button";
 import { findById, getUser, updateTokenRequestStatus } from "@/lib/data";
 import { Dataset } from "@/lib/definitions";
+import toast from "react-hot-toast";
 
 interface ModalProps {
   isOpen: boolean;
@@ -11,6 +13,7 @@ interface ModalProps {
   paymentId: string;
   datasetId: string;
   reqUser: string | null;
+  duration: number;
 }
 
 export default function Modal2(props: ModalProps) {
@@ -26,25 +29,35 @@ export default function Modal2(props: ModalProps) {
     setPrice(event.target.value);
   };
 
-  const handleTimeOptionChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleTimeOptionChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setTimeOption(event.target.value);
   };
 
   if (props.tokenReqId === undefined) {
-    console.error("No ID found");
     return null;
   }
 
   const handleSubmit = () => {
-    if (selectedOption === "paid") {
-      // Handle paid option
-    } else if (selectedOption === "free") {
-      // Handle free option
-    }
-    if (timeOption === "limited") {
-      // Handle limited time option
-    } else if (timeOption === "unlimited") {
-      // Handle unlimited time option
+    if (selectedOption === "free") {
+      updateTokenRequestStatus(
+        props.tokenReqId,
+        props.datasetId,
+        props.paymentId,
+        "accepted",
+        0
+      );
+      toast.success("Token request accepted");
+    } else if (selectedOption === "paid") {
+      updateTokenRequestStatus(
+        props.tokenReqId,
+        props.datasetId,
+        props.paymentId,
+        "accepted",
+        parseInt(price)
+      );
+      toast.success("Token request accepted");
     }
     props.toggleModal();
   };
@@ -70,7 +83,9 @@ export default function Modal2(props: ModalProps) {
                 <strong>{props.reqUser}</strong> has requested a token. Please
                 choose one of the following options to proceed:
               </p>
-              <div className="mt-8 text-gray-500 font-semibold">Choose Price</div>
+              <div className="mt-8 text-gray-500 font-semibold">
+                Choose Price
+              </div>
               <div className="flex flex-col items-center space-y-4">
                 <div className="flex justify-center space-x-4 mt-4">
                   <label className="flex items-center">
@@ -107,36 +122,56 @@ export default function Modal2(props: ModalProps) {
                     />
                   </div>
                 )}
-                <div className="mt-8 text-gray-500 font-semibold">Choose Time Duration</div>
-                <div className="flex justify-center space-x-4">
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="timeOption"
-                      value="unlimited"
-                      checked={timeOption === "unlimited"}
-                      onChange={handleTimeOptionChange}
-                      className="mr-2"
-                    />
-                    Unlimited Time
-                  </label>
-                  <label className="flex items-center">
-                    <input
-                      type="radio"
-                      name="timeOption"
-                      value="limited"
-                      checked={timeOption === "limited"}
-                      onChange={handleTimeOptionChange}
-                      className="mr-2"
-                    />
-                    Default Time
-                  </label>
+                <div className="mt-8 text-gray-500 font-semibold">
+                  Choose Time Duration
                 </div>
+                {props.duration === -1 ? (
+                  <div className="flex justify-center space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="timeOption"
+                        value="unlimited"
+                        checked={timeOption === "unlimited"}
+                        onChange={handleTimeOptionChange}
+                        className="mr-2"
+                      />
+                      Unlimited Time
+                    </label>
+                  </div>
+                ) : (
+                  <div className="flex justify-center space-x-4">
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="timeOption"
+                        value="unlimited"
+                        checked={timeOption === "unlimited"}
+                        onChange={handleTimeOptionChange}
+                        className="mr-2"
+                      />
+                      Unlimited Time
+                    </label>
+                    <label className="flex items-center">
+                      <input
+                        type="radio"
+                        name="timeOption"
+                        value="limited"
+                        checked={timeOption === "limited"}
+                        onChange={handleTimeOptionChange}
+                        className="mr-2"
+                      />
+                      Default Time ({props.duration} hours)
+                    </label>
+                  </div>
+                )}
               </div>
               <div className="flex justify-center space-x-4 mt-8">
                 <ButtonComponent
                   onClick={handleSubmit}
-                  className={`bg-blue-500 text-white px-16 py-2 rounded ${isSubmitDisabled ? "opacity-50 cursor-not-allowed" : ""}`}
+                  className={`bg-blue-500 text-white px-16 py-2 rounded ${
+                    isSubmitDisabled ? "opacity-50 cursor-not-allowed" : ""
+                  }`}
                   disabled={isSubmitDisabled}
                 >
                   Proceed
