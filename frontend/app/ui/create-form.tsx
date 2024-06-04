@@ -39,6 +39,9 @@ export default function Form() {
   const [position, setPosition] = useState<string>("");
   const initialState = { message: "", errors: {} };
   const [state, dispatch] = useFormState(postDataset, initialState);
+  const [selectedOption, setSelectedOption] = useState('unlimited');
+  const handleOptionChange = (event: any) => setSelectedOption(event.target.value);
+
 
   const [checkboxes, setCheckboxes] = useState<Checkbox[]>([
     {
@@ -83,6 +86,13 @@ export default function Form() {
       price: 0,
       isFree: true,
     },
+    {
+      id: 7,
+      label: "Data playground",
+      checked: false,
+      price: 0,
+      isFree: true
+    },
   ]);
 
   const handleCheckboxChange = (id: number) => {
@@ -117,6 +127,7 @@ export default function Form() {
     );
   };
 
+
   const appendCategory = (formData: FormData) => {
     const category = position;
     formData.append("category", category);
@@ -141,6 +152,12 @@ export default function Form() {
 
     const purposeAndPriceString = JSON.stringify(purposeAndPriceArray);
     formData.append("purposeAndPrice", purposeAndPriceString);
+    
+    if(selectedOption == 'unlimited') {
+      formData.append("duration", "-1")
+    } 
+
+    
 
     dispatch(formData);
   };
@@ -308,13 +325,13 @@ export default function Form() {
               </div>
             </div>
           </div>
+
+
+
           <div className="mb-8 flex">
             <div className="flex-1 mr-6">
               <div className="flex mb-2 gap-1">
-                <label
-                  htmlFor="accessToken"
-                  className="mb-2 block text-sm font-medium"
-                >
+                <label htmlFor="accessToken" className="mb-2 block text-sm font-medium">
                   Secret Token
                 </label>
                 <ChevronRight className="h-5 w-5 text-gray-500" />
@@ -322,7 +339,6 @@ export default function Form() {
                   Enter a secret token to secure the dataset
                 </p>
               </div>
-
               <div className="relative">
                 <input
                   id="accessToken"
@@ -341,10 +357,9 @@ export default function Form() {
                   {showToken ? <EyeOffIcon className="h-5 w-5" /> : <EyeIcon className="h-5 w-5" />}
                 </button>
               </div>
-
               <div id="accessToken-error" aria-live="polite" aria-atomic="true">
                 {state?.errors?.accessToken &&
-                  state.errors.accessToken.map((error: string) => (
+                  state.errors.accessToken.map((error) => (
                     <p className="mt-2 text-sm text-red-500" key={error}>
                       {error}
                     </p>
@@ -353,31 +368,54 @@ export default function Form() {
             </div>
             <div className="flex-1 ml-2">
               <div className="flex mb-2 gap-1">
-                <label
-                  htmlFor="duration"
-                  className="mb-2 block text-sm font-medium"
-                >
-                  Token Expiration (Hours)
+                <label className="mb-2 block text-sm font-medium">
+                  Token Expiration
                 </label>
                 <ChevronRight className="h-5 w-5 text-gray-500" />
                 <p className="text-sm text-gray-500">
-                  Enter the duration of the token in hours
+                  Select the token expiration
                 </p>
               </div>
-              <div className="relative">
-                <input
-                  id="duration"
-                  name="duration"
-                  type="text"
-                  placeholder="Enter token expiration in hours"
-                  className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
-                  aria-describedby="duration-error"
-                />
-                <ClockIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+              <div className="flex items-center mb-4">
+                <label className="inline-flex items-center mr-4">
+                  <input
+                    type="radio"
+                    className="form-radio"
+                    name="expiration"
+                    value="unlimited"
+                    checked={selectedOption === 'unlimited'}
+                    onChange={handleOptionChange}
+                  />
+                  <span className="ml-2">Unlimited</span>
+                </label>
+                <label className="inline-flex items-center mr-4">
+                  <input
+                    type="radio"
+                    className="form-radio"
+                    name="expiration"
+                    value="limited"
+                    checked={selectedOption === 'limited'}
+                    onChange={handleOptionChange}
+                  />
+                  <span className="ml-2">Limited</span>
+                </label>
+                {selectedOption === 'limited' && (
+                  <div className="relative ml-2">
+                    <input
+                      id="duration"
+                      name="duration"
+                      type="text"
+                      placeholder="Hours"
+                      className="peer block w-full rounded-md border border-gray-200 py-2 pl-10 text-sm outline-2 placeholder:text-gray-500"
+                      aria-describedby="duration-error"
+                    />
+                    <ClockIcon className="pointer-events-none absolute left-3 top-1/2 h-[18px] w-[18px] -translate-y-1/2 text-gray-500 peer-focus:text-gray-900" />
+                  </div>
+                )}
               </div>
               <div id="duration-error" aria-live="polite" aria-atomic="true">
                 {state?.errors?.duration &&
-                  state.errors.duration.map((error: string) => (
+                  state.errors.duration.map((error) => (
                     <p className="mt-2 text-sm text-red-500" key={error}>
                       {error}
                     </p>
@@ -385,6 +423,8 @@ export default function Form() {
               </div>
             </div>
           </div>
+
+
           <div className="mb-8">
             <div className="max-w-mx-auto mt-4 bg-gray-50">
               <div className="flex mb-2 gap-1">

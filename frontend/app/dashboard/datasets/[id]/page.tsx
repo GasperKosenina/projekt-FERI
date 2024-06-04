@@ -154,6 +154,7 @@ export default async function Page({
             mongoUser={mongoUser}
             userId={userId}
             purpose={purpose}
+            dataProvider={await getDataProvider(dataset.userID) || ''}
           />
         ) : (
           <RequestAccess
@@ -163,6 +164,7 @@ export default async function Page({
             mongoUser={mongoUser}
             userId={userId}
             purpose={purpose}
+            dataProvider={await getDataProvider(dataset.userID) || ''}
           />
         )}
       </div>

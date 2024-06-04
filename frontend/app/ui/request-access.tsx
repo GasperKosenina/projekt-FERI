@@ -12,6 +12,7 @@ interface ModalProps {
   mongoUser: any;
   userId: any;
   purpose: string | undefined;
+  dataProvider: string | undefined
 }
 
 export default function RequestAccess({
@@ -21,6 +22,7 @@ export default function RequestAccess({
   mongoUser,
   userId,
   purpose,
+  dataProvider
 }: ModalProps) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isCheckboxChecked, setIsCheckboxChecked] = useState(false);
@@ -51,10 +53,13 @@ export default function RequestAccess({
             </button>
             <h2 className="font-bold mb-5">Are you absolutely sure?</h2>
             <p className="text-sm text-gray-500">
-              The dataset may only be used for: <strong>{purpose}</strong>
+              Data provider: <strong>{dataProvider}</strong>
+            </p>
+            <p className="text-sm text-gray-500">
+              The dataset may only be used for <strong>{purpose}</strong>
             </p>
             <p className="text-sm text-gray-500 mb-3">
-              After successful payment you will have access to data for:{" "}
+              After successful payment you will have access to data for {" "}
               <strong>
                 {dataset.duration == -1
                   ? "unlimited time"

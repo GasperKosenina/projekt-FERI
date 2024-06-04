@@ -125,10 +125,12 @@ export default async function Table({
                         priceItem.purpose === "Machine learning") ||
                       (tipUserja === "company" &&
                         priceItem.purpose ===
-                          "Business analytics (commercial)") ||
+                        "Business analytics (commercial)") ||
                       (tipUserja === "research-institution" &&
                         priceItem.purpose ===
-                          "Research (using dataset for scientific research)") ||
+                        "Research (using dataset for scientific research)" ||
+                        priceItem.purpose ===
+                        "Machine Learning") ||
                       ((tipUserja === "public-administration" ||
                         tipUserja === "state-administration") &&
                         priceItem.purpose === "Public administration processes")

@@ -41,6 +41,11 @@ export default async function Page() {
     }, {} as Record<string, TokenRequest[]>)
     : {};
 
+
+  const sortedPayments = payments.sort(
+    (a, b) => new Date(b.createdAt ||'').getTime() - new Date(a.createdAt || '').getTime()
+  );
+
   return (
     <>
       <div className="container mx-auto p-4">
@@ -64,19 +69,21 @@ export default async function Page() {
               </tr>
             </thead>
             <tbody>
-              {!payments ? (
+              {!sortedPayments.length ? (
                 <tr>
                   <td colSpan={6} className="text-center py-4">
                     No payment history found
                   </td>
                 </tr>
               ) : (
-                payments.map(async (payment) => {
-                  const matchingTokenRequests = tokenRequests ? tokenRequests.filter(
-                    (request) =>
-                      request.datasetID === payment.datasetId &&
-                      request.reqUserID === payment.userId
-                  ) : [];
+                sortedPayments.map(async (payment) => {
+                  const matchingTokenRequests = tokenRequests
+                    ? tokenRequests.filter(
+                      (request) =>
+                        request.datasetID === payment.datasetId &&
+                        request.reqUserID === payment.userId
+                    )
+                    : [];
                   return (
                     <tr key={payment.id} className="border-t">
                       <td className="py-2 px-4">

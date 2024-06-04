@@ -16,7 +16,6 @@ export default async function Page({ params }: { params: { id: string } }) {
     if (dataset.duration === -1) {
         validCustomers = payments;
     } else {
-        // Convert duration from hours to milliseconds
         const durationInMilliseconds = dataset.duration * 60 * 60 * 1000;
 
         validCustomers = payments.filter(payment => {
@@ -63,10 +62,6 @@ export default async function Page({ params }: { params: { id: string } }) {
             </div>
         );
     }
-
-    console.log(dataset)
-    console.log(validCustomers)
-
 
     return <DatasetPage dataset={dataset} validCunsomers={validCustomersLength} />;
 }
