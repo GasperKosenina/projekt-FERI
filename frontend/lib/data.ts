@@ -37,8 +37,8 @@ const DatasetSchema = z.object({
       message: "Schema must be less than 1MB",
     }),
   category: z.string().nonempty({ message: "Please select a category" }),
-  duration: z.number({ message: "Duration must be a number" }),
-  // .gt(0, { message: "Duration must be greater than 0" }),
+  duration: z.number({ message: "Duration must be a number" })
+  .gte(-1, { message: "Duration must be greater than 0" }),
   userID: z.string(),
 });
 
