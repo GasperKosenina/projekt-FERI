@@ -55,20 +55,20 @@ export default async function Page() {
     <>
       <div className="container mx-auto p-4">
         <h1 className="text-2xl mb-8 text-gray-800">Transactions History</h1>
-        <div className="bg-white outline outline-1 outline-gray-200 rounded-lg overflow-hidden">
+        <div className="bg-white outline outline-8 outline-[#f9fafb] rounded-sm overflow-hidden">
           <table className="min-w-full bg-white">
             <thead>
               <tr>
-                <th className="py-2 px-4 bg-gray-200 text-left">Bought By</th>
-                <th className="py-2 px-4 bg-gray-200 text-left">
+                <th className="py-2 px-4 bg-[#f9fafb] text-sm text-left">Bought By</th>
+                <th className="py-2 px-4 bg-[#f9fafb] text-sm text-left">
                   Purchased At
                 </th>
-                <th className="py-2 px-4 bg-gray-200 text-left">Dataset</th>
-                <th className="py-2 px-4 bg-gray-200 text-left">Amount</th>
-                <th className="py-2 px-4 bg-gray-200 text-center">
+                <th className="py-2 px-4 bg-[#f9fafb] text-sm text-left">Dataset</th>
+                <th className="py-2 px-4 bg-[#f9fafb] text-sm text-left">Amount</th>
+                <th className="py-2 px-4 bg-[#f9fafb] text-sm text-center">
                   Paid Success
                 </th>
-                <th className="py-2 px-4 bg-gray-200 text-center">
+                <th className="py-2 px-4 bg-[#f9fafb] text-sm text-center">
                   Token Requests
                 </th>
               </tr>

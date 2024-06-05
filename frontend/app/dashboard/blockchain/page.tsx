@@ -70,29 +70,29 @@ export default async function Page() {
           <CreditCardIcon className="inline-block mr-2" />
           Transaction view
         </h1>
-        <div className="bg-white outline outline-8 outline-[#f3f4f6] rounded-lg overflow-hidden">
-          <table className="min-w-full bg-white border border-[#f3f4f6]">
+        <div className="bg-white outline outline-8 outline-[#f9fafb] rounded-sm overflow-hidden">
+          <table className="min-w-full bg-white border border-[#f9fafb]">
             <thead>
               <tr>
-                <th className="py-2 px-4 bg-[#f9fafb] text-left text-base text-gray-900">
+                <th className="py-2 px-4 bg-[#f9fafb] text-left text-sm text-gray-900">
                   Data Consumer
                 </th>
-                <th className="py-2 px-4 bg-[#f9fafb] text-left text-base text-gray-900">
+                <th className="py-2 px-4 bg-[#f9fafb] text-left text-sm text-gray-900">
                   Requested At
                 </th>
-                <th className="py-2 px-4 bg-[#f9fafb] text-left text-base text-gray-900">
+                <th className="py-2 px-4 bg-[#f9fafb] text-left text-sm text-gray-900">
                   Data Provider
                 </th>
-                <th className="py-2 px-4 bg-[#f9fafb] text-left text-base text-gray-900">
+                <th className="py-2 px-4 bg-[#f9fafb] text-left text-sm text-gray-900">
                   Token Generated At
                 </th>
-                <th className="py-2 px-4 bg-[#f9fafb] text-left text-base text-gray-900">
+                <th className="py-2 px-4 bg-[#f9fafb] text-left text-sm text-gray-900">
                   Dataset
                 </th>
-                <th className="py-2 px-4 bg-[#f9fafb] text-left text-base text-gray-900">
+                <th className="py-2 px-4 bg-[#f9fafb] text-left text-sm text-gray-900">
                   Amount
                 </th>
-                <th className="py-2 px-4 bg-[#f9fafb] text-center text-base text-gray-900">
+                <th className="py-2 px-4 bg-[#f9fafb] text-center text-sm text-gray-900">
                   Paid Success
                 </th>
               </tr>
@@ -138,23 +138,23 @@ export default async function Page() {
           <GlobeIcon className="inline-block mr-2" />
           Token tracker
         </h1>
-        <div className="bg-white outline outline-8 outline-[#f3f4f6] rounded-lg overflow-hidden">
-          <table className="min-w-full bg-white border border-[#f3f4f6]">
+        <div className="bg-white outline outline-8 outline-[#f9fafb] rounded-sm overflow-hidden">
+          <table className="min-w-full bg-white border border-[#f9fafb]">
             <thead>
               <tr>
-                <th className="py-2 px-4 bg-[#f3f4f6] text-left text-base text-gray-900 border-b border-[#f3f4f6]">
+                <th className="py-2 px-4 bg-[#f9fafb] text-left text-sm text-gray-900 border-b border-[#f9fafb]">
                   Token Requester
                 </th>
-                <th className="py-2 px-4 bg-[#f3f4f6] text-left text-base text-gray-900 border-b border-[#f3f4f6]">
+                <th className="py-2 px-4 bg-[#f9fafb] text-left text-sm text-gray-900 border-b border-[#f9fafb]">
                   Token Requested At
                 </th>
-                <th className="py-2 px-4 bg-[#f3f4f6] text-left text-base text-gray-900 border-b border-[#f3f4f6]">
+                <th className="py-2 px-4 bg-[#f9fafb] text-left text-sm text-gray-900 border-b border-[#f9fafb]">
                   Token Provider
                 </th>
-                <th className="py-2 px-4 bg-[#f3f4f6] text-left text-base text-gray-900 border-b border-[#f3f4f6]">
+                <th className="py-2 px-4 bg-[#f9fafb] text-left text-sm text-gray-900 border-b border-[#f9fafb]">
                   Token Status
                 </th>
-                <th className="py-2 px-4 bg-[#f3f4f6] text-left text-base text-gray-900 border-b border-[#f3f4f6]">
+                <th className="py-2 px-4 bg-[#f9fafb] text-left text-sm text-gray-900 border-b border-[#f9fafb]">
                   Token Request Reason
                 </th>
               </tr>
@@ -164,7 +164,7 @@ export default async function Page() {
                 token_requests.map(async (token_request) => (
                   <tr
                     key={token_request.id}
-                    className="border-t border-[#f3f4f6]"
+                    className="border-t border-[#f9fafb]"
                   >
                     <td className="py-2 px-4 text-base text-gray-600">
                       {await getDataProviderName(token_request.reqUserID)}
