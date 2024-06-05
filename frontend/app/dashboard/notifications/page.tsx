@@ -74,7 +74,7 @@ export default async function Page() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-2xl mb-6 font-bold text-gray-800">Token Requests</h1>
+      <h1 className="text-2xl mb-8 font-bold text-gray-800">Token Requests</h1>
 
       {/* Pending Requests Section */}
       <div className="mb-8">

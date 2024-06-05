@@ -1,3 +1,4 @@
+import PaymentsChart from "@/app/ui/paymentChart";
 import {
   getAllPayments,
   getAllTokenRequests,
@@ -62,6 +63,8 @@ export default async function Page() {
       return dateB - dateA;
     });
   }
+
+  console.log(payments);
 
   return (
     <>
@@ -207,6 +210,9 @@ export default async function Page() {
                 ))}
             </tbody>
           </table>
+        </div>
+        <div className="mt-20">
+          <PaymentsChart payments={payments} />
         </div>
       </div>
     </>
