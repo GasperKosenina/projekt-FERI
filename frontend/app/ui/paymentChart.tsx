@@ -1,4 +1,5 @@
 "use client";
+import { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
 import {
   Chart as ChartJS,
@@ -10,6 +11,7 @@ import {
   Legend,
 } from "chart.js";
 import { Payment } from "@/lib/definitions";
+import { getDataProviderName } from "@/lib/data"; // Import the function to get provider names
 
 ChartJS.register(
   CategoryScale,
@@ -25,31 +27,47 @@ interface PaymentsChartProps {
 }
 
 const PaymentsChart: React.FC<PaymentsChartProps> = ({ payments }) => {
-  // Aggregate payments by date
-  const aggregatedPayments: { [date: string]: number } = payments.reduce(
+  const [userNames, setUserNames] = useState<{ [userId: string]: string }>({});
+
+  useEffect(() => {
+    const fetchUserNames = async () => {
+      const names: { [userId: string]: string } = {};
+      await Promise.all(
+        payments.map(async (payment) => {
+          if (!names[payment.userId]) {
+            const name = await getDataProviderName(payment.userId);
+            names[payment.userId] = name ?? "Unknown User"; // Provide a fallback value
+          }
+        })
+      );
+      setUserNames(names);
+    };
+
+    fetchUserNames();
+  }, [payments]);
+
+  // Aggregate payments by user
+  const aggregatedPayments: { [userId: string]: number } = payments.reduce(
     (acc, payment) => {
-      const date = payment.createdAt
-        ? new Date(payment.createdAt).toLocaleDateString()
-        : "Unknown Date";
-      if (!acc[date]) {
-        acc[date] = 0;
+      if (!acc[payment.userId]) {
+        acc[payment.userId] = 0;
       }
-      acc[date] += payment.amount;
+      acc[payment.userId] += payment.amount;
       return acc;
     },
-    {} as { [date: string]: number }
+    {} as { [userId: string]: number }
   );
 
-  const dates = Object.keys(aggregatedPayments);
+  const userIds = Object.keys(aggregatedPayments);
+  const userNamesList = userIds.map((userId) => userNames[userId] ?? userId);
   const amounts = Object.values(aggregatedPayments);
 
   const data = {
-    labels: dates,
+    labels: userNamesList,
     datasets: [
       {
-        label: "Transactions",
+        label: "Payments by User",
         data: amounts,
-        // more colours
         backgroundColor: [
           "rgba(255, 99, 132, 0.2)",
           "rgba(54, 162, 235, 0.2)",
@@ -60,27 +78,6 @@ const PaymentsChart: React.FC<PaymentsChartProps> = ({ payments }) => {
           "rgba(255, 99, 132, 0.2)",
           "rgba(54, 162, 235, 0.2)",
           "rgba(255, 206, 86, 0.2)",
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(153, 102, 255, 0.2)",
-          "rgba(255, 159, 64, 0.2)",
-          "rgba(255, 99, 132, 0.2)",
-          "rgba(54, 162, 235, 0.2)",
-          "rgba(255, 206, 86, 0.2)",
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(153, 102, 255, 0.2)",
-          "rgba(255, 159, 64, 0.2)",
-          "rgba(255, 99, 132, 0.2)",
-          "rgba(54, 162, 235, 0.2)",
-          "rgba(255, 206, 86, 0.2)",
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(153, 102, 255, 0.2)",
-          "rgba(255, 159, 64, 0.2)",
-          "rgba(255, 99, 132, 0.2)",
-          "rgba(54, 162, 235, 0.2)",
-          "rgba(255, 206, 86, 0.2)",
-          "rgba(75, 192, 192, 0.2)",
-          "rgba(153, 102, 255, 0.2)",
-          "rgba(255, 159, 64, 0.2)",
         ],
       },
     ],
@@ -94,7 +91,7 @@ const PaymentsChart: React.FC<PaymentsChartProps> = ({ payments }) => {
       },
       title: {
         display: true,
-        text: "Transactions by Date",
+        text: "How much each user has spent",
       },
     },
   };

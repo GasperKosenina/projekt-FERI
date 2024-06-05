@@ -212,7 +212,7 @@ export default async function Page() {
           </table>
         </div>
         <div className="mt-20">
-          <PaymentsChart payments={payments} />
+          {payments && <PaymentsChart payments={payments} />}
         </div>
       </div>
     </>
