@@ -12,6 +12,14 @@ import {
   getUserEmail,
   updateTokenRequestSeen,
 } from "@/lib/data";
+import {
+  CheckCircleIcon,
+  XCircleIcon,
+  ClockIcon,
+  RedoIcon,
+  CreditCardIcon,
+  GlobeIcon,
+} from "lucide-react";
 import { Dataset, TokenRequest } from "@/lib/definitions";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { CheckBadgeIcon } from "@heroicons/react/24/outline";
@@ -66,20 +74,23 @@ export default async function Page() {
 
   return (
     <div className="container mx-auto p-4">
-      <h1 className="text-3xl mb-8 text-gray-800">Token Requests</h1>
+      <h1 className="text-2xl mb-6 font-bold text-gray-800">Token Requests</h1>
 
       {/* Pending Requests Section */}
       <div className="mb-8">
-        <h1 className="text-xl mb-8 text-gray-800">Pending Requests</h1>
-        <div className="bg-white shadow rounded-lg overflow-hidden">
+        <div className="flex items-center mb-8">
+          <ClockIcon className="inline-block mr-2" />
+          <h1 className="text-xl text-gray-800">Pending Requests</h1>
+        </div>
+        <div className="bg-white rounded-sm outline outline-8 outline-[#f9fafb] overflow-hidden">
           <table className="min-w-full bg-white text-sm">
             <thead className="bg-[#f9fafb]">
               <tr>
-                <th className="py-2 px-4 text-left">Requested By</th>
-                <th className="py-2 px-4 text-left">Requested At</th>
-                <th className="py-2 px-4 text-left">Dataset</th>
-                <th className="py-2 px-4 text-center">Reason</th>
-                <th className="py-2 px-4 text-center">Accept/Decline</th>
+                <th className="py-3 px-4 text-left">Requested By</th>
+                <th className="py-3 px-4 text-left">Requested At</th>
+                <th className="py-3 px-4 text-left">Dataset</th>
+                <th className="py-3 px-4 text-center">Reason</th>
+                <th className="py-3 px-4 text-center">Accept/Decline</th>
               </tr>
             </thead>
             <tbody>
@@ -87,7 +98,7 @@ export default async function Page() {
                 <tr>
                   <td
                     colSpan={5}
-                    className="py-4 px-4 text-center text-gray-500"
+                    className="py-5 px-4 text-center text-gray-500"
                   >
                     No pending requests found
                   </td>
@@ -99,19 +110,19 @@ export default async function Page() {
                   }
                   return (
                     <tr key={request.id} className="border-t">
-                      <td className="py-3 px-4">
+                      <td className="py-5 px-4">
                         {getDataProviderName(request.reqUserID)}
                       </td>
-                      <td className="py-3 px-4">
+                      <td className="py-5 px-4">
                         {formatDate(request.createdAt)}
                       </td>
-                      <td className="py-3 px-4">
+                      <td className="py-5 px-4">
                         {getDatasetNameById(request.datasetID)}
                       </td>
-                      <td className="py-3 px-4 text-center">
+                      <td className="py-5 px-4 text-center">
                         {request.reason}
                       </td>
-                      <td className="py-3 px-4 text-center">
+                      <td className="py-5 px-4 text-center">
                         <AcceptDeclineButton
                           id={request.id}
                           paymentId={request.paymentID}
@@ -131,18 +142,21 @@ export default async function Page() {
         </div>
       </div>
 
-      <div className="mt-40">
+      <div className="mt-28">
         {/* Accepted Requests Section */}
         <div className="w-full px-2 mb-8">
-          <h1 className="text-xl mb-8 text-gray-800">Accepted Requests</h1>
-          <div className="bg-white shadow rounded-lg overflow-hidden">
+          <div className="flex items-center mb-8">
+            <CheckCircleIcon className="inline-block mr-2" />
+            <h1 className="text-xl text-gray-800">Accepted Requests</h1>
+          </div>
+          <div className="bg-white rounded-sm outline outline-8 outline-[#f9fafb] overflow-hidden">
             <table className="min-w-full bg-white text-sm">
               <thead className="bg-[#f9fafb]">
                 <tr>
-                  <th className="py-2 px-4 text-left">Accepted By</th>
-                  <th className="py-2 px-4 text-left">Accepted At</th>
-                  <th className="py-2 px-4 text-left">Dataset</th>
-                  <th className="py-2 px-4 text-left">Token URL</th>
+                  <th className="py-3 px-4 text-left">Accepted By</th>
+                  <th className="py-3 px-4 text-left">Accepted At</th>
+                  <th className="py-3 px-4 text-left">Dataset</th>
+                  <th className="py-3 px-4 text-left">Token URL</th>
                 </tr>
               </thead>
               <tbody>
@@ -201,14 +215,17 @@ export default async function Page() {
 
         {/* Declined Requests Section */}
         <div className="w-full px-2 mb-8">
-          <h1 className="text-xl mb-8 text-gray-800">Declined Requests</h1>
-          <div className="bg-white shadow rounded-lg overflow-hidden">
+          <div className="flex items-center mb-8">
+            <XCircleIcon className="inline-block mr-2" />
+            <h1 className="text-xl text-gray-800">Declined Requests</h1>
+          </div>
+          <div className="bg-white rounded-sm outline outline-8 outline-[#f9fafb] overflow-hidden">
             <table className="min-w-full bg-white text-sm">
               <thead className="bg-[#f9fafb]">
                 <tr>
-                  <th className="py-2 px-4 text-left">Declined By</th>
-                  <th className="py-2 px-4 text-left">Declined At</th>
-                  <th className="py-2 px-4 text-left">Dataset</th>
+                  <th className="py-3 px-4 text-left">Declined By</th>
+                  <th className="py-3 px-4 text-left">Declined At</th>
+                  <th className="py-3 px-4 text-left">Dataset</th>
                 </tr>
               </thead>
               <tbody>

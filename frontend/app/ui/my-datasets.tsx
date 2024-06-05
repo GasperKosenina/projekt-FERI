@@ -31,7 +31,7 @@ export default async function MyDatasets() {
 
   return (
     <div className="flex w-full flex-col md:col-span-4">
-      <strong className="mb-4 text-lg text-blue-700">Published Datasets</strong>
+      <strong className="mb-4 text-lg text-blue-500">Published Datasets</strong>
       <div className="flex-grow bg-gray-50 p-4 rounded-xl">
         {datasetsLength === 0 ? (
           <p className="truncate text-sm font-semibold md:text-base">

@@ -52,7 +52,7 @@ export default async function MyTokens() {
 
   return (
     <div className="flex w-full flex-col md:col-span-4">
-      <strong className="mb-4 text-lg text-blue-600">
+      <strong className="mb-4 text-lg text-blue-500">
         Dataset Access
       </strong>
       <div className="flex grow flex-col justify-between rounded-xl bg-gray-50 p-4">

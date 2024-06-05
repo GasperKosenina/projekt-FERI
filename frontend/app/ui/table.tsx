@@ -88,30 +88,30 @@ export default async function Table({
           </div>
 
           <table className="hidden min-w-full text-gray-900 md:table">
-            <thead className="rounded-lg text-left text-sm font-normal">
+            <thead className="rounded-sm text-left text-sm font-normal">
               <tr>
                 <th
                   scope="col"
-                  className="px-3 py-8 font-medium sm:pl-6 text-blue-900"
+                  className="px-3 py-4 sm:pl-6 text-grey-800"
                 >
                   Name
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-8 font-medium sm:pl-6 text-blue-900"
+                  className="px-3 py-4 sm:pl-6 text-grey-800"
                 >
                   Category
                 </th>
-                <th scope="col" className="px-3 py-8 font-medium text-blue-900">
+                <th scope="col" className="px-3 py-4 text-grey-800">
                   Data Provider
                 </th>
-                <th scope="col" className="px-3 py-8 font-medium text-blue-900">
+                <th scope="col" className="px-3 py-4 text-grey-800">
                   Purpose
                 </th>
-                <th scope="col" className="px-3 py-8 font-medium text-blue-900">
+                <th scope="col" className="px-3 py-4 text-grey-800">
                   Price
                 </th>
-                <th scope="col" className="px-3 py-8 font-medium text-blue-900">
+                <th scope="col" className="px-3 py-4 text-grey-800">
                   Date
                 </th>
               </tr>
@@ -140,7 +140,7 @@ export default async function Table({
                           key={`${dataset.id}_${index}`}
                           className="w-full border-b py-3 text-sm last-of-type:border-none [&:first-child>td:first-child]:rounded-tl-lg [&:first-child>td:last-child]:rounded-tr-lg [&:last-child>td:first-child]:rounded-bl-lg [&:last-child>td:last-child]:rounded-br-lg"
                         >
-                          <td className="whitespace-nowrap py-10 pl-6 pr-3">
+                          <td className="whitespace-nowrap py-5 pl-6 pr-3">
                             <div className="flex items-center gap-3 hover:text-gray-500">
                               <Link
                                 href={`/dashboard/datasets/${dataset.id}?purpose=${priceItem.purpose}&price=${priceItem.price}`}
@@ -149,11 +149,11 @@ export default async function Table({
                               </Link>
                             </div>
                           </td>
-                          <td className="whitespace-nowrap px-6 py-10">
+                          <td className="whitespace-nowrap px-6 py-5">
                             {dataset.category.charAt(0).toUpperCase() +
                               dataset.category.slice(1)}
                           </td>
-                          <td className="whitespace-nowrap px-3 py-10">
+                          <td className="whitespace-nowrap px-3 py-5">
                             <span className="flex items-center gap-2">
                               <Image
                                 src={await getDataProviderPicture(
@@ -167,15 +167,15 @@ export default async function Table({
                               {await getDataProviderName(dataset.userID)}
                             </span>
                           </td>
-                          <td className="whitespace-nowrap px-3 py-10">
+                          <td className="whitespace-nowrap px-3 py-5">
                             {priceItem.purpose}
                           </td>
-                          <td className="whitespace-nowrap px-3 py-10">
+                          <td className="whitespace-nowrap px-3 py-5">
                             {priceItem.price === 0
                               ? "Free"
                               : priceItem.price + " $"}
                           </td>
-                          <td className="whitespace-nowrap px-3 py-10">
+                          <td className="whitespace-nowrap px-3 py-5">
                             {formatDate(dataset.createdAt)}
                           </td>
                         </tr>
