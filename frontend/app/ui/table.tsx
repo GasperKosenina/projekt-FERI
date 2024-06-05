@@ -92,26 +92,26 @@ export default async function Table({
               <tr>
                 <th
                   scope="col"
-                  className="px-3 py-4 sm:pl-6 text-grey-800"
+                  className="px-4 py-5 sm:pl-6 text-grey-800"
                 >
                   Name
                 </th>
                 <th
                   scope="col"
-                  className="px-3 py-4 sm:pl-6 text-grey-800"
+                  className="px-4 py-5 sm:pl-6 text-grey-800"
                 >
                   Category
                 </th>
-                <th scope="col" className="px-3 py-4 text-grey-800">
+                <th scope="col" className="px-4 py-5 text-grey-800">
                   Data Provider
                 </th>
-                <th scope="col" className="px-3 py-4 text-grey-800">
+                <th scope="col" className="px-4 py-5 text-grey-800">
                   Purpose
                 </th>
-                <th scope="col" className="px-3 py-4 text-grey-800">
+                <th scope="col" className="px-4 py-5 text-grey-800">
                   Price
                 </th>
-                <th scope="col" className="px-3 py-4 text-grey-800">
+                <th scope="col" className="px-4 py-5 text-grey-800">
                   Date
                 </th>
               </tr>
