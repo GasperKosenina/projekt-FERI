@@ -75,25 +75,25 @@ export default async function Page() {
           <table className="min-w-full bg-white border border-[#f9fafb]">
             <thead>
               <tr>
-                <th className="py-4 px-4 bg-[#f9fafb] text-left text-sm text-gray-900">
+                <th className="py-3 px-4 bg-[#f9fafb] text-left text-sm text-gray-900">
                   Data Consumer
                 </th>
-                <th className="py-4 px-4 bg-[#f9fafb] text-left text-sm text-gray-900">
+                <th className="py-3 px-4 bg-[#f9fafb] text-left text-sm text-gray-900">
                   Requested At
                 </th>
-                <th className="py-4 px-4 bg-[#f9fafb] text-left text-sm text-gray-900">
+                <th className="py-3 px-4 bg-[#f9fafb] text-left text-sm text-gray-900">
                   Data Provider
                 </th>
-                <th className="py-4 px-4 bg-[#f9fafb] text-left text-sm text-gray-900">
+                <th className="py-3 px-4 bg-[#f9fafb] text-left text-sm text-gray-900">
                   Token Generated At
                 </th>
-                <th className="py-4 px-4 bg-[#f9fafb] text-left text-sm text-gray-900">
+                <th className="py-3 px-4 bg-[#f9fafb] text-left text-sm text-gray-900">
                   Dataset
                 </th>
-                <th className="py-4 px-4 bg-[#f9fafb] text-left text-sm text-gray-900">
+                <th className="py-3 px-4 bg-[#f9fafb] text-left text-sm text-gray-900">
                   Amount
                 </th>
-                <th className="py-4 px-4 bg-[#f9fafb] text-center text-sm text-gray-900">
+                <th className="py-3 px-4 bg-[#f9fafb] text-center text-sm text-gray-900">
                   Paid Success
                 </th>
               </tr>
