@@ -66,7 +66,9 @@ export default async function Page() {
   return (
     <>
       <div className="container mx-auto p-4">
-      <h1 className="text-2xl mb-8 font-bold text-gray-800">Clearing house</h1>
+        <h1 className="text-2xl mb-8 font-bold text-gray-800">
+          Clearing house
+        </h1>
         <h1 className="text-xl mb-8 flex items-center">
           <CreditCardIcon className="inline-block mr-2" />
           Transaction view
@@ -156,6 +158,9 @@ export default async function Page() {
                   Token Status
                 </th>
                 <th className="py-4 px-4 bg-[#f9fafb] text-left text-sm text-gray-900 border-b border-[#f9fafb]">
+                  Price
+                </th>
+                <th className="py-4 px-4 bg-[#f9fafb] text-left text-sm text-gray-900 border-b border-[#f9fafb]">
                   Token Request Reason
                 </th>
               </tr>
@@ -187,6 +192,14 @@ export default async function Page() {
                         <ClockIcon className="text-yellow-400 inline-block" />
                       )}
                     </td>
+                    <td className="py-5 px-4 text-base text-gray-600">
+                      {token_request.status === "accepted"
+                        ? token_request.amount === 0
+                          ? "Free"
+                          : token_request.amount + "$"
+                        : "-"}
+                    </td>
+
                     <td className="py-5 px-4 text-base text-gray-600">
                       {token_request.reason}
                     </td>

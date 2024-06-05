@@ -33,38 +33,46 @@ export default async function Page() {
   const tokenRequests: TokenRequest[] = await getTokenRequestsByUser(userId);
   const tokenRequestsByDataset = tokenRequests
     ? tokenRequests.reduce((acc, request) => {
-      if (!acc[request.datasetID]) {
-        acc[request.datasetID] = [];
-      }
-      acc[request.datasetID].push(request);
-      return acc;
-    }, {} as Record<string, TokenRequest[]>)
+        if (!acc[request.datasetID]) {
+          acc[request.datasetID] = [];
+        }
+        acc[request.datasetID].push(request);
+        return acc;
+      }, {} as Record<string, TokenRequest[]>)
     : {};
-
 
   let sortedPayments: Payment[] = [];
 
   if (payments) {
     sortedPayments = payments.sort(
-      (a, b) => new Date(b.createdAt || '').getTime() - new Date(a.createdAt || '').getTime()
+      (a, b) =>
+        new Date(b.createdAt || "").getTime() -
+        new Date(a.createdAt || "").getTime()
     );
   }
-
 
   return (
     <>
       <div className="container mx-auto p-4">
-        <h1 className="text-2xl mb-10 font-bold text-gray-800">Transactions History</h1>
+        <h1 className="text-2xl mb-10 font-bold text-gray-800">
+          Transactions History
+        </h1>
         <div className="bg-white outline outline-8 outline-[#f9fafb] rounded-sm overflow-hidden">
           <table className="min-w-full bg-white">
             <thead>
               <tr>
-                <th className="py-3 px-4 bg-[#f9fafb] text-sm text-left">Bought By</th>
+                <th className="py-3 px-4 bg-[#f9fafb] text-sm text-left">
+                  Bought By
+                </th>
                 <th className="py-3 px-4 bg-[#f9fafb] text-sm text-left">
                   Purchased At
                 </th>
-                <th className="py-3 px-4 bg-[#f9fafb] text-sm text-left">Dataset</th>
-                <th className="py-3 px-4 bg-[#f9fafb] text-sm text-left">Amount</th>
+                <th className="py-3 px-4 bg-[#f9fafb] text-sm text-left">
+                  Dataset
+                </th>
+                <th className="py-3 px-4 bg-[#f9fafb] text-sm text-left">
+                  Amount
+                </th>
                 <th className="py-3 px-4 bg-[#f9fafb] text-sm text-center">
                   Paid Success
                 </th>
@@ -84,10 +92,10 @@ export default async function Page() {
                 sortedPayments.map(async (payment) => {
                   const matchingTokenRequests = tokenRequests
                     ? tokenRequests.filter(
-                      (request) =>
-                        request.datasetID === payment.datasetId &&
-                        request.reqUserID === payment.userId
-                    )
+                        (request) =>
+                          request.datasetID === payment.datasetId &&
+                          request.reqUserID === payment.userId
+                      )
                     : [];
                   return (
                     <tr key={payment.id} className="border-t">
@@ -108,13 +116,20 @@ export default async function Page() {
                           <CircleX className="text-red-600 inline-block" />
                         )}
                       </td>
-                      <td className="py-5 px-4 text-center">
-                        {matchingTokenRequests.map((request) => (
-                          <div key={request.id}>
-                            {formatDate(request.createdAt)} - {request.amount}$
-                          </div>
-                        ))}
-                      </td>
+                      {matchingTokenRequests.length === 0 ? (
+                        <td className="py-5 px-4 text-center">
+                          No current token requests
+                        </td>
+                      ) : (
+                        <td className="py-5 px-4 text-center">
+                          {matchingTokenRequests.map((request) => (
+                            <div key={request.id}>
+                              {formatDate(request.createdAt)} - {request.amount}
+                              $
+                            </div>
+                          ))}
+                        </td>
+                      )}
                     </tr>
                   );
                 })

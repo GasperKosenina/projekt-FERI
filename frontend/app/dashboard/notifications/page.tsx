@@ -156,7 +156,7 @@ export default async function Page() {
                   <th className="py-3 px-4 text-left">Accepted By</th>
                   <th className="py-3 px-4 text-left">Accepted At</th>
                   <th className="py-3 px-4 text-left">Dataset</th>
-                  <th className="py-3 px-4 text-left">Token URL</th>
+                  <th className="py-3 px-4 text-left">Get Token Access</th>
                 </tr>
               </thead>
               <tbody>
@@ -183,12 +183,20 @@ export default async function Page() {
                           {formatDate(request.createdAt)}
                         </td>
                         <td className="py-3 px-4">
-                          {getDatasetNameById(request.datasetID)}
+                          <Link
+                            href={`/dashboard/datasets/purchased/${request.datasetID}`}
+                          >
+                            <span className="underline cursor-pointer">
+                              {getDatasetNameById(request.datasetID)}
+                            </span>
+                          </Link>
                         </td>
                         <td className="py-3 px-4">
                           {request.amount === 0 ? (
                             <Link target="_blank" href={request.url || ""}>
-                              Click here
+                              <span className="text-blue-500 underline cursor-pointer">
+                                Access for Free
+                              </span>
                             </Link>
                           ) : request.payed === false ? (
                             <RequestAccess2
@@ -201,7 +209,7 @@ export default async function Page() {
                               amount={request.amount}
                             />
                           ) : (
-                            <p>Successfully paid</p>
+                            <p className="text-green">Successfully paid</p>
                           )}
                         </td>
                       </tr>
@@ -226,6 +234,9 @@ export default async function Page() {
                   <th className="py-3 px-4 text-left">Declined By</th>
                   <th className="py-3 px-4 text-left">Declined At</th>
                   <th className="py-3 px-4 text-left">Dataset</th>
+                  <th className="py-3 px-4 text-left">
+                    Your reason for a new token
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -254,6 +265,7 @@ export default async function Page() {
                         <td className="py-3 px-4">
                           {getDatasetNameById(request.datasetID)}
                         </td>
+                        <td className="py-3 px-4">{request.reason}</td>
                       </tr>
                     );
                   })
