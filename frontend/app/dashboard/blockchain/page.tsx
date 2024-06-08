@@ -1,4 +1,5 @@
 import PaymentsChart from "@/app/ui/paymentChart";
+import TokenChart from "@/app/ui/tokenChart";
 import {
   getAllPayments,
   getAllTokenRequests,
@@ -211,8 +212,9 @@ export default async function Page() {
             </tbody>
           </table>
         </div>
-        <div className="mt-20">
+        <div className="flex flex-col justify-center items-center mt-20">
           {payments && <PaymentsChart payments={payments} />}
+          {token_requests && <TokenChart tokenRequests={token_requests} />}
         </div>
       </div>
     </>
