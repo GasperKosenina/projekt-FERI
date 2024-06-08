@@ -23,7 +23,7 @@ export default async function SideNav() {
   }
 
   const mongoUser = await getUser(userId);
-  const admin = mongoUser.admin;
+  const admin = mongoUser?.admin || false;
 
   const pendingRequests: TokenRequest[] =
     (await getAllPendingByUserId(userId)) || [];
