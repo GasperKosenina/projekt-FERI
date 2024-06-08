@@ -60,7 +60,6 @@ export async function postDataset(prevState: State, formData: FormData) {
   const { userId } = auth();
 
   if (!userId) {
-    console.log("Error getting user ID");
     return {
       message: "Internal Server Error. Failed to create dataset",
     };
@@ -384,7 +383,6 @@ export async function updateUserWithEmail(formData: FormData) {
   });
 
   if (!validatedData.success) {
-    //console.log(validatedData.error.flatten().fieldErrors)
     return {
       errors: validatedData.error.flatten().fieldErrors,
       message: "",
@@ -438,7 +436,6 @@ export async function createPayment(datasetId: string, amount: number) {
     }
 
     const data = await response.json();
-    //console.log(data);
     return data;
   } catch (error) {
     console.error("Error creating payment:", error);
@@ -538,7 +535,6 @@ export async function updateStatus(id: string) {
 
 export async function updateTokenCreatedAt(id: string) {
   const tokenCreatedAt = new Date().toISOString();
-  console.log(tokenCreatedAt);
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/payment/tokenCreatedAt/${id}`,
@@ -984,7 +980,6 @@ export async function updateTokenRequestPayed(id: string) {
 }
 
 export async function getAllPayments() {
-  //console.log(id);
   try {
     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment`, {
       method: "GET",
@@ -1008,7 +1003,6 @@ export async function getAllPayments() {
 }
 
 export async function getAllTokenRequests() {
-  //console.log(id);
   try {
     const response = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/tokenrequest`,

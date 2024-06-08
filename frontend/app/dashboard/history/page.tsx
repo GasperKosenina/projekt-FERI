@@ -116,18 +116,23 @@ export default async function Page() {
                           <CircleX className="text-red-600 inline-block" />
                         )}
                       </td>
-                      {matchingTokenRequests.length === 0 ? (
-                        <td className="py-5 px-4 text-center">
-                          No current token requests
-                        </td>
+                      {matchingTokenRequests.length === 0 ||
+                      payment.paymentStatus === false ? (
+                        <td className="py-5 px-4 text-center">-</td>
                       ) : (
                         <td className="py-5 px-4 text-center">
-                          {matchingTokenRequests.map((request) => (
-                            <div key={request.id}>
-                              {formatDate(request.createdAt)} - {request.amount}
-                              $
-                            </div>
-                          ))}
+                          {matchingTokenRequests.map(
+                            (request) =>
+                              (request.payed === true ||
+                                request.amount === 0) && (
+                                <div key={request.id}>
+                                  {formatDate(request.createdAt)} -{" "}
+                                  {request.amount === 0
+                                    ? "Free"
+                                    : request.amount + "$"}{" "}
+                                </div>
+                              )
+                          )}
                         </td>
                       )}
                     </tr>

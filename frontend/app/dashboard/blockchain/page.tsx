@@ -65,8 +65,6 @@ export default async function Page() {
     });
   }
 
-  console.log(payments);
-
   return (
     <>
       <div className="container mx-auto p-4">

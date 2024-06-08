@@ -210,7 +210,7 @@ export default async function Page() {
                               amount={request.amount}
                             />
                           ) : (
-                            <p className="text-green">Successfully paid</p>
+                            <p className="text-green-500">Successfully paid</p>
                           )}
                         </td>
                       </tr>
