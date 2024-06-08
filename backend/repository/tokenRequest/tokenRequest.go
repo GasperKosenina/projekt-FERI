@@ -106,6 +106,20 @@ func (t *TokenRequest) UpdateSeen(ctx context.Context, id string, seen bool) err
 
 	return nil
 }
+func (t *TokenRequest) UpdateAcceptedSeen(ctx context.Context, id string, acceptedSeen bool) error {
+	collection := t.Client.Database("projekt").Collection("tokenRequest")
+	objectID, err := primitive.ObjectIDFromHex(id)
+	if err != nil {
+		return err
+	}
+
+	_, err = collection.UpdateOne(ctx, bson.M{"_id": objectID}, bson.M{"$set": bson.M{"acceptedSeen": acceptedSeen}})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
 
 func (t *TokenRequest) ListAll(ctx context.Context) ([]*model.TokenRequest, error) {
 	collection := t.Client.Database("projekt").Collection("tokenRequest")

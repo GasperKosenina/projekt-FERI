@@ -1,9 +1,13 @@
-import { ArrowPathIcon } from '@heroicons/react/24/outline';
-import clsx from 'clsx';
-import { getPurchasedDatasets, getPaymentByDataset } from '@/lib/data';
-import { Dataset, Payment } from '@/lib/definitions';
-import { auth, clerkClient } from '@clerk/nextjs/server';
-import Link from 'next/link';
+import { ArrowPathIcon } from "@heroicons/react/24/outline";
+import clsx from "clsx";
+import {
+  getPurchasedDatasets,
+  getPaymentByDataset,
+  getDataProviderName,
+} from "@/lib/data";
+import { Dataset, Payment } from "@/lib/definitions";
+import { auth, clerkClient } from "@clerk/nextjs/server";
+import Link from "next/link";
 
 async function getDataProvider(userId: string) {
   try {
@@ -29,32 +33,32 @@ export default async function MyTokens() {
 
   const payments: Payment[] = await Promise.all(
     purchasedDatasets.map(async (dataset) => {
-      return await getPaymentByDataset(dataset.id || '', userId);
+      return await getPaymentByDataset(dataset.id || "", userId);
     })
   );
 
   const datasetsWithExpirationStatus = purchasedDatasets.map((dataset) => {
     if (dataset.duration === -1) {
-      return { ...dataset, status: 'active' };
+      return { ...dataset, status: "active" };
     }
 
     const payment = payments.find((p) => p.datasetId === dataset.id);
     if (!payment || !payment.tokenCreatedAt) {
-      return { ...dataset, status: 'expired' };
+      return { ...dataset, status: "expired" };
     }
 
-    const tokenExpirationTime = new Date(payment.tokenCreatedAt).getTime() + dataset.duration * 60 * 60 * 1000;
+    const tokenExpirationTime =
+      new Date(payment.tokenCreatedAt).getTime() +
+      dataset.duration * 60 * 60 * 1000;
     const currentTime = Date.now();
 
     const isExpired = currentTime >= tokenExpirationTime;
-    return { ...dataset, status: isExpired ? 'expired' : 'active' };
+    return { ...dataset, status: isExpired ? "expired" : "active" };
   });
 
   return (
     <div className="flex w-full flex-col md:col-span-4">
-      <strong className="mb-4 text-lg text-blue-500">
-        Dataset Access
-      </strong>
+      <strong className="mb-4 text-lg text-blue-500">Dataset Access</strong>
       <div className="flex grow flex-col justify-between rounded-xl bg-gray-50 p-4">
         {datasetsWithExpirationStatus.length === 0 ? (
           <p className="truncate text-sm font-semibold md:text-base">
@@ -65,22 +69,33 @@ export default async function MyTokens() {
             {datasetsWithExpirationStatus.map(async (dataset, i) => (
               <div
                 key={dataset.id}
-                className={clsx('flex flex-row items-center justify-between py-4', {
-                  'border-t': i !== 0,
-                })}
+                className={clsx(
+                  "flex flex-row items-center justify-between py-4",
+                  {
+                    "border-t": i !== 0,
+                  }
+                )}
               >
                 <div className="flex items-center">
                   <div className="min-w-0">
                     <Link href={`/dashboard/datasets/purchased/${dataset.id}`}>
-                      <p className="truncate text-sm font-semibold md:text-base hover:text-gray-500">{dataset.name}</p>
+                      <p className="truncate text-sm font-semibold md:text-base hover:text-gray-500">
+                        {dataset.name}
+                      </p>
                     </Link>
                     <p className="hidden text-sm text-gray-500 sm:block">
-                      <span>{await getDataProvider(dataset.userID)}</span>
+                      <span>{await getDataProviderName(dataset.userID)}</span>
                     </p>
                   </div>
                 </div>
-                <p className={`truncate text-sm font-medium md:text-base ${dataset.status === 'expired' ? 'text-red-500' : 'text-green-500'}`}>
-                  {dataset.status === 'expired' ? 'expired' : 'active'}
+                <p
+                  className={`truncate text-sm font-medium md:text-base ${
+                    dataset.status === "expired"
+                      ? "text-red-500"
+                      : "text-green-500"
+                  }`}
+                >
+                  {dataset.status === "expired" ? "expired" : "active"}
                 </p>
               </div>
             ))}

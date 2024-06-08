@@ -32,14 +32,19 @@ export default async function SideNav() {
   const acceptedRequests: TokenRequest[] =
     (await getAllAcceptedByUserId(userId)) || [];
 
-  const allRequests: TokenRequest[] = [];
-  allRequests.push(...pendingRequests);
-  allRequests.push(...declinedRequests);
-  allRequests.push(...acceptedRequests);
+  let unseenCount = 0;
 
-  const unseenCount = allRequests.filter(
-    (request) => request.seen === false
-  ).length;
+  pendingRequests.forEach((request) => {
+    if (request.seen === false) {
+      unseenCount++;
+    }
+  });
+
+  acceptedRequests.forEach((request) => {
+    if (request.acceptedSeen === false) {
+      unseenCount++;
+    }
+  });
 
   return (
     <div className="flex h-full flex-col px-3 py-4 md:px-2">

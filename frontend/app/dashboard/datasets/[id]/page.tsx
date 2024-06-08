@@ -1,5 +1,11 @@
 import Breadcrumbs from "@/app/ui/breadcrumbs";
-import { findById, generate, getPaymentByDataset, getUser } from "@/lib/data";
+import {
+  findById,
+  generate,
+  getDataProviderName,
+  getPaymentByDataset,
+  getUser,
+} from "@/lib/data";
 import { Dataset, Payment } from "@/lib/definitions";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import Modal1 from "@/app/ui/modal_jsonschema";
@@ -95,7 +101,7 @@ export default async function Page({
                   Data Provider
                 </dt>
                 <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                  {await getDataProvider(dataset.userID)}
+                  {await getDataProviderName(dataset.userID)}
                 </dd>
               </div>
               <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
@@ -158,7 +164,7 @@ export default async function Page({
             mongoUser={mongoUser}
             userId={userId}
             purpose={purpose}
-            dataProvider={await getDataProvider(dataset.userID) || ''}
+            dataProvider={(await getDataProviderName(dataset.userID)) || ""}
           />
         ) : (
           <RequestAccess
@@ -168,7 +174,7 @@ export default async function Page({
             mongoUser={mongoUser}
             userId={userId}
             purpose={purpose}
-            dataProvider={await getDataProvider(dataset.userID) || ''}
+            dataProvider={(await getDataProviderName(dataset.userID)) || ""}
           />
         )}
       </div>

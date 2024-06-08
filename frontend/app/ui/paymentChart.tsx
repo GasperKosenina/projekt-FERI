@@ -36,7 +36,7 @@ const PaymentsChart: React.FC<PaymentsChartProps> = ({ payments }) => {
         payments.map(async (payment) => {
           if (!names[payment.userId]) {
             const name = await getDataProviderName(payment.userId);
-            names[payment.userId] = name ?? "Unknown User"; // Provide a fallback value
+            names[payment.userId] = name ?? "Unknown User";
           }
         })
       );
@@ -49,6 +49,9 @@ const PaymentsChart: React.FC<PaymentsChartProps> = ({ payments }) => {
   // Aggregate payments by user
   const aggregatedPayments: { [userId: string]: number } = payments.reduce(
     (acc, payment) => {
+      if (payment.paymentStatus === false) {
+        return acc;
+      }
       if (!acc[payment.userId]) {
         acc[payment.userId] = 0;
       }

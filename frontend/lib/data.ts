@@ -37,8 +37,9 @@ const DatasetSchema = z.object({
       message: "Schema must be less than 1MB",
     }),
   category: z.string().nonempty({ message: "Please select a category" }),
-  duration: z.number({ message: "Duration must be a number" })
-  .gte(-1, { message: "Duration must be greater than 0" }),
+  duration: z
+    .number({ message: "Duration must be a number" })
+    .gte(-1, { message: "Duration must be greater than 0" }),
   userID: z.string(),
 });
 
@@ -916,6 +917,31 @@ export async function updateTokenRequestSeen(id: string) {
         },
         body: JSON.stringify({
           seen: true,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      console.error("Error setting token request seen:", response.statusText);
+      return;
+    }
+
+    revalidatePath("/dashboard/notifications");
+  } catch (error) {
+    console.error("Error setting token request seen:", error);
+  }
+}
+export async function updateTokenRequestAcceptedSeen(id: string) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/tokenrequest/accepted-seen/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          acceptedSeen: true,
         }),
       }
     );

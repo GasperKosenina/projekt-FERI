@@ -27,6 +27,8 @@ func (t *TokenRequest) Create(c echo.Context) error {
 		Reason     string `json:"reason"`
 	}
 
+	fmt.Println("Create token request")
+
 	if err := c.Bind(&body); err != nil {
 		return c.JSON(400, "Bad Request")
 	}
@@ -36,17 +38,19 @@ func (t *TokenRequest) Create(c echo.Context) error {
 	}
 
 	tokenRequest := &model.TokenRequest{
-		ReqUserID:  body.ReqUserID,
-		ProviderID: body.ProviderID,
-		CreatedAt:  time.Now(),
-		DatasetID:  body.DatasetID,
-		PaymentID:  body.PaymentID,
-		Status:     body.Status,
-		Seen:       false,
-		Reason:     body.Reason,
-		Url:        "",
-		Amount:     0,
-		Payed:      false,
+		ReqUserID:    body.ReqUserID,
+		ProviderID:   body.ProviderID,
+		CreatedAt:    time.Now(),
+		DatasetID:    body.DatasetID,
+		PaymentID:    body.PaymentID,
+		Status:       body.Status,
+		Seen:         false,
+		AcceptedSeen: false,
+		DeclinedSeen: false,
+		Reason:       body.Reason,
+		Url:          "",
+		Amount:       0,
+		Payed:        false,
 	}
 
 	err := t.Repository.Insert(c.Request().Context(), tokenRequest)
@@ -147,6 +151,27 @@ func (t *TokenRequest) UpdateSeen(c echo.Context) error {
 	}
 
 	err := t.Repository.UpdateSeen(c.Request().Context(), id, body.Seen)
+	if err != nil {
+		return c.JSON(500, "Internal Server Error")
+	}
+
+	return c.JSON(200, "OK")
+}
+
+func (t *TokenRequest) UpdateAcceptedSeen(c echo.Context) error {
+	var body struct {
+		AcceptedSeen bool `json:"acceptedSeen"`
+	}
+	id := c.Param("id")
+	if id == "" {
+		return c.JSON(400, "Bad Request")
+	}
+
+	if err := c.Bind(&body); err != nil {
+		return c.JSON(400, "Bad Request")
+	}
+
+	err := t.Repository.UpdateAcceptedSeen(c.Request().Context(), id, body.AcceptedSeen)
 	if err != nil {
 		return c.JSON(500, "Internal Server Error")
 	}

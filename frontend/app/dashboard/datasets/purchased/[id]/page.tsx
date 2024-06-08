@@ -1,5 +1,10 @@
 import Countdown from "@/app/ui/countdown-token";
-import { findById, getPaymentByDataset, getUser } from "@/lib/data";
+import {
+  findById,
+  getDataProviderName,
+  getPaymentByDataset,
+  getUser,
+} from "@/lib/data";
 import { Dataset, Payment } from "@/lib/definitions";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { ButtonComponent, ButtonDetailsComponent } from "@/app/ui/button";
@@ -98,7 +103,7 @@ export default async function Page({ params }: { params: { id: string } }) {
                 Data Provider
               </dt>
               <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {await getDataProvider(dataset.userID)}
+                {await getDataProviderName(dataset.userID)}
               </dd>
             </div>
 

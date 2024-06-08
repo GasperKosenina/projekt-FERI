@@ -10,6 +10,7 @@ import {
   getDatasetNameById,
   getUser,
   getUserEmail,
+  updateTokenRequestAcceptedSeen,
   updateTokenRequestSeen,
 } from "@/lib/data";
 import {
@@ -171,8 +172,8 @@ export default async function Page() {
                   </tr>
                 ) : (
                   acceptedRequests.map(async (request) => {
-                    if (request.seen === false) {
-                      updateTokenRequestSeen(request.id as string);
+                    if (request.acceptedSeen === false) {
+                      updateTokenRequestAcceptedSeen(request.id as string);
                     }
                     return (
                       <tr key={request.id} className="border-t">
